@@ -3,6 +3,7 @@ package mchorse.chameleon.metamorph.editor;
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
+import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -30,19 +31,37 @@ import java.util.function.Consumer;
 @SideOnly(Side.CLIENT)
 public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 {
-	public GuiBodyPartEditor bodyPart;
+	public GuiCustomBodyPartEditor bodyPart;
 	public GuiChameleonMainPanel mainPanel;
+	public GuiChameleonModelRenderer chameleonModelRenderer;
 
 	public GuiChameleonMorph(Minecraft mc)
 	{
 		super(mc);
 
-		this.bodyPart = new GuiBodyPartEditor(mc, this);
+		this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
 		this.mainPanel = new GuiChameleonMainPanel(mc, this);
 		this.defaultPanel = this.mainPanel;
 
 		this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
 		this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.MATERIAL);
+	}
+
+	@Override
+	protected GuiModelRenderer createMorphRenderer(Minecraft mc)
+	{
+		this.chameleonModelRenderer = new GuiChameleonModelRenderer(mc);
+		this.chameleonModelRenderer.picker(this::pickLimb);
+
+		return this.chameleonModelRenderer;
+	}
+
+	private void pickLimb(String limb)
+	{
+		if (this.view.delegate == this.bodyPart)
+		{
+			this.bodyPart.setLimb(limb);
+		}
 	}
 
 	@Override
@@ -68,6 +87,8 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 		{
 			this.bodyPart.setLimbs(model.getBoneNames());
 		}
+
+		this.chameleonModelRenderer.boneName = "";
 	}
 
 	@Override
@@ -148,7 +169,7 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 			};
 
 			/* Materials view */
-			this.skin = new GuiButtonElement(mc, IKey.lang("chameleon.gui.morph.pick_skin"), (b) ->
+			this.skin = new GuiButtonElement(mc, IKey.lang("chameleon.gui.editor.pick_skin"), (b) ->
 			{
 				this.picker.refresh();
 				this.picker.fill(this.morph.skin);

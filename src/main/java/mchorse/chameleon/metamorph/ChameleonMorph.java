@@ -5,6 +5,7 @@ import mchorse.chameleon.client.RenderLightmap;
 import mchorse.chameleon.geckolib.ChameleonAnimator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.ChameleonRenderer;
+import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;

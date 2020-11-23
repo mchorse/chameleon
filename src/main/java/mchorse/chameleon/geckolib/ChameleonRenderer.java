@@ -130,26 +130,27 @@ public class ChameleonRenderer
 
 		if (!bone.isHidden)
 		{
+			if (bone.name.equals(boneName))
+			{
+				Matrix4f matrix4f = new Matrix4f(MATRIX_STACK.getModelMatrix());
+
+				matrix4f.transpose();
+				MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
+
+				MatrixUtils.buffer.clear();
+				MatrixUtils.buffer.put(MatrixUtils.floats);
+				MatrixUtils.buffer.flip();
+
+				GlStateManager.multMatrix(MatrixUtils.buffer);
+				GlStateManager.translate(bone.rotationPointX / 16.0F, bone.rotationPointY / 16.0F, bone.rotationPointZ / 16.0F);
+
+				MATRIX_STACK.pop();
+
+				return true;
+			}
+
 			for (GeoBone childBone : bone.childBones)
 			{
-				if (childBone.name.equals(boneName))
-				{
-					Matrix4f matrix4f = new Matrix4f(MATRIX_STACK.getModelMatrix());
-
-					matrix4f.transpose();
-					MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
-
-					MatrixUtils.buffer.clear();
-					MatrixUtils.buffer.put(MatrixUtils.floats);
-					MatrixUtils.buffer.flip();
-
-					GlStateManager.multMatrix(MatrixUtils.buffer);
-
-					MATRIX_STACK.pop();
-
-					return true;
-				}
-
 				if (postRenderRecursively(childBone, boneName))
 				{
 					MATRIX_STACK.pop();

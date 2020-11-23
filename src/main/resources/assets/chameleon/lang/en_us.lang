@@ -1,7 +1,9 @@
 #PARSE_ESCAPES
 
 # GUI
-chameleon.gui.morph.pick_skin=Pick skin
+chameleon.gui.editor.pick_skin=Pick skin
+chameleon.gui.editor.main=Main panel
+chameleon.gui.editor.body_part=Body parts
 
 # Morph stuff
 morph.section.chameleon=Chameleon (powered by GeckoLib)
