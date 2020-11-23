@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "chameleon",
+        "name": "Chameleon",
+        "description": "Loads animated Blockbench models as Metamorph morphs, powered by GeckoLib",
+        "version": "${version}",
+        "mcversion": "${mcversion}",
+        "url": "",
+        "updateUrl": "",
+        "authorList": ["mchorse"],
+        "credits": "Gecko and Eliot Lash for GeckoLib",
+        "logoFile": "",
+        "screenshots": [],
+        "dependencies": []
+    }
+]

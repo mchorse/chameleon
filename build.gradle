@@ -1,0 +1,61 @@
+buildscript
+{
+    repositories
+    {
+        jcenter()
+        maven { url = "https://files.minecraftforge.net/maven" }
+    }
+
+    dependencies
+    {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+group = "mchorse.chameleon"
+archivesBaseName = "chameleon"
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+compileJava
+{
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft
+{
+    version = "1.12.2-14.23.5.2799"
+    runDir = "run"
+    mappings = "snapshot_20171003"
+
+    replace("%MCLIB%", project.mclib)
+    replace("%METAMORPH%", project.metamorph)
+    replace("%GECKOLIB%", project.geckolib)
+}
+
+dependencies
+{
+    compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
+    compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
+    compile files("run/libs/forge-1.12.2-geckolib-${geckolib}-beta.1-dev.jar")
+}
+
+processResources
+{
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs)
+    {
+        include 'mcmod.info'
+
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs)
+    {
+        exclude 'mcmod.info'
+    }
+}
