@@ -1,5 +1,6 @@
 package mchorse.chameleon.metamorph;
 
+import mchorse.chameleon.metamorph.editor.GuiChameleonMorph;
 import mchorse.metamorph.api.IMorphFactory;
 import mchorse.metamorph.api.MorphManager;
 import mchorse.metamorph.api.morphs.AbstractMorph;

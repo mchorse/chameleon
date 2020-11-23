@@ -4,6 +4,7 @@ import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChameleonModel
@@ -31,5 +32,22 @@ public class ChameleonModel
 
 			this.saveInitialBoneSnapshots(bone.childBones);
 		}
+	}
+
+	public List<String> getBoneNames()
+	{
+		return this.getBoneNames(new ArrayList<String>(), this.model.topLevelBones);
+	}
+
+	public List<String> getBoneNames(List<String> boneNames, List<GeoBone> bones)
+	{
+		for (GeoBone bone : bones)
+		{
+			boneNames.add(bone.name);
+
+			this.getBoneNames(boneNames, bone.childBones);
+		}
+
+		return boneNames;
 	}
 }

@@ -1,6 +1,8 @@
-package mchorse.chameleon.metamorph;
+package mchorse.chameleon.metamorph.editor;
 
 import mchorse.chameleon.ClientProxy;
+import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.utils.Icons;
@@ -11,6 +13,7 @@ import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.bodypart.GuiBodyPartEditor;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
@@ -20,18 +23,51 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 {
+	public GuiBodyPartEditor bodyPart;
+	public GuiChameleonMainPanel mainPanel;
+
 	public GuiChameleonMorph(Minecraft mc)
 	{
 		super(mc);
 
-		this.registerPanel(new GuiChameleonMainPanel(mc, this), IKey.str("Test"), Icons.MATERIAL);
-		this.registerPanel(this.bodyPart, IKey.lang("blockbuster.gui.builder.body_part"), Icons.LIMB);
+		this.bodyPart = new GuiBodyPartEditor(mc, this);
+		this.mainPanel = new GuiChameleonMainPanel(mc, this);
+		this.defaultPanel = this.mainPanel;
+
+		this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
+		this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.MATERIAL);
+	}
+
+	@Override
+	public boolean canEdit(AbstractMorph morph)
+	{
+		return morph instanceof ChameleonMorph;
+	}
+
+	@Override
+	public void startEdit(ChameleonMorph morph)
+	{
+		super.startEdit(morph);
+
+		ChameleonModel model = morph.getModel();
+
+		morph.parts.reinitBodyParts();
+
+		if (model == null)
+		{
+			this.bodyPart.setLimbs(Collections.emptyList());
+		}
+		else
+		{
+			this.bodyPart.setLimbs(model.getBoneNames());
+		}
 	}
 
 	@Override
