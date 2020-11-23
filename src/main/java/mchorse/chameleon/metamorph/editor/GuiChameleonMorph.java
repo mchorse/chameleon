@@ -31,6 +31,7 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 		super(mc);
 
 		this.registerPanel(new GuiChameleonMainPanel(mc, this), IKey.str("Test"), Icons.MATERIAL);
+		this.registerPanel(this.bodyPart, IKey.lang("blockbuster.gui.builder.body_part"), Icons.LIMB);
 	}
 
 	@Override

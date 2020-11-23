@@ -1,9 +1,12 @@
 package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
+import mchorse.chameleon.client.RenderLightmap;
 import mchorse.chameleon.geckolib.ChameleonAnimator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.ChameleonRenderer;
+import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import net.minecraft.client.Minecraft;
@@ -61,7 +64,18 @@ public class ChameleonMorph extends AbstractMorph
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 
+		boolean captured = MatrixUtils.captureMatrix();
+		float renderYawOffset = Interpolations.lerp(target.prevRenderYawOffset, target.renderYawOffset, partialTicks);
+
+		GlStateManager.rotate(-renderYawOffset + 180, 0, 1, 0);
+		GlStateManager.color(1, 1, 1, 1);
+
 		this.renderModel(target, partialTicks);
+
+		if (captured)
+		{
+			MatrixUtils.releaseMatrix();
+		}
 
 		GlStateManager.popMatrix();
 	}
@@ -89,7 +103,14 @@ public class ChameleonMorph extends AbstractMorph
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.skin);
 		}
 
+		boolean hurtLight = RenderLightmap.set(target, partialTicks);
+
 		ChameleonRenderer.render(model);
+
+		if (hurtLight)
+		{
+			RenderLightmap.unset();
+		}
 	}
 
 	@Override

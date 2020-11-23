@@ -3,14 +3,13 @@ package mchorse.chameleon;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Chameleon mod
  *
  * GeckoLib powered mod to import animated Blockbench models into
- * Metamorph
+ * Metamorph as morphs
  */
 @Mod(modid = Chameleon.MOD_ID, name = Chameleon.MODNAME, version = Chameleon.VERSION, dependencies = "required-after:mclib@[%MCLIB%,);required-after:metamorph@[%METAMORPH%,)")
 public class Chameleon
@@ -27,8 +26,4 @@ public class Chameleon
     {
         proxy.preInit(event);
     }
-
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {}
 }

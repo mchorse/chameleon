@@ -18,6 +18,8 @@ public class ChameleonModel
 		this.animation = file;
 		this.lastUpdate = lastUpdate;
 
+		/* This is VERY IMPORTANT, if initial bone snapshots won't be saved,
+		 * there will be rotation inconsistencies! */
 		this.saveInitialBoneSnapshots(model.topLevelBones);
 	}
 

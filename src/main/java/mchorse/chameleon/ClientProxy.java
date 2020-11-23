@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.molang.MolangRegistrar;
+import software.bernie.shadowed.eliotlash.mclib.math.Variable;
 import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
 import java.io.File;
@@ -37,6 +38,10 @@ public class ClientProxy extends CommonProxy
 		parser = new MolangParser();
 
 		MolangRegistrar.registerVars(parser);
+
+		/* Additional Chameleon specific variables */
+		parser.register(new Variable("query.head_yaw", 0));
+		parser.register(new Variable("query.head_pitch", 0));
 	}
 
 	@Override

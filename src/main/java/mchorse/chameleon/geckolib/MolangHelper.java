@@ -1,5 +1,6 @@
 package mchorse.chameleon.geckolib;
 
+import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.entity.Entity;
@@ -59,6 +60,10 @@ public class MolangHelper
 		parser.setValue("query.ground_speed", groundSpeed);
 
 		parser.setValue("query.yaw_speed", target.rotationYaw - target.prevRotationYaw);
+
+		/* Chameleon specific queries */
+		parser.setValue("query.head_yaw", Interpolations.lerp(target.prevRotationYaw, target.rotationYaw, partialTick));
+		parser.setValue("query.head_pitch", Interpolations.lerp(target.prevRotationPitch, target.rotationPitch, partialTick));
 	}
 
 	public static double getValue(IValue value, Component component, EnumFacing.Axis axis)
