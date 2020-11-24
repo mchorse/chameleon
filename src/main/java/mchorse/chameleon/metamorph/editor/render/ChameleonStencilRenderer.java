@@ -16,6 +16,12 @@ import software.bernie.geckolib3.util.MatrixStack;
 import javax.vecmath.Vector4f;
 import java.util.List;
 
+/**
+ * Stencil render processor
+ *
+ * This bad boy is responsible for rendering given GeoModel for
+ * stencil limb picking
+ */
 @SideOnly(Side.CLIENT)
 public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 {
@@ -49,9 +55,8 @@ public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 		stack.moveToPivot(cube);
 		stack.rotate(cube);
 		stack.moveBackFromPivot(cube);
-		GeoQuad[] quads = cube.quads;
 
-		for (GeoQuad quad : quads)
+		for (GeoQuad quad : cube.quads)
 		{
 			for (GeoVertex vertex : quad.vertices)
 			{

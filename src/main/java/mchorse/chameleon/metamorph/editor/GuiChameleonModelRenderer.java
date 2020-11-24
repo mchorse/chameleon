@@ -61,7 +61,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 
 		HIGHLIGHT_RENDERER.setBoneName(this.boneName);
 
-		ChameleonRenderer.renderProcessModel(HIGHLIGHT_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
+		ChameleonRenderer.processRenderModel(HIGHLIGHT_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
@@ -92,7 +92,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 
 		STENCIL_RENDERER.setBones(model.getBoneNames());
 
-		ChameleonRenderer.renderProcessModel(STENCIL_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
+		ChameleonRenderer.processRenderModel(STENCIL_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();

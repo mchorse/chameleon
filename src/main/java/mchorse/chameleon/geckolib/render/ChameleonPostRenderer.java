@@ -10,6 +10,13 @@ import software.bernie.geckolib3.util.MatrixStack;
 
 import javax.vecmath.Matrix4f;
 
+/**
+ * Post render processor
+ *
+ * This render processors is responsible for applying given bone's transformation
+ * onto OpenGL's matrix stack. Make sure you push before and pop after the matrix
+ * stack when you using this!
+ */
 @SideOnly(Side.CLIENT)
 public class ChameleonPostRenderer implements IChameleonRenderProcessor
 {

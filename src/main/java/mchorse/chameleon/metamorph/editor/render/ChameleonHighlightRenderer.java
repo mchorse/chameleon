@@ -18,6 +18,12 @@ import software.bernie.geckolib3.util.MatrixStack;
 
 import javax.vecmath.Vector4f;
 
+/**
+ * Highlight renderer
+ *
+ * This bad boy is responsible for rendering given model's bone
+ * as a blue box highlight (in addition with axes identifiers)
+ */
 @SideOnly(Side.CLIENT)
 public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 {
@@ -60,9 +66,8 @@ public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 		stack.moveToPivot(cube);
 		stack.rotate(cube);
 		stack.moveBackFromPivot(cube);
-		GeoQuad[] quads = cube.quads;
 
-		for (GeoQuad quad : quads)
+		for (GeoQuad quad : cube.quads)
 		{
 			for (GeoVertex vertex : quad.vertices)
 			{

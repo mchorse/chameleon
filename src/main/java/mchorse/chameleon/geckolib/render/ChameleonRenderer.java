@@ -18,6 +18,13 @@ public class ChameleonRenderer
 	private static final ChameleonCubeRenderer CUBE_RENDERER = new ChameleonCubeRenderer();
 	private static final ChameleonPostRenderer POST_RENDERER = new ChameleonPostRenderer();
 
+	/* Specific utility methods */
+
+	/**
+	 * Just render given model
+	 *
+	 * The texture should be bind beforehand
+	 */
 	public static void render(GeoModel model)
 	{
 		CUBE_RENDERER.setColor(1F, 1F, 1F, 1F);
@@ -28,7 +35,7 @@ public class ChameleonRenderer
 		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
 
-		renderProcessModel(CUBE_RENDERER, builder, MATRIX_STACK, model);
+		processRenderModel(CUBE_RENDERER, builder, MATRIX_STACK, model);
 
 		Tessellator.getInstance().draw();
 
@@ -36,18 +43,32 @@ public class ChameleonRenderer
 		GlStateManager.enableCull();
 	}
 
+	/**
+	 * Post render (multiply the current matrix stack by bone's
+	 * transformations by given name)
+	 */
 	public static boolean postRender(GeoModel model, String boneName)
 	{
 		POST_RENDERER.setBoneName(boneName);
 
-		return renderProcessModel(POST_RENDERER, null, MATRIX_STACK, model);
+		/* Buffer builder isn't used in this render processor, but just in case */
+		return processRenderModel(POST_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model);
 	}
 
-	public static boolean renderProcessModel(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoModel model)
+	/* Generic render methods */
+
+	/**
+	 * Process/render given model
+	 *
+	 * This method recursively goes through all bones in the model, and
+	 * applies given render processor. Processor may return true from its
+	 * sole method which means that iteration should be halted
+	 */
+	public static boolean processRenderModel(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoModel model)
 	{
 		for (GeoBone bone : model.topLevelBones)
 		{
-			if (renderRecursively(renderProcessor, builder, stack, bone))
+			if (processRenderRecursively(renderProcessor, builder, stack, bone))
 			{
 				return true;
 			}
@@ -56,7 +77,10 @@ public class ChameleonRenderer
 		return false;
 	}
 
-	private static boolean renderRecursively(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoBone bone)
+	/**
+	 * Apply the render processor, recursively
+	 */
+	private static boolean processRenderRecursively(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoBone bone)
 	{
 		stack.push();
 		stack.translate(bone);
@@ -76,7 +100,7 @@ public class ChameleonRenderer
 
 			for (GeoBone childBone : bone.childBones)
 			{
-				if (renderRecursively(renderProcessor, builder, stack, childBone))
+				if (processRenderRecursively(renderProcessor, builder, stack, childBone))
 				{
 					stack.pop();
 

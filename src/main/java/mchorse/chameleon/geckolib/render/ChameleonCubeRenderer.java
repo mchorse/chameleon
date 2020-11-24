@@ -12,6 +12,11 @@ import software.bernie.geckolib3.util.MatrixStack;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+/**
+ * Cube renderer
+ *
+ * Renders given bones from the model as cubes, fully
+ */
 @SideOnly(Side.CLIENT)
 public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 {
@@ -44,14 +49,20 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 		stack.moveToPivot(cube);
 		stack.rotate(cube);
 		stack.moveBackFromPivot(cube);
-		GeoQuad[] quads = cube.quads;
 
-		for (GeoQuad quad : quads)
+		for (GeoQuad quad : cube.quads)
 		{
 			Vector3f normal = new Vector3f(quad.normal.getX(), quad.normal.getY(), quad.normal.getZ());
 
 			stack.getNormalMatrix().transform(normal);
 
+			/* For 0 sized cubes on either axis, to avoid getting dark shading on models
+			 * which didn't correctly setup the UV faces.
+			 *
+			 * For example two wings, first wing uses top face for texturing the flap,
+			 * and second wing uses bottom face as a flap. In the end, the second wing
+			 * will appear dark shaded without this fix.
+			 */
 			if ((cube.size.y == 0.0F || cube.size.z == 0.0F) && normal.getX() < 0.0F)
 			{
 				normal.x *= -1.0F;
