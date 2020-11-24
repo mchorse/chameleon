@@ -140,12 +140,12 @@ public class ClientProxy extends CommonProxy
 		/* Load model and animation */
 		ChameleonModel oldModel = chameleonModels.get(modelFolder.getName());
 
-		if (model != null && !animations.isEmpty() && (oldModel == null || oldModel.lastUpdate < lastUpdated))
+		if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
 		{
 			GeoModel geoModel = this.loader.loadModel(model);
 			AnimationFile animationFile = this.loadAnimations(animations);
 
-			if (animationFile != null && geoModel != null)
+			if (geoModel != null)
 			{
 				chameleonModels.put(modelFolder.getName(), new ChameleonModel(geoModel, animationFile, lastUpdated));
 			}
@@ -154,7 +154,7 @@ public class ClientProxy extends CommonProxy
 
 	private AnimationFile loadAnimations(List<File> files)
 	{
-		AnimationFile animations = null;
+		AnimationFile animations = new AnimationFile();
 
 		for (File animationFile : files)
 		{
@@ -162,11 +162,6 @@ public class ClientProxy extends CommonProxy
 
 			if (file != null)
 			{
-				if (animations == null)
-				{
-					animations = new AnimationFile();
-				}
-
 				for (Animation animation : file.getAllAnimations())
 				{
 					animations.putAnimation(animation.animationName, animation);
