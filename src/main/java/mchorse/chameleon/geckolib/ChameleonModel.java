@@ -16,6 +16,8 @@ public class ChameleonModel
 	public AnimationFile animation;
 	public long lastUpdate;
 
+	private List<String> boneNames;
+
 	public ChameleonModel(GeoModel model, AnimationFile file, long lastUpdate)
 	{
 		this.model = model;
@@ -39,10 +41,15 @@ public class ChameleonModel
 
 	public List<String> getBoneNames()
 	{
-		return this.getBoneNames(new ArrayList<String>(), this.model.topLevelBones);
+		if (this.boneNames != null)
+		{
+			return this.boneNames;
+		}
+
+		return this.boneNames = this.getBoneNames(new ArrayList<String>(), this.model.topLevelBones);
 	}
 
-	public List<String> getBoneNames(List<String> boneNames, List<GeoBone> bones)
+	private List<String> getBoneNames(List<String> boneNames, List<GeoBone> bones)
 	{
 		for (GeoBone bone : bones)
 		{

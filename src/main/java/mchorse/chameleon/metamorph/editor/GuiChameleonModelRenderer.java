@@ -1,32 +1,27 @@
 package mchorse.chameleon.metamorph.editor;
 
 import mchorse.chameleon.geckolib.ChameleonModel;
-import mchorse.chameleon.geckolib.ChameleonRenderer;
+import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.ChameleonMorph;
-import mchorse.mclib.client.Draw;
+import mchorse.chameleon.metamorph.editor.render.ChameleonHighlightRenderer;
+import mchorse.chameleon.metamorph.editor.render.ChameleonStencilRenderer;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoCube;
-import software.bernie.geckolib3.geo.render.built.GeoQuad;
-import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.util.MatrixStack;
 
-import javax.vecmath.Vector4f;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiChameleonModelRenderer extends GuiMorphRenderer
 {
 	private static final MatrixStack MATRIX_STACK = new MatrixStack();
+	private static final ChameleonStencilRenderer STENCIL_RENDERER = new ChameleonStencilRenderer();
+	private static final ChameleonHighlightRenderer HIGHLIGHT_RENDERER = new ChameleonHighlightRenderer();
 
 	public String boneName = "";
 
@@ -64,88 +59,14 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 		GlStateManager.color(0, 0.5F, 1, 0.33F);
 		GlStateManager.rotate(180, 0, 1, 0);
 
-		for (GeoBone bone : model.model.topLevelBones)
-		{
-			if (this.renderRecursivelyForHighlight(bone))
-			{
-				break;
-			}
-		}
+		HIGHLIGHT_RENDERER.setBoneName(this.boneName);
+
+		ChameleonRenderer.renderProcessModel(HIGHLIGHT_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableDepth();
 		GlStateManager.enableLighting();
-	}
-
-	private boolean renderRecursivelyForHighlight(GeoBone bone)
-	{
-		MATRIX_STACK.push();
-		MATRIX_STACK.translate(bone);
-		MATRIX_STACK.moveToPivot(bone);
-		MATRIX_STACK.rotate(bone);
-		MATRIX_STACK.scale(bone);
-		MATRIX_STACK.moveBackFromPivot(bone);
-
-		if (!bone.isHidden)
-		{
-			if (bone.name.equals(this.boneName))
-			{
-				BufferBuilder builder = Tessellator.getInstance().getBuffer();
-				builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-
-				for (GeoCube cube : bone.childCubes)
-				{
-					renderCubeForHighlight(builder, cube);
-				}
-
-				Tessellator.getInstance().draw();
-
-				GlStateManager.pushMatrix();
-				ChameleonRenderer.multiplyMatrix(MATRIX_STACK, bone);
-
-				Draw.axis(0.25F * 1.5F);
-
-				GlStateManager.popMatrix();
-
-				MATRIX_STACK.pop();
-
-				return true;
-			}
-
-			for (GeoBone childBone : bone.childBones)
-			{
-				if (this.renderRecursivelyForHighlight(childBone))
-				{
-					MATRIX_STACK.pop();
-
-					return true;
-				}
-			}
-		}
-
-		MATRIX_STACK.pop();
-
-		return false;
-	}
-
-	private void renderCubeForHighlight(BufferBuilder builder, GeoCube cube)
-	{
-		MATRIX_STACK.moveToPivot(cube);
-		MATRIX_STACK.rotate(cube);
-		MATRIX_STACK.moveBackFromPivot(cube);
-		GeoQuad[] quads = cube.quads;
-
-		for (GeoQuad quad : quads)
-		{
-			for (GeoVertex vertex : quad.vertices)
-			{
-				Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0F);
-
-				MATRIX_STACK.getModelMatrix().transform(vector4f);
-				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).endVertex();
-			}
-		}
 	}
 
 	@Override
@@ -163,74 +84,19 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 			return;
 		}
 
-		List<String> bones = model.getBoneNames();
-
 		GlStateManager.disableCull();
 		GlStateManager.disableTexture2D();
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1, 1, 1, 1);
 		GlStateManager.rotate(180, 0, 1, 0);
 
-		for (GeoBone bone : model.model.topLevelBones)
-		{
-			this.renderRecursivelyForStencil(bones, bone);
-		}
+		STENCIL_RENDERER.setBones(model.getBoneNames());
+
+		ChameleonRenderer.renderProcessModel(STENCIL_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
 
 		GlStateManager.popMatrix();
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableCull();
-	}
-
-	private void renderRecursivelyForStencil(List<String> bones, GeoBone bone)
-	{
-		MATRIX_STACK.push();
-		MATRIX_STACK.translate(bone);
-		MATRIX_STACK.moveToPivot(bone);
-		MATRIX_STACK.rotate(bone);
-		MATRIX_STACK.scale(bone);
-		MATRIX_STACK.moveBackFromPivot(bone);
-
-		if (!bone.isHidden)
-		{
-			int index = bones.indexOf(bone.name) + 1;
-			GL11.glStencilFunc(GL11.GL_ALWAYS, index, -1);
-
-			BufferBuilder builder = Tessellator.getInstance().getBuffer();
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-
-			for (GeoCube cube : bone.childCubes)
-			{
-				renderCube(builder, cube);
-			}
-
-			Tessellator.getInstance().draw();
-
-			for (GeoBone childBone : bone.childBones)
-			{
-				renderRecursivelyForStencil(bones, childBone);
-			}
-		}
-
-		MATRIX_STACK.pop();
-	}
-
-	private void renderCube(BufferBuilder builder, GeoCube cube)
-	{
-		MATRIX_STACK.moveToPivot(cube);
-		MATRIX_STACK.rotate(cube);
-		MATRIX_STACK.moveBackFromPivot(cube);
-		GeoQuad[] quads = cube.quads;
-
-		for (GeoQuad quad : quads)
-		{
-			for (GeoVertex vertex : quad.vertices)
-			{
-				Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0F);
-
-				MATRIX_STACK.getModelMatrix().transform(vector4f);
-				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).endVertex();
-			}
-		}
 	}
 
 	@Override

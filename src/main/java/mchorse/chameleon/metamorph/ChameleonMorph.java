@@ -3,7 +3,7 @@ package mchorse.chameleon.metamorph;
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.geckolib.ChameleonModel;
-import mchorse.chameleon.geckolib.ChameleonRenderer;
+import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
