@@ -5,6 +5,8 @@ import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.client.resources.data.IMetadataSection;
 import net.minecraft.client.resources.data.MetadataSerializer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
+@SideOnly(Side.CLIENT)
 public class ChameleonPack implements IResourcePack
 {
 	private static final Set<String> DOMAINS = ImmutableSet.of("c.s");

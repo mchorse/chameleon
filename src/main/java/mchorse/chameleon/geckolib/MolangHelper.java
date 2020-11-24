@@ -23,15 +23,14 @@ public class MolangHelper
 		parser.setValue("query.anim_time", frame / 20);
 		parser.setValue("query.life_time", frame / 20);
 
-		Minecraft minecraftInstance = Minecraft.getMinecraft();
-		float partialTick = minecraftInstance.getRenderPartialTicks();
+		Minecraft mc = Minecraft.getMinecraft();
+		float partialTick = mc.getRenderPartialTicks();
 
-		parser.setValue("query.actor_count", minecraftInstance.world.loadedEntityList.size());
-		parser.setValue("query.time_of_day", MolangUtils.normalizeTime(minecraftInstance.world.getTotalWorldTime()));
-		parser.setValue("query.moon_phase", minecraftInstance.world.getMoonPhase());
+		parser.setValue("query.actor_count", mc.world.loadedEntityList.size());
+		parser.setValue("query.time_of_day", MolangUtils.normalizeTime(mc.world.getTotalWorldTime()));
+		parser.setValue("query.moon_phase", mc.world.getMoonPhase());
 
-		Entity camera = minecraftInstance.getRenderViewEntity();
-
+		Entity camera = mc.getRenderViewEntity();
 		Vec3d entityCamera = new Vec3d(
 			camera.prevPosX + (camera.posX - camera.prevPosX) * partialTick,
 			camera.prevPosY + (camera.posY - camera.prevPosY) * partialTick,
@@ -66,6 +65,15 @@ public class MolangHelper
 		parser.setValue("query.head_pitch", Interpolations.lerp(target.prevRotationPitch, target.rotationPitch, partialTick));
 	}
 
+	/**
+	 * Get value from given value of a keyframe (end or start)
+	 *
+	 * This method is responsible for processing keyframe value, because
+	 * for some reason constant values are exported in radians, while molang
+	 * expressions are in degrees
+	 *
+	 * Plus X and Y axis of rotation are inverted for some reason ...
+	 */
 	public static double getValue(IValue value, Component component, EnumFacing.Axis axis)
 	{
 		double out = value.get();
@@ -85,6 +93,10 @@ public class MolangHelper
 		return out;
 	}
 
+	/**
+	 * Component enum determines which part of the animation is being
+	 * calculated
+	 */
 	public static enum Component
 	{
 		POSITION, ROTATION, SCALE

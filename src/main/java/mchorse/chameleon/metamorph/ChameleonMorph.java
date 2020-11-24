@@ -1,19 +1,17 @@
 package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
-import mchorse.chameleon.client.RenderLightmap;
+import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.geckolib.ChameleonAnimator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.ChameleonRenderer;
-import mchorse.mclib.client.Draw;
-import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
+import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
-import mchorse.metamorph.bodypart.GuiBodyPartEditor;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,7 +22,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import java.util.Objects;
@@ -39,7 +36,21 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 	 */
 	private String key;
 
-	private int tick;
+	@SideOnly(Side.CLIENT)
+	private Animator animator;
+
+	@SideOnly(Side.CLIENT)
+	protected Animator getAnimator()
+	{
+		if (this.animator == null)
+		{
+			ChameleonModel model = this.getModel();
+
+			this.animator = new Animator(model == null ? null : model.animation);
+		}
+
+		return this.animator;
+	}
 
 	@Override
 	public BodyPartManager getBodyPart()
@@ -107,13 +118,10 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		}
 
 		GeoModel model = chameleonModel.model;
-		Animation animation = chameleonModel.animation.getAnimation("animation.bat.fly");
 
-		if (animation != null)
-		{
-			ChameleonAnimator.animate(target, model, animation, GuiModelRenderer.isRendering() ? 0F : this.tick + partialTicks);
-		}
+		this.getAnimator().applyActions(target, model, partialTicks);
 
+		/* Render the model */
 		if (this.skin != null)
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.skin);
@@ -122,6 +130,14 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		boolean hurtLight = RenderLightmap.set(target, partialTicks);
 
 		ChameleonRenderer.render(model);
+
+		if (hurtLight)
+		{
+			RenderLightmap.unset();
+		}
+
+		/* Render body parts */
+		GlStateManager.color(1, 1, 1);
 
 		this.parts.initBodyParts();
 
@@ -136,11 +152,6 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 
 			GlStateManager.popMatrix();
 		}
-
-		if (hurtLight)
-		{
-			RenderLightmap.unset();
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -154,7 +165,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 	{
 		super.update(target);
 
-		this.tick++;
+		if (target.world.isRemote)
+		{
+			this.updateClient(target);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	private void updateClient(EntityLivingBase target)
+	{
+		this.getAnimator().update(target);
 	}
 
 	@Override
