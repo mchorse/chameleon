@@ -2,7 +2,6 @@ package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.Animator;
-import mchorse.chameleon.geckolib.ChameleonAnimator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.ChameleonRenderer;
 import mchorse.mclib.client.render.RenderLightmap;

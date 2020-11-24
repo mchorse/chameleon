@@ -7,6 +7,8 @@ import mchorse.chameleon.Chameleon;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
 import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.file.AnimationFile;
@@ -29,6 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+@SideOnly(Side.CLIENT)
 public class ChameleonLoader
 {
 	public AnimationFile loadAllAnimations(MolangParser parser, File file)

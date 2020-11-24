@@ -1,10 +1,10 @@
 package mchorse.chameleon.metamorph.editor;
 
 import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.geckolib.ChameleonRenderer;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.mclib.client.Draw;
 import mchorse.mclib.client.gui.framework.elements.utils.GuiContext;
-import mchorse.mclib.utils.MatrixUtils;
 import mchorse.metamorph.client.gui.creative.GuiMorphRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -20,7 +20,6 @@ import software.bernie.geckolib3.geo.render.built.GeoQuad;
 import software.bernie.geckolib3.geo.render.built.GeoVertex;
 import software.bernie.geckolib3.util.MatrixStack;
 
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
 import java.util.List;
 
@@ -103,17 +102,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 				Tessellator.getInstance().draw();
 
 				GlStateManager.pushMatrix();
-				Matrix4f matrix4f = new Matrix4f(MATRIX_STACK.getModelMatrix());
-
-				matrix4f.transpose();
-				MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
-
-				MatrixUtils.buffer.clear();
-				MatrixUtils.buffer.put(MatrixUtils.floats);
-				MatrixUtils.buffer.flip();
-
-				GlStateManager.multMatrix(MatrixUtils.buffer);
-				GlStateManager.translate(bone.rotationPointX / 16.0F, bone.rotationPointY / 16.0F, bone.rotationPointZ / 16.0F);
+				ChameleonRenderer.multiplyMatrix(MATRIX_STACK, bone);
 
 				Draw.axis(0.25F * 1.5F);
 

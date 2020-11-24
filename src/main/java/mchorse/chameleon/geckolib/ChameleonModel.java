@@ -1,5 +1,7 @@
 package mchorse.chameleon.geckolib;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
@@ -7,6 +9,7 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 import java.util.ArrayList;
 import java.util.List;
 
+@SideOnly(Side.CLIENT)
 public class ChameleonModel
 {
 	public GeoModel model;

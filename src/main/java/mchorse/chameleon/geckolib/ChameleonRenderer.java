@@ -132,17 +132,7 @@ public class ChameleonRenderer
 		{
 			if (bone.name.equals(boneName))
 			{
-				Matrix4f matrix4f = new Matrix4f(MATRIX_STACK.getModelMatrix());
-
-				matrix4f.transpose();
-				MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
-
-				MatrixUtils.buffer.clear();
-				MatrixUtils.buffer.put(MatrixUtils.floats);
-				MatrixUtils.buffer.flip();
-
-				GlStateManager.multMatrix(MatrixUtils.buffer);
-				GlStateManager.translate(bone.rotationPointX / 16.0F, bone.rotationPointY / 16.0F, bone.rotationPointZ / 16.0F);
+				multiplyMatrix(MATRIX_STACK, bone);
 
 				MATRIX_STACK.pop();
 
@@ -163,5 +153,23 @@ public class ChameleonRenderer
 		MATRIX_STACK.pop();
 
 		return false;
+	}
+
+	/**
+	 * Multiply given matrix stack onto OpenGL's matrix stack
+	 */
+	public static void multiplyMatrix(MatrixStack stack, GeoBone bone)
+	{
+		Matrix4f matrix4f = new Matrix4f(stack.getModelMatrix());
+
+		matrix4f.transpose();
+		MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
+
+		MatrixUtils.buffer.clear();
+		MatrixUtils.buffer.put(MatrixUtils.floats);
+		MatrixUtils.buffer.flip();
+
+		GlStateManager.multMatrix(MatrixUtils.buffer);
+		GlStateManager.translate(bone.rotationPointX / 16.0F, bone.rotationPointY / 16.0F, bone.rotationPointZ / 16.0F);
 	}
 }
