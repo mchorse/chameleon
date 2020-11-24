@@ -46,6 +46,7 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 
 	private void renderCube(BufferBuilder builder, MatrixStack stack, GeoCube cube)
 	{
+		stack.push();
 		stack.moveToPivot(cube);
 		stack.rotate(cube);
 		stack.moveBackFromPivot(cube);
@@ -86,5 +87,7 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(vertex.textureU, vertex.textureV).color(this.r, this.g, this.b, this.a).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
 			}
 		}
+
+		stack.pop();
 	}
 }

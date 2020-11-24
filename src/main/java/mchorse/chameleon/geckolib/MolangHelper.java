@@ -89,6 +89,10 @@ public class MolangHelper
 				out *= -1;
 			}
 		}
+		else if (component == Component.SCALE)
+		{
+			out = out - 1;
+		}
 
 		return out;
 	}

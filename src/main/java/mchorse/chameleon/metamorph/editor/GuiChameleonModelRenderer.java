@@ -52,12 +52,15 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 			return;
 		}
 
+		GlStateManager.enableBlend();
 		GlStateManager.disableLighting();
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableDepth();
 		GlStateManager.pushMatrix();
 		GlStateManager.color(0, 0.5F, 1, 0.33F);
 		GlStateManager.rotate(180, 0, 1, 0);
+
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		HIGHLIGHT_RENDERER.setBoneName(this.boneName);
 
@@ -67,6 +70,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableDepth();
 		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
 	}
 
 	@Override

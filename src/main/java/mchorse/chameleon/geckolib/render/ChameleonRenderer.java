@@ -31,6 +31,9 @@ public class ChameleonRenderer
 
 		GlStateManager.disableCull();
 		GlStateManager.enableRescaleNormal();
+		GlStateManager.enableBlend();
+
+		GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
 		BufferBuilder builder = Tessellator.getInstance().getBuffer();
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
@@ -39,6 +42,7 @@ public class ChameleonRenderer
 
 		Tessellator.getInstance().draw();
 
+		GlStateManager.disableBlend();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.enableCull();
 	}
