@@ -9,6 +9,7 @@ import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.molang.MolangRegistrar;
@@ -16,8 +17,10 @@ import software.bernie.shadowed.eliotlash.mclib.math.Variable;
 import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @SideOnly(Side.CLIENT)
@@ -91,7 +94,7 @@ public class ClientProxy extends CommonProxy
 	private void reloadModelFolder(File modelFolder)
 	{
 		File model = null;
-		File animation = null;
+		List<File> animations = new ArrayList<File>();
 		File[] files = modelFolder.listFiles();
 		long lastUpdated = 0;
 
@@ -107,25 +110,71 @@ public class ClientProxy extends CommonProxy
 				model = file;
 				lastUpdated = Math.max(file.lastModified(), lastUpdated);
 			}
-			else if (animation == null && file.getName().endsWith(".animation.json"))
+			else if (animations.isEmpty() && file.getName().endsWith(".animation.json"))
 			{
-				animation = file;
+				animations.add(file);
 				lastUpdated = Math.max(file.lastModified(), lastUpdated);
 			}
 		}
 
+		/* Scan for animation files also in animations folder */
+		File animationsFolder = new File(modelFolder, "animations");
+
+		if (animationsFolder.isDirectory())
+		{
+			File[] animationsInFolder = animationsFolder.listFiles();
+
+			if (animationsInFolder != null)
+			{
+				for (File animationFile : animationsInFolder)
+				{
+					if (animationFile.getName().endsWith(".animation.json"))
+					{
+						animations.add(animationFile);
+						lastUpdated = Math.max(animationFile.lastModified(), lastUpdated);
+					}
+				}
+			}
+		}
+
+		/* Load model and animation */
 		ChameleonModel oldModel = chameleonModels.get(modelFolder.getName());
 
-		if (model != null && animation != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
+		if (model != null && !animations.isEmpty() && (oldModel == null || oldModel.lastUpdate < lastUpdated))
 		{
-			AnimationFile animationFile = this.loader.loadAllAnimations(parser, animation);
 			GeoModel geoModel = this.loader.loadModel(model);
+			AnimationFile animationFile = this.loadAnimations(animations);
 
 			if (animationFile != null && geoModel != null)
 			{
 				chameleonModels.put(modelFolder.getName(), new ChameleonModel(geoModel, animationFile, lastUpdated));
 			}
 		}
+	}
+
+	private AnimationFile loadAnimations(List<File> files)
+	{
+		AnimationFile animations = null;
+
+		for (File animationFile : files)
+		{
+			AnimationFile file = this.loader.loadAllAnimations(parser, animationFile);
+
+			if (file != null)
+			{
+				if (animations == null)
+				{
+					animations = new AnimationFile();
+				}
+
+				for (Animation animation : file.getAllAnimations())
+				{
+					animations.putAnimation(animation.animationName, animation);
+				}
+			}
+		}
+
+		return animations;
 	}
 
 	@Override
