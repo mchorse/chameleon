@@ -14,6 +14,7 @@ import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -71,6 +72,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 	@SideOnly(Side.CLIENT)
 	public void renderOnScreen(EntityPlayer target, int x, int y, float scale, float alpha)
 	{
+		GlStateManager.enableDepth();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.scale(scale, scale, scale);
@@ -78,9 +80,14 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		GlStateManager.rotate(135.0F, 0.0F, -1.0F, 0.0F);
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
 
+		RenderHelper.enableStandardItemLighting();
+
 		this.renderModel(target, 0F);
 
+		RenderHelper.disableStandardItemLighting();
+
 		GlStateManager.popMatrix();
+		GlStateManager.disableDepth();
 	}
 
 	@Override
