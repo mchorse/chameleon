@@ -6,11 +6,16 @@ import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
 import mchorse.chameleon.metamorph.pose.AnimatorPoseTransform;
+import mchorse.chameleon.metamorph.pose.PoseAnimation;
 import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
+import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
+import mchorse.metamorph.api.morphs.utils.Animation;
+import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
 import mchorse.metamorph.bodypart.IBodyPartProvider;
@@ -31,11 +36,13 @@ import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import java.util.Objects;
 
-public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
+public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph, IAnimationProvider
 {
 	public ResourceLocation skin;
 	public AnimatedPose pose;
 	public BodyPartManager parts = new BodyPartManager();
+
+	public PoseAnimation animation = new PoseAnimation();
 
 	/**
 	 * Cached key value
@@ -56,6 +63,44 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		}
 
 		return this.animator;
+	}
+
+	@Override
+	public void pause(AbstractMorph previous, int offset)
+	{
+		this.animation.pause(offset);
+
+		if (previous instanceof IMorphProvider)
+		{
+			previous = ((IMorphProvider) previous).getMorph();
+		}
+
+		AnimatedPose pose = null;
+
+		if (previous instanceof ChameleonMorph)
+		{
+			pose = ((ChameleonMorph) previous).pose;
+
+			if (pose != null)
+			{
+				pose = pose.clone();
+			}
+		}
+
+		this.animation.last = pose == null ? (previous == null ? this.pose : new AnimatedPose()) : pose;
+		this.parts.pause(previous, offset);
+	}
+
+	@Override
+	public boolean isPaused()
+	{
+		return this.animation.paused;
+	}
+
+	@Override
+	public Animation getAnimation()
+	{
+		return this.animation;
 	}
 
 	@Override
@@ -130,8 +175,9 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		}
 
 		GeoModel model = chameleonModel.model;
+		boolean applied = this.getAnimator().applyActions(target, model, partialTicks);
 
-		this.applyPose(model, this.getAnimator().applyActions(target, model, partialTicks));
+		this.applyPose(model, applied, partialTicks);
 
 		/* Render the model */
 		if (this.skin != null)
@@ -166,14 +212,24 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		}
 	}
 
-	private void applyPose(GeoModel model, boolean applied)
+	@SideOnly(Side.CLIENT)
+	private void applyPose(GeoModel model, boolean applied, float partialTicks)
 	{
+		AnimatedPose pose = this.pose;
+		boolean inProgress = this.animation.isInProgress();
+
+		if (inProgress)
+		{
+			pose = this.animation.calculatePose(this.pose, this.getModel(), partialTicks);
+		}
+
 		for (GeoBone bone : model.topLevelBones)
 		{
-			this.applyPose(bone, this.pose, applied);
+			this.applyPose(bone, pose, applied);
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void applyPose(GeoBone bone, AnimatedPose pose, boolean applied)
 	{
 		if (pose != null && pose.bones.containsKey(bone.name))
@@ -226,6 +282,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 	@Override
 	public void update(EntityLivingBase target)
 	{
+		this.animation.update();
+
 		super.update(target);
 
 		if (target.world.isRemote)
@@ -258,6 +316,29 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 	}
 
 	@Override
+	public boolean canMerge(AbstractMorph morph)
+	{
+		if (morph instanceof ChameleonMorph)
+		{
+			ChameleonMorph animated = (ChameleonMorph) morph;
+
+			if (Objects.equals(this.getKey(), animated.getKey()))
+			{
+				this.animation.paused = false;
+
+				this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
+				this.pose = animated.pose == null ? null : animated.pose.clone();
+				this.parts.merge(animated.parts);
+				this.animation.merge(animated.animation);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
 	public AbstractMorph create()
 	{
 		return new ChameleonMorph();
@@ -280,6 +361,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 			}
 
 			this.parts.copy(morph.parts);
+			this.animation.copy(morph.animation);
 		}
 	}
 
@@ -326,6 +408,13 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		{
 			tag.setTag("BodyParts", bodyParts);
 		}
+
+		NBTTagCompound animation = this.animation.toNBT();
+
+		if (!animation.hasNoTags())
+		{
+			tag.setTag("Transition", animation);
+		}
 	}
 
 	@Override
@@ -347,6 +436,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		if (tag.hasKey("BodyParts", 9))
 		{
 			this.parts.fromNBT(tag.getTagList("BodyParts", 10));
+		}
+
+		if (tag.hasKey("Transition"))
+		{
+			this.animation.fromNBT(tag.getCompoundTag("Transition"));
 		}
 	}
 }
