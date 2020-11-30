@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
+public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements IBonePicker
 {
 	public GuiCustomBodyPartEditor(Minecraft mc, GuiAbstractMorph editor)
 	{
@@ -37,7 +37,8 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor
 		parent.chameleonModelRenderer.boneName = limbName;
 	}
 
-	public void setLimb(String limb)
+	@Override
+	public void pickBone(String limb)
 	{
 		try
 		{

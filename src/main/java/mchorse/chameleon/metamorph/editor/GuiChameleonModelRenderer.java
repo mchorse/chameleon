@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 import software.bernie.geckolib3.util.MatrixStack;
 
 import java.util.List;
@@ -88,6 +89,9 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 			return;
 		}
 
+		GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+
+		GlStateManager.enableDepth();
 		GlStateManager.disableCull();
 		GlStateManager.disableTexture2D();
 		GlStateManager.pushMatrix();

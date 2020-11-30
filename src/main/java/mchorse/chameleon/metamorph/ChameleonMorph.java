@@ -4,6 +4,8 @@ import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.render.ChameleonRenderer;
+import mchorse.chameleon.metamorph.pose.AnimatedPose;
+import mchorse.chameleon.metamorph.pose.AnimatorPoseTransform;
 import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
 import mchorse.mclib.utils.MatrixUtils;
@@ -20,8 +22,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import software.bernie.geckolib3.core.snapshot.BoneSnapshot;
+import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import java.util.Objects;
@@ -29,6 +34,7 @@ import java.util.Objects;
 public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 {
 	public ResourceLocation skin;
+	public AnimatedPose pose;
 	public BodyPartManager parts = new BodyPartManager();
 
 	/**
@@ -125,7 +131,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 
 		GeoModel model = chameleonModel.model;
 
-		this.getAnimator().applyActions(target, model, partialTicks);
+		this.applyPose(model, this.getAnimator().applyActions(target, model, partialTicks));
 
 		/* Render the model */
 		if (this.skin != null)
@@ -157,6 +163,57 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 			}
 
 			GlStateManager.popMatrix();
+		}
+	}
+
+	private void applyPose(GeoModel model, boolean applied)
+	{
+		for (GeoBone bone : model.topLevelBones)
+		{
+			this.applyPose(bone, this.pose, applied);
+		}
+	}
+
+	private void applyPose(GeoBone bone, AnimatedPose pose, boolean applied)
+	{
+		if (pose != null && pose.bones.containsKey(bone.name))
+		{
+			AnimatorPoseTransform transform = pose.bones.get(bone.name);
+			BoneSnapshot snapshot = bone.getInitialSnapshot();
+			float factor = !pose.animated || !applied ? 0 : transform.fixed;
+
+			bone.setPositionX(Interpolations.lerp(snapshot.positionOffsetX, bone.getPositionX(), factor) + transform.x);
+			bone.setPositionY(Interpolations.lerp(snapshot.positionOffsetY, bone.getPositionY(), factor) + transform.y);
+			bone.setPositionZ(Interpolations.lerp(snapshot.positionOffsetZ, bone.getPositionZ(), factor) + transform.z);
+
+			bone.setRotationX(Interpolations.lerp(snapshot.rotationValueX, bone.getRotationX(), factor) + transform.rotateX);
+			bone.setRotationY(Interpolations.lerp(snapshot.rotationValueY, bone.getRotationY(), factor) + transform.rotateY);
+			bone.setRotationZ(Interpolations.lerp(snapshot.rotationValueZ, bone.getRotationZ(), factor) + transform.rotateZ);
+
+			bone.setScaleX(Interpolations.lerp(snapshot.scaleValueX, bone.getScaleX(), factor) + (transform.scaleX - 1));
+			bone.setScaleY(Interpolations.lerp(snapshot.scaleValueY, bone.getScaleY(), factor) + (transform.scaleY - 1));
+			bone.setScaleZ(Interpolations.lerp(snapshot.scaleValueZ, bone.getScaleZ(), factor) + (transform.scaleZ - 1));
+		}
+		else if (!applied)
+		{
+			BoneSnapshot snapshot = bone.getInitialSnapshot();
+
+			bone.setPositionX(snapshot.positionOffsetX);
+			bone.setPositionY(snapshot.positionOffsetY);
+			bone.setPositionZ(snapshot.positionOffsetZ);
+
+			bone.setRotationX(snapshot.rotationValueX);
+			bone.setRotationY(snapshot.rotationValueY);
+			bone.setRotationZ(snapshot.rotationValueZ);
+
+			bone.setScaleX(snapshot.scaleValueX);
+			bone.setScaleY(snapshot.scaleValueY);
+			bone.setScaleZ(snapshot.scaleValueZ);
+		}
+
+		for (GeoBone childBone : bone.childBones)
+		{
+			this.applyPose(childBone, pose, applied);
 		}
 	}
 
@@ -193,6 +250,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 			ChameleonMorph morph = (ChameleonMorph) obj;
 
 			result = result && Objects.equals(morph.skin, this.skin);
+			result = result && Objects.equals(morph.pose, this.pose);
 			result = result && Objects.equals(morph.parts, this.parts);
 		}
 
@@ -215,6 +273,12 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 			ChameleonMorph morph = (ChameleonMorph) from;
 
 			this.skin = RLUtils.clone(morph.skin);
+
+			if (morph.pose != null)
+			{
+				this.pose = morph.pose.clone();
+			}
+
 			this.parts.copy(morph.parts);
 		}
 	}
@@ -251,6 +315,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 			tag.setTag("Skin", RLUtils.writeNbt(this.skin));
 		}
 
+		if (this.pose != null)
+		{
+			tag.setTag("Pose", this.pose.toNBT());
+		}
+
 		NBTTagList bodyParts = this.parts.toNBT();
 
 		if (bodyParts != null)
@@ -267,6 +336,12 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider
 		if (tag.hasKey("Skin"))
 		{
 			this.skin = RLUtils.create(tag.getTag("Skin"));
+		}
+
+		if (tag.hasKey("Pose", Constants.NBT.TAG_COMPOUND))
+		{
+			this.pose = new AnimatedPose();
+			this.pose.fromNBT(tag.getCompoundTag("Pose"));
 		}
 
 		if (tag.hasKey("BodyParts", 9))

@@ -4,15 +4,12 @@ import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
-import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
-import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.files.entries.AbstractEntry;
 import mchorse.mclib.utils.files.entries.FileEntry;
 import mchorse.mclib.utils.files.entries.FolderEntry;
-import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiAbstractMorph;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
@@ -25,7 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 @SideOnly(Side.CLIENT)
 public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
@@ -57,9 +53,9 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 
 	private void pickLimb(String limb)
 	{
-		if (this.view.delegate == this.bodyPart)
+		if (this.view.delegate instanceof IBonePicker)
 		{
-			this.bodyPart.setLimb(limb);
+			((IBonePicker) this.view.delegate).pickBone(limb);
 		}
 	}
 
@@ -86,8 +82,14 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 		{
 			this.bodyPart.setLimbs(model.getBoneNames());
 		}
+	}
 
+	@Override
+	public void setPanel(GuiMorphPanel panel)
+	{
 		this.chameleonModelRenderer.boneName = "";
+
+		super.setPanel(panel);
 	}
 
 	@Override
@@ -148,48 +150,4 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 		{}
 	}
 
-	/**
-	 * Custom model morph panel which allows editing custom textures
-	 * for materials of the custom model morph
-	 */
-	public static class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonMorph>
-	{
-		/* Materials */
-		public GuiButtonElement skin;
-		public GuiTexturePicker picker;
-
-		public GuiChameleonMainPanel(Minecraft mc, GuiChameleonMorph editor)
-		{
-			super(mc, editor);
-
-			Consumer<ResourceLocation> skin = (rl) ->
-			{
-				this.morph.skin = RLUtils.clone(rl);
-			};
-
-			/* Materials view */
-			this.skin = new GuiButtonElement(mc, IKey.lang("chameleon.gui.editor.pick_skin"), (b) ->
-			{
-				this.picker.refresh();
-				this.picker.fill(this.morph.skin);
-				this.picker.callback = skin;
-				this.add(this.picker);
-				this.picker.resize();
-			});
-			this.picker = new GuiTexturePicker(mc, skin);
-
-			this.skin.flex().relative(this).set(10, 10, 110, 20);
-			this.picker.flex().relative(this).wh(1F, 1F);
-
-			this.add(this.skin);
-		}
-
-		@Override
-		public void fillData(ChameleonMorph morph)
-		{
-			super.fillData(morph);
-
-			this.picker.removeFromParent();
-		}
-	}
 }

@@ -382,16 +382,20 @@ public class Animator
     /**
      * Apply currently running action pipeline onto given armature
      */
-    public void applyActions(EntityLivingBase target, GeoModel armature, float partialTicks)
+    public boolean applyActions(EntityLivingBase target, GeoModel armature, float partialTicks)
     {
+        boolean applied = false;
+
         if (this.active != null)
         {
             this.active.apply(target, armature, partialTicks, 1F, false);
+            applied = true;
         }
 
         if (this.lastActive != null && this.lastActive.isFading())
         {
             this.lastActive.apply(target, armature, partialTicks, this.lastActive.getFadeFactor(partialTicks), true);
+            applied = true;
         }
 
         for (ActionPlayback action : this.actions)
@@ -404,6 +408,10 @@ public class Animator
             {
                 action.apply(target, armature, partialTicks, 1F, true);
             }
+
+            applied = true;
         }
+
+        return applied;
     }
 }
