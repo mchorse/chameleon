@@ -5,9 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
 
 /**
- * Configuration class for hand held item transformations 
+ * Configuration class for general transformation
  */
-public class AnimatorHeldItemConfig
+public class AnimatedTransform
 {
     public String boneName;
 
@@ -26,12 +26,12 @@ public class AnimatorHeldItemConfig
     public float rotateY;
     public float rotateZ;
 
-    public AnimatorHeldItemConfig(String name)
+    public AnimatedTransform(String name)
     {
         this.boneName = name;
     }
 
-    public void interpolate(AnimatorHeldItemConfig a, AnimatorHeldItemConfig b, float x, Interpolation interp)
+    public void interpolate(AnimatedTransform a, AnimatedTransform b, float x, Interpolation interp)
     {
         this.x = interp.interpolate(a.x, b.x, x);
         this.y = interp.interpolate(a.y, b.y, x);
@@ -48,9 +48,9 @@ public class AnimatorHeldItemConfig
      * Clone this object 
      */
     @Override
-    public AnimatorHeldItemConfig clone()
+    public AnimatedTransform clone()
     {
-        AnimatorHeldItemConfig item = new AnimatorHeldItemConfig(this.boneName);
+        AnimatedTransform item = new AnimatedTransform(this.boneName);
 
         item.x = this.x;
         item.y = this.y;
@@ -68,9 +68,9 @@ public class AnimatorHeldItemConfig
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof AnimatorHeldItemConfig)
+        if (obj instanceof AnimatedTransform)
         {
-            AnimatorHeldItemConfig config = (AnimatorHeldItemConfig) obj;
+            AnimatedTransform config = (AnimatedTransform) obj;
 
             boolean result = config.x == this.x && config.y == this.y && config.z == this.z;
 

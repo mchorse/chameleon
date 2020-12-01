@@ -75,7 +75,7 @@ public class Animator
 
     public void refresh()
     {
-        AnimatorActionsConfig actions = this.morph.actions;
+        ActionsConfig actions = this.morph.actions;
 
         this.idle = this.createAction(this.idle, actions.getConfig("idle"), true);
         this.walking = this.createAction(this.walking, actions.getConfig("walking"), true);

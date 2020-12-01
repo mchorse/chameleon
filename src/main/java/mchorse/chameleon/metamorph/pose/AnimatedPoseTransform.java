@@ -2,21 +2,21 @@ package mchorse.chameleon.metamorph.pose;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class AnimatorPoseTransform extends AnimatorHeldItemConfig
+public class AnimatedPoseTransform extends AnimatedTransform
 {
 	public static final int FIXED = 0;
 	public static final int ANIMATED = 1;
 
 	public float fixed = ANIMATED;
 
-	public AnimatorPoseTransform(String name)
+	public AnimatedPoseTransform(String name)
 	{
 		super(name);
 	}
 
-	public AnimatorPoseTransform clone()
+	public AnimatedPoseTransform clone()
 	{
-		AnimatorPoseTransform item = new AnimatorPoseTransform(this.boneName);
+		AnimatedPoseTransform item = new AnimatedPoseTransform(this.boneName);
 
 		item.x = this.x;
 		item.y = this.y;
@@ -37,9 +37,9 @@ public class AnimatorPoseTransform extends AnimatorHeldItemConfig
 	{
 		boolean result = super.equals(obj);
 
-		if (obj instanceof AnimatorPoseTransform)
+		if (obj instanceof AnimatedPoseTransform)
 		{
-			result = result && this.fixed == ((AnimatorPoseTransform) obj).fixed;
+			result = result && this.fixed == ((AnimatedPoseTransform) obj).fixed;
 		}
 
 		return result;

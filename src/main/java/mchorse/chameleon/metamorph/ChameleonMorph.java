@@ -2,15 +2,14 @@ package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.Animator;
-import mchorse.chameleon.animation.AnimatorActionsConfig;
+import mchorse.chameleon.animation.ActionsConfig;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
-import mchorse.chameleon.metamorph.pose.AnimatorPoseTransform;
+import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
 import mchorse.chameleon.metamorph.pose.PoseAnimation;
 import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
-import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -42,7 +41,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 {
 	public ResourceLocation skin;
 	public AnimatedPose pose;
-	public AnimatorActionsConfig actions = new AnimatorActionsConfig();
+	public ActionsConfig actions = new ActionsConfig();
 	public BodyPartManager parts = new BodyPartManager();
 
 	public PoseAnimation animation = new PoseAnimation();
@@ -251,7 +250,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	{
 		if (pose != null && pose.bones.containsKey(bone.name))
 		{
-			AnimatorPoseTransform transform = pose.bones.get(bone.name);
+			AnimatedPoseTransform transform = pose.bones.get(bone.name);
 			BoneSnapshot snapshot = bone.getInitialSnapshot();
 			float factor = !applied ? 0 : transform.fixed * pose.animated;
 
@@ -408,7 +407,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		this.key = null;
 		this.skin = null;
 		this.pose = null;
-		this.actions = new AnimatorActionsConfig();
+		this.actions = new ActionsConfig();
 		this.parts.reset();
 
 		this.updateAnimator = true;

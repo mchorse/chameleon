@@ -7,8 +7,8 @@ import java.util.Map;
 
 public class AnimatedPose
 {
-    public final Map<String, AnimatorPoseTransform> bones = new HashMap<String, AnimatorPoseTransform>();
-    public float animated = AnimatorPoseTransform.ANIMATED;
+    public final Map<String, AnimatedPoseTransform> bones = new HashMap<String, AnimatedPoseTransform>();
+    public float animated = AnimatedPoseTransform.ANIMATED;
 
     @Override
     public boolean equals(Object obj)
@@ -28,7 +28,7 @@ public class AnimatedPose
     {
         AnimatedPose pose = new AnimatedPose();
 
-        for (Map.Entry<String, AnimatorPoseTransform> entry : this.bones.entrySet())
+        for (Map.Entry<String, AnimatedPoseTransform> entry : this.bones.entrySet())
         {
             pose.bones.put(entry.getKey(), entry.getValue().clone());
         }
@@ -46,7 +46,7 @@ public class AnimatedPose
 
             for (String key : pose.getKeySet())
             {
-                AnimatorPoseTransform config = new AnimatorPoseTransform(key);
+                AnimatedPoseTransform config = new AnimatedPoseTransform(key);
 
                 config.fromNBT(pose.getCompoundTag(key));
                 this.bones.put(key, config);
@@ -55,7 +55,7 @@ public class AnimatedPose
 
         if (tag.hasKey("Animated"))
         {
-            this.animated = tag.getBoolean("Animated") ? AnimatorPoseTransform.ANIMATED : AnimatorPoseTransform.FIXED;
+            this.animated = tag.getBoolean("Animated") ? AnimatedPoseTransform.ANIMATED : AnimatedPoseTransform.FIXED;
         }
     }
 
@@ -64,14 +64,14 @@ public class AnimatedPose
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound pose = new NBTTagCompound();
 
-        for (Map.Entry<String, AnimatorPoseTransform> entry : this.bones.entrySet())
+        for (Map.Entry<String, AnimatedPoseTransform> entry : this.bones.entrySet())
         {
             pose.setTag(entry.getKey(), entry.getValue().toNBT(null));
         }
 
         tag.setTag("Pose", pose);
 
-        if (this.animated != AnimatorPoseTransform.ANIMATED)
+        if (this.animated != AnimatedPoseTransform.ANIMATED)
         {
             tag.setBoolean("Animated", false);
         }

@@ -15,16 +15,16 @@ import java.util.Objects;
  * which should be used for particular <s>set of skills</s> actions. 
  */
 @SideOnly(Side.CLIENT)
-public class AnimatorActionsConfig
+public class ActionsConfig
 {
     public Map<String, ActionConfig> actions = new HashMap<String, ActionConfig>();
 
     @Override
     public boolean equals(Object obj)
     {
-        if (obj instanceof AnimatorActionsConfig)
+        if (obj instanceof ActionsConfig)
         {
-            AnimatorActionsConfig config = (AnimatorActionsConfig) obj;
+            ActionsConfig config = (ActionsConfig) obj;
 
             return Objects.equals(this.actions, config.actions);
         }
@@ -32,7 +32,7 @@ public class AnimatorActionsConfig
         return super.equals(obj);
     }
 
-    public void copy(AnimatorActionsConfig config)
+    public void copy(ActionsConfig config)
     {
         this.actions.clear();
         this.actions.putAll(config.actions);

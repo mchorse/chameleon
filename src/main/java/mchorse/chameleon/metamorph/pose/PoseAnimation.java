@@ -8,7 +8,7 @@ import mchorse.metamorph.api.morphs.utils.Animation;
  */
 public class PoseAnimation extends Animation
 {
-    public static final AnimatorPoseTransform ZERO = new AnimatorPoseTransform("");
+    public static final AnimatedPoseTransform ZERO = new AnimatedPoseTransform("");
 
     public AnimatedPose last;
     public AnimatedPose pose = new AnimatedPose();
@@ -27,13 +27,13 @@ public class PoseAnimation extends Animation
 
         for (String key : model.getBoneNames())
         {
-            AnimatorPoseTransform trans = this.pose.bones.get(key);
-            AnimatorPoseTransform last = this.last == null ? null : this.last.bones.get(key);
-            AnimatorPoseTransform current = pose == null ? null : pose.bones.get(key);
+            AnimatedPoseTransform trans = this.pose.bones.get(key);
+            AnimatedPoseTransform last = this.last == null ? null : this.last.bones.get(key);
+            AnimatedPoseTransform current = pose == null ? null : pose.bones.get(key);
 
             if (trans == null)
             {
-                trans = new AnimatorPoseTransform(key);
+                trans = new AnimatedPoseTransform(key);
                 this.pose.bones.put(key, trans);
             }
 
@@ -44,8 +44,8 @@ public class PoseAnimation extends Animation
             trans.interpolate(last, current, factor, this.interp);
         }
 
-        float lastAnimated = this.last == null ? AnimatorPoseTransform.ANIMATED : this.last.animated;
-        float poseAnimated = pose == null ? AnimatorPoseTransform.ANIMATED : pose.animated;
+        float lastAnimated = this.last == null ? AnimatedPoseTransform.ANIMATED : this.last.animated;
+        float poseAnimated = pose == null ? AnimatedPoseTransform.ANIMATED : pose.animated;
 
         this.pose.animated = this.interp.interpolate(lastAnimated, poseAnimated, factor);
 

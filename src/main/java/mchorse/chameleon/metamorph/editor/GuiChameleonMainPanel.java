@@ -3,7 +3,7 @@ package mchorse.chameleon.metamorph.editor;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
-import mchorse.chameleon.metamorph.pose.AnimatorPoseTransform;
+import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
@@ -14,10 +14,8 @@ import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Custom model morph panel which allows editing custom textures
@@ -39,7 +37,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 	private IKey createLabel = IKey.lang("chameleon.gui.editor.create_pose");
 	private IKey resetLabel = IKey.lang("chameleon.gui.editor.reset_pose");
 
-	private AnimatorPoseTransform transform;
+	private AnimatedPoseTransform transform;
 
 	public GuiChameleonMainPanel(Minecraft mc, GuiChameleonMorph editor)
 	{
@@ -87,7 +85,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
 			for (String bone : bones)
 			{
-				pose.bones.put(bone, new AnimatorPoseTransform(bone));
+				pose.bones.put(bone, new AnimatedPoseTransform(bone));
 			}
 
 			this.morph.pose = pose;
@@ -111,20 +109,20 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.transform = this.morph.pose.bones.get(bone);
 
 		this.bones.setCurrentScroll(bone);
-		this.animated.toggled(this.morph.pose.animated == AnimatorPoseTransform.ANIMATED);
-		this.fixed.toggled(this.transform.fixed == AnimatorPoseTransform.FIXED);
+		this.animated.toggled(this.morph.pose.animated == AnimatedPoseTransform.ANIMATED);
+		this.fixed.toggled(this.transform.fixed == AnimatedPoseTransform.FIXED);
 		this.transforms.set(this.transform);
 		this.editor.chameleonModelRenderer.boneName = bone;
 	}
 
 	private void toggleFixed(GuiToggleElement toggle)
 	{
-		this.transform.fixed = toggle.isToggled() ? AnimatorPoseTransform.FIXED : AnimatorPoseTransform.ANIMATED;
+		this.transform.fixed = toggle.isToggled() ? AnimatedPoseTransform.FIXED : AnimatedPoseTransform.ANIMATED;
 	}
 
 	private void toggleAnimated(GuiToggleElement toggle)
 	{
-		this.morph.pose.animated = toggle.isToggled() ? AnimatorPoseTransform.ANIMATED : AnimatorPoseTransform.FIXED;
+		this.morph.pose.animated = toggle.isToggled() ? AnimatedPoseTransform.ANIMATED : AnimatedPoseTransform.FIXED;
 	}
 
 	@Override
@@ -165,14 +163,14 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
 	public static class GuiPoseTransformations extends GuiTransformations
 	{
-		public AnimatorPoseTransform trans;
+		public AnimatedPoseTransform trans;
 
 		public GuiPoseTransformations(Minecraft mc)
 		{
 			super(mc);
 		}
 
-		public void set(AnimatorPoseTransform trans)
+		public void set(AnimatedPoseTransform trans)
 		{
 			this.trans = trans;
 
