@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Animated actions config. This little dude right there is 
@@ -17,6 +18,19 @@ import java.util.Map;
 public class AnimatorActionsConfig
 {
     public Map<String, ActionConfig> actions = new HashMap<String, ActionConfig>();
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj instanceof AnimatorActionsConfig)
+        {
+            AnimatorActionsConfig config = (AnimatorActionsConfig) obj;
+
+            return Objects.equals(this.actions, config.actions);
+        }
+
+        return super.equals(obj);
+    }
 
     public void copy(AnimatorActionsConfig config)
     {
@@ -37,6 +51,11 @@ public class AnimatorActionsConfig
             config.fromNBT(base);
             this.actions.put(newKey, config);
         }
+    }
+
+    public NBTTagCompound toNBT()
+    {
+        return this.toNBT(new NBTTagCompound());
     }
 
     public NBTTagCompound toNBT(NBTTagCompound tag)

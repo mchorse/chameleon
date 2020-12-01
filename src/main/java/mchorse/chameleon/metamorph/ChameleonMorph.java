@@ -2,6 +2,7 @@ package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.Animator;
+import mchorse.chameleon.animation.AnimatorActionsConfig;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
@@ -9,6 +10,7 @@ import mchorse.chameleon.metamorph.pose.AnimatorPoseTransform;
 import mchorse.chameleon.metamorph.pose.PoseAnimation;
 import mchorse.mclib.client.render.RenderLightmap;
 import mchorse.mclib.utils.Interpolations;
+import mchorse.mclib.utils.MathUtils;
 import mchorse.mclib.utils.MatrixUtils;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.api.models.IMorphProvider;
@@ -40,6 +42,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 {
 	public ResourceLocation skin;
 	public AnimatedPose pose;
+	public AnimatorActionsConfig actions = new AnimatorActionsConfig();
 	public BodyPartManager parts = new BodyPartManager();
 
 	public PoseAnimation animation = new PoseAnimation();
@@ -52,6 +55,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	@SideOnly(Side.CLIENT)
 	private Animator animator;
 
+	private boolean updateAnimator = false;
+
 	@SideOnly(Side.CLIENT)
 	protected Animator getAnimator()
 	{
@@ -59,7 +64,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		{
 			ChameleonModel model = this.getModel();
 
-			this.animator = new Animator(model == null ? null : model.animation);
+			this.animator = new Animator(this, model == null ? null : model.animation);
 		}
 
 		return this.animator;
@@ -174,6 +179,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			return;
 		}
 
+		this.checkAnimator();
+
 		GeoModel model = chameleonModel.model;
 		boolean applied = this.getAnimator().applyActions(target, model, partialTicks);
 
@@ -213,6 +220,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	}
 
 	@SideOnly(Side.CLIENT)
+	private void checkAnimator()
+	{
+		if (this.updateAnimator)
+		{
+			this.updateAnimator = false;
+			this.getAnimator().refresh();
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
 	private void applyPose(GeoModel model, boolean applied, float partialTicks)
 	{
 		AnimatedPose pose = this.pose;
@@ -236,7 +253,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		{
 			AnimatorPoseTransform transform = pose.bones.get(bone.name);
 			BoneSnapshot snapshot = bone.getInitialSnapshot();
-			float factor = !pose.animated || !applied ? 0 : transform.fixed;
+			float factor = !applied ? 0 : transform.fixed * pose.animated;
 
 			bone.setPositionX(Interpolations.lerp(snapshot.positionOffsetX, bone.getPositionX(), factor) + transform.x);
 			bone.setPositionY(Interpolations.lerp(snapshot.positionOffsetY, bone.getPositionY(), factor) + transform.y);
@@ -295,6 +312,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	@SideOnly(Side.CLIENT)
 	private void updateClient(EntityLivingBase target)
 	{
+		this.checkAnimator();
 		this.getAnimator().update(target);
 	}
 
@@ -310,6 +328,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			result = result && Objects.equals(morph.skin, this.skin);
 			result = result && Objects.equals(morph.pose, this.pose);
 			result = result && Objects.equals(morph.parts, this.parts);
+			result = result && Objects.equals(morph.actions, this.actions);
 		}
 
 		return result;
@@ -328,8 +347,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 				this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
 				this.pose = animated.pose == null ? null : animated.pose.clone();
+				this.actions.copy(animated.actions);
 				this.parts.merge(animated.parts);
 				this.animation.merge(animated.animation);
+
+				this.updateAnimator = true;
 
 				return true;
 			}
@@ -360,6 +382,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 				this.pose = morph.pose.clone();
 			}
 
+			this.actions.copy(morph.actions);
 			this.parts.copy(morph.parts);
 			this.animation.copy(morph.animation);
 		}
@@ -384,7 +407,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 		this.key = null;
 		this.skin = null;
+		this.pose = null;
+		this.actions = new AnimatorActionsConfig();
 		this.parts.reset();
+
+		this.updateAnimator = true;
 	}
 
 	@Override
@@ -415,6 +442,13 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		{
 			tag.setTag("Transition", animation);
 		}
+
+		NBTTagCompound actions = this.actions.toNBT();
+
+		if (actions != null)
+		{
+			tag.setTag("Actions", actions);
+		}
 	}
 
 	@Override
@@ -441,6 +475,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		if (tag.hasKey("Transition"))
 		{
 			this.animation.fromNBT(tag.getCompoundTag("Transition"));
+		}
+
+		if (tag.hasKey("Actions"))
+		{
+			this.actions.fromNBT(tag.getCompoundTag("Actions"));
 		}
 	}
 }

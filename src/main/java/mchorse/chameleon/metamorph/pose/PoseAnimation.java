@@ -44,6 +44,11 @@ public class PoseAnimation extends Animation
             trans.interpolate(last, current, factor, this.interp);
         }
 
+        float lastAnimated = this.last == null ? AnimatorPoseTransform.ANIMATED : this.last.animated;
+        float poseAnimated = pose == null ? AnimatorPoseTransform.ANIMATED : pose.animated;
+
+        this.pose.animated = this.interp.interpolate(lastAnimated, poseAnimated, factor);
+
         return this.pose;
     }
 }

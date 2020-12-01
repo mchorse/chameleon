@@ -1,5 +1,6 @@
 package mchorse.chameleon.animation;
 
+import mchorse.chameleon.metamorph.ChameleonMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,17 +63,19 @@ public class Animator
     public boolean wasShooting = false;
     public boolean wasConsuming = false;
 
+    private ChameleonMorph morph;
     private AnimationFile animations;
 
-    public Animator(AnimationFile animations)
+    public Animator(ChameleonMorph morph, AnimationFile animations)
     {
+        this.morph = morph;
         this.animations = animations;
         this.refresh();
     }
 
     public void refresh()
     {
-        AnimatorActionsConfig actions = new AnimatorActionsConfig();
+        AnimatorActionsConfig actions = this.morph.actions;
 
         this.idle = this.createAction(this.idle, actions.getConfig("idle"), true);
         this.walking = this.createAction(this.walking, actions.getConfig("walking"), true);

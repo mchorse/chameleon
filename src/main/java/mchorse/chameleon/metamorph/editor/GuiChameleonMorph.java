@@ -26,6 +26,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 {
+	public GuiActionsPanel actionsPanel;
 	public GuiCustomBodyPartEditor bodyPart;
 	public GuiChameleonMainPanel mainPanel;
 	public GuiChameleonModelRenderer chameleonModelRenderer;
@@ -34,10 +35,12 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 	{
 		super(mc);
 
-		this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
 		this.mainPanel = new GuiChameleonMainPanel(mc, this);
+		this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
+		this.actionsPanel = new GuiActionsPanel(mc, this);
 		this.defaultPanel = this.mainPanel;
 
+		this.registerPanel(this.actionsPanel, IKey.lang("chameleon.gui.editor.actions.actions"), Icons.MORE);
 		this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
 		this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.GEAR);
 	}

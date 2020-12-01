@@ -111,7 +111,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.transform = this.morph.pose.bones.get(bone);
 
 		this.bones.setCurrentScroll(bone);
-		this.animated.toggled(this.morph.pose.animated);
+		this.animated.toggled(this.morph.pose.animated == AnimatorPoseTransform.ANIMATED);
 		this.fixed.toggled(this.transform.fixed == AnimatorPoseTransform.FIXED);
 		this.transforms.set(this.transform);
 		this.editor.chameleonModelRenderer.boneName = bone;
@@ -124,7 +124,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
 	private void toggleAnimated(GuiToggleElement toggle)
 	{
-		this.morph.pose.animated = toggle.isToggled();
+		this.morph.pose.animated = toggle.isToggled() ? AnimatorPoseTransform.ANIMATED : AnimatorPoseTransform.FIXED;
 	}
 
 	@Override

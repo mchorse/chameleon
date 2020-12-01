@@ -18,7 +18,7 @@ public class ActionPlayback
     private int duration;
     private float speed = 1;
 
-    private boolean looping = false;
+    private boolean looping;
     private boolean fading = false;
     public boolean playing = true;
     public int priority;

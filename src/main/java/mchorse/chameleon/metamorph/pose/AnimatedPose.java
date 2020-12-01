@@ -8,7 +8,7 @@ import java.util.Map;
 public class AnimatedPose
 {
     public final Map<String, AnimatorPoseTransform> bones = new HashMap<String, AnimatorPoseTransform>();
-    public boolean animated = true;
+    public float animated = AnimatorPoseTransform.ANIMATED;
 
     @Override
     public boolean equals(Object obj)
@@ -55,7 +55,7 @@ public class AnimatedPose
 
         if (tag.hasKey("Animated"))
         {
-            this.animated = tag.getBoolean("Animated");
+            this.animated = tag.getBoolean("Animated") ? AnimatorPoseTransform.ANIMATED : AnimatorPoseTransform.FIXED;
         }
     }
 
@@ -71,9 +71,9 @@ public class AnimatedPose
 
         tag.setTag("Pose", pose);
 
-        if (!this.animated)
+        if (this.animated != AnimatorPoseTransform.ANIMATED)
         {
-            tag.setBoolean("Animated", this.animated);
+            tag.setBoolean("Animated", false);
         }
 
         return tag;

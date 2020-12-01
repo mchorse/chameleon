@@ -9,6 +9,15 @@ chameleon.gui.editor.reset_pose=Reset pose
 chameleon.gui.editor.fixed=Fixate movement
 chameleon.gui.editor.animated=Animated pose
 
+chameleon.gui.editor.actions.actions=Actions
+chameleon.gui.editor.actions.action=Action
+
+chameleon.gui.editor.actions.clamp=Clamp
+chameleon.gui.editor.actions.reset=Reset
+chameleon.gui.editor.actions.speed=Speed
+chameleon.gui.editor.actions.fade=Fade
+chameleon.gui.editor.actions.tick=Tick
+
 # Morph stuff
 morph.section.chameleon=Chameleon (powered by GeckoLib)
 morph.category.chameleon=Animated models

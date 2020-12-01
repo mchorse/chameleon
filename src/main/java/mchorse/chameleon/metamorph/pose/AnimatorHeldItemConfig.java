@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.Constants.NBT;
  */
 public class AnimatorHeldItemConfig
 {
-    public String boneName = "";
+    public String boneName;
 
     /* Translate */
     public float x;
