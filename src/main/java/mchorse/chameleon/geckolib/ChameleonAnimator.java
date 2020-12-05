@@ -22,6 +22,36 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ChameleonAnimator
 {
+	public static void resetPose(GeoModel model)
+	{
+		for (GeoBone bone : model.topLevelBones)
+		{
+			resetBone(bone);
+		}
+	}
+
+	private static void resetBone(GeoBone bone)
+	{
+		BoneSnapshot initial = bone.getInitialSnapshot();
+
+		bone.setPositionX(initial.positionOffsetX);
+		bone.setPositionY(initial.positionOffsetY);
+		bone.setPositionZ(initial.positionOffsetZ);
+
+		bone.setRotationX(initial.rotationValueX);
+		bone.setRotationY(initial.rotationValueY);
+		bone.setRotationZ(initial.rotationValueZ);
+
+		bone.setScaleX(initial.scaleValueX);
+		bone.setScaleY(initial.scaleValueY);
+		bone.setScaleZ(initial.scaleValueZ);
+
+		for (GeoBone childBone : bone.childBones)
+		{
+			resetBone(childBone);
+		}
+	}
+
 	public static void animate(EntityLivingBase target, GeoModel model, Animation animation, float frame, float blend, boolean skipInitial)
 	{
 		MolangHelper.setMolangVariables(ClientProxy.parser, target, frame);
@@ -34,20 +64,21 @@ public class ChameleonAnimator
 
 	private static void animateBone(GeoBone bone, Animation animation, float frame, float blend, boolean skipInitial)
 	{
-		boolean skipped = true;
+		boolean applied = false;
 
 		for (BoneAnimation boneAnimation : animation.boneAnimations)
 		{
 			if (boneAnimation.boneName.equals(bone.name))
 			{
 				applyBoneAnimation(bone, boneAnimation, frame, blend);
-				skipped = false;
+
+				applied = true;
 
 				break;
 			}
 		}
 
-		if (skipped && !skipInitial)
+		if (!applied && !skipInitial)
 		{
 			BoneSnapshot initial = bone.getInitialSnapshot();
 

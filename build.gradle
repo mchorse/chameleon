@@ -35,6 +35,7 @@ minecraft
     runDir = "run"
     mappings = "snapshot_20171003"
 
+    replace("%VERSION%", project.version)
     replace("%MCLIB%", project.mclib)
     replace("%METAMORPH%", project.metamorph)
     replace("%GECKOLIB%", project.geckolib)

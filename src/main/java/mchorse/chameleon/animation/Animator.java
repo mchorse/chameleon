@@ -27,7 +27,6 @@ public class Animator
 {
     /* Actions */
     public ActionPlayback idle;
-    public ActionPlayback walking;
     public ActionPlayback running;
     public ActionPlayback sprinting;
     public ActionPlayback crouching;
@@ -78,7 +77,6 @@ public class Animator
         ActionsConfig actions = this.morph.actions;
 
         this.idle = this.createAction(this.idle, actions.getConfig("idle"), true);
-        this.walking = this.createAction(this.walking, actions.getConfig("walking"), true);
         this.running = this.createAction(this.running, actions.getConfig("running"), true);
         this.sprinting = this.createAction(this.sprinting, actions.getConfig("sprinting"), true);
         this.crouching = this.createAction(this.crouching, actions.getConfig("crouching"), true);
@@ -226,14 +224,18 @@ public class Animator
         }
         else
         {
-            double speed = Math.round(Math.sqrt(dx * dx + dz * dz) * 1000) / 1000.0;
+            double speed = target.limbSwingAmount;
 
             if (target.isSneaking())
             {
-                speed /= 0.065;
+                speed /= 0.65;
 
                 this.setActiveAction(!moves ? this.crouchingIdle : this.crouching);
-                if (this.crouching != null) this.crouching.setSpeed(target.moveForward > 0 ? speed : -speed);
+
+                if (this.crouching != null)
+                {
+                    this.crouching.setSpeed(target.moveForward > 0 ? speed : -speed);
+                }
             }
             else if (!target.onGround && target.motionY < 0 && target.fallDistance > 1.25)
             {
@@ -243,16 +245,18 @@ public class Animator
             {
                 this.setActiveAction(this.sprinting);
 
-                this.sprinting.setSpeed(speed / 0.281);
+                this.sprinting.setSpeed(speed);
             }
             else
             {
                 this.setActiveAction(!moves ? this.idle : this.running);
 
-                speed /= 0.216;
+                speed /= 0.85;
 
-                if (this.running != null) this.running.setSpeed(target.moveForward >= 0 ? speed : -speed);
-                if (this.walking != null) this.walking.setSpeed(target.moveForward > 0 ? speed : -speed);
+                if (this.running != null)
+                {
+                    this.running.setSpeed(target.moveForward >= 0 ? speed : -speed);
+                }
             }
 
             if (target.onGround && !this.wasOnGround && !target.isSprinting() && this.prevMY < -0.5)
@@ -353,9 +357,7 @@ public class Animator
 
         if (this.active != null)
         {
-            System.out.println("Changed");
             this.lastActive = this.active;
-            this.lastActive.fadeOut();
         }
 
         this.active = action;
@@ -388,22 +390,18 @@ public class Animator
     /**
      * Apply currently running action pipeline onto given armature
      */
-    public boolean applyActions(EntityLivingBase target, GeoModel armature, float partialTicks)
+    public void applyActions(EntityLivingBase target, GeoModel armature, float partialTicks)
     {
-        boolean applied = false;
+        if (this.lastActive != null && this.active.isFading())
+        {
+            this.lastActive.apply(target, armature, partialTicks, 1F, false);
+        }
 
         if (this.active != null)
         {
             float fade = this.active.isFading() ? this.active.getFadeFactor(partialTicks) : 1F;
 
             this.active.apply(target, armature, partialTicks, fade, false);
-            applied = true;
-        }
-
-        if (this.lastActive != null && this.lastActive.isFading())
-        {
-            this.lastActive.apply(target, armature, partialTicks, this.lastActive.getFadeFactor(partialTicks), true);
-            applied = true;
         }
 
         for (ActionPlayback action : this.actions)
@@ -416,10 +414,6 @@ public class Animator
             {
                 action.apply(target, armature, partialTicks, 1F, true);
             }
-
-            applied = true;
         }
-
-        return applied;
     }
 }

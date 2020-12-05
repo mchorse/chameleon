@@ -1,8 +1,9 @@
 package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
-import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.animation.ActionsConfig;
+import mchorse.chameleon.animation.Animator;
+import mchorse.chameleon.geckolib.ChameleonAnimator;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.geckolib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
@@ -181,9 +182,15 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		this.checkAnimator();
 
 		GeoModel model = chameleonModel.model;
-		boolean applied = !chameleonModel.isStatic() && this.getAnimator().applyActions(target, model, partialTicks);
 
-		this.applyPose(model, applied, partialTicks);
+		ChameleonAnimator.resetPose(model);
+
+		if (!chameleonModel.isStatic())
+		{
+			this.getAnimator().applyActions(target, model, partialTicks);
+		}
+
+		this.applyPose(model, partialTicks);
 
 		/* Render the model */
 		if (this.skin != null)
@@ -229,7 +236,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void applyPose(GeoModel model, boolean applied, float partialTicks)
+	private void applyPose(GeoModel model, float partialTicks)
 	{
 		AnimatedPose pose = this.pose;
 		boolean inProgress = this.animation.isInProgress();
@@ -241,18 +248,18 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 		for (GeoBone bone : model.topLevelBones)
 		{
-			this.applyPose(bone, pose, applied);
+			this.applyPose(bone, pose);
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	private void applyPose(GeoBone bone, AnimatedPose pose, boolean applied)
+	private void applyPose(GeoBone bone, AnimatedPose pose)
 	{
 		if (pose != null && pose.bones.containsKey(bone.name))
 		{
 			AnimatedPoseTransform transform = pose.bones.get(bone.name);
 			BoneSnapshot snapshot = bone.getInitialSnapshot();
-			float factor = !applied ? 0 : transform.fixed * pose.animated;
+			float factor = transform.fixed * pose.animated;
 
 			bone.setPositionX(Interpolations.lerp(snapshot.positionOffsetX, bone.getPositionX(), factor) + transform.x);
 			bone.setPositionY(Interpolations.lerp(snapshot.positionOffsetY, bone.getPositionY(), factor) + transform.y);
@@ -266,26 +273,10 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			bone.setScaleY(Interpolations.lerp(snapshot.scaleValueY, bone.getScaleY(), factor) + (transform.scaleY - 1));
 			bone.setScaleZ(Interpolations.lerp(snapshot.scaleValueZ, bone.getScaleZ(), factor) + (transform.scaleZ - 1));
 		}
-		else if (!applied)
-		{
-			BoneSnapshot snapshot = bone.getInitialSnapshot();
-
-			bone.setPositionX(snapshot.positionOffsetX);
-			bone.setPositionY(snapshot.positionOffsetY);
-			bone.setPositionZ(snapshot.positionOffsetZ);
-
-			bone.setRotationX(snapshot.rotationValueX);
-			bone.setRotationY(snapshot.rotationValueY);
-			bone.setRotationZ(snapshot.rotationValueZ);
-
-			bone.setScaleX(snapshot.scaleValueX);
-			bone.setScaleY(snapshot.scaleValueY);
-			bone.setScaleZ(snapshot.scaleValueZ);
-		}
 
 		for (GeoBone childBone : bone.childBones)
 		{
-			this.applyPose(childBone, pose, applied);
+			this.applyPose(childBone, pose);
 		}
 	}
 
