@@ -1,5 +1,11 @@
 #PARSE_ESCAPES
 
+# Config
+chameleon.config.title=Chameleon
+
+chameleon.config.general.title=General
+chameleon.config.general.tooltip=General options
+
 # GUI
 chameleon.gui.editor.pick_skin=Pick skin
 chameleon.gui.editor.main=Main panel
@@ -17,6 +23,11 @@ chameleon.gui.editor.actions.reset=Reset
 chameleon.gui.editor.actions.speed=Speed
 chameleon.gui.editor.actions.fade=Fade
 chameleon.gui.editor.actions.tick=Tick
+
+chameleon.gui.config.models=Open models...
+chameleon.gui.config.tutorial=Video tutorials
+chameleon.gui.config.discord=Discord
+chameleon.gui.config.wiki=Wiki
 
 # Morph stuff
 morph.section.chameleon=Chameleon (powered by GeckoLib)

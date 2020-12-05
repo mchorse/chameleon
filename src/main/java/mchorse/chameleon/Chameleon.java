@@ -1,9 +1,14 @@
 package mchorse.chameleon;
 
+import mchorse.chameleon.mclib.ValueButtons;
+import mchorse.mclib.McLib;
+import mchorse.mclib.config.ConfigBuilder;
+import mchorse.mclib.events.RegisterConfigEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Chameleon mod
@@ -24,6 +29,19 @@ public class Chameleon
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        McLib.EVENT_BUS.register(this);
+
         proxy.preInit(event);
+    }
+
+    @SubscribeEvent
+    public void onConfig(RegisterConfigEvent event)
+    {
+        ConfigBuilder builder = event.createBuilder(MOD_ID);
+
+        /* General */
+        builder.category("general").register(new ValueButtons("buttons"));
+
+        event.modules.add(builder.build());
     }
 }
