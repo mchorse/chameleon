@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.io.IOUtils;
-import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.exception.GeoModelException;
 import software.bernie.geckolib3.geo.raw.pojo.Converter;
@@ -28,59 +27,46 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 @SideOnly(Side.CLIENT)
 public class ChameleonLoader
 {
-	public AnimationFile loadAllAnimations(MolangParser parser, File file)
+	public void loadAllAnimations(MolangParser parser, File file, AnimationFile animationFile)
 	{
-		AnimationFile animationFile = new AnimationFile();
-		JsonObject jsonRepresentation = this.loadFile(file);
+		JsonObject json = this.loadFile(file);
 
-		if (jsonRepresentation == null)
+		if (json != null)
 		{
-			return null;
-		}
-
-		Set<Map.Entry<String, JsonElement>> entrySet = JsonAnimationUtils.getAnimations(jsonRepresentation);
-		Iterator<Map.Entry<String, JsonElement>> it = entrySet.iterator();
-
-		while(it.hasNext())
-		{
-			Map.Entry<String, JsonElement> entry = it.next();
-			String animationName = entry.getKey();
-
-			try
+			for (Map.Entry<String, JsonElement> entry : JsonAnimationUtils.getAnimations(json))
 			{
-				Animation animation = JsonAnimationUtils.deserializeJsonToAnimation(JsonAnimationUtils.getAnimation(jsonRepresentation, animationName), parser);
-				animationFile.putAnimation(animationName, animation);
-			}
-			catch (JsonException e)
-			{
-				return null;
+				String key = entry.getKey();
+
+				try
+				{
+					animationFile.putAnimation(key, JsonAnimationUtils.deserializeJsonToAnimation(JsonAnimationUtils.getAnimation(json, key), parser));
+				}
+				catch (JsonException e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
-
-		return animationFile;
 	}
 
 	public GeoModel loadModel(File file)
 	{
-		try {
+		try
+		{
 			RawGeoModel rawModel = Converter.fromJsonString(this.loadStringFile(file));
 
 			if (rawModel.getFormatVersion() != FormatVersion.VERSION_1_12_0)
 			{
-				throw new GeoModelException(new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath()), "Wrong geometry json version, expected 1.12.0");
+				throw new GeoModelException(new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath()), "Given geometry JSON version" + rawModel.getFormatVersion().toValue() + ", expected 1.12.0");
 			}
 			else
 			{
-				RawGeometryTree rawGeometryTree = RawGeometryTree.parseHierarchy(rawModel, new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath()));
-
-				return GeoBuilder.constructGeoModel(rawGeometryTree);
+				return GeoBuilder.constructGeoModel(RawGeometryTree.parseHierarchy(rawModel, new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath())));
 			}
 		}
 		catch (Exception e)
@@ -95,10 +81,7 @@ public class ChameleonLoader
 	{
 		try
 		{
-			String content = this.loadStringFile(file);
-			Gson GSON = new Gson();
-
-			return JsonUtils.fromJson(GSON, new StringReader(content), JsonObject.class);
+			return JsonUtils.fromJson(new Gson(), new StringReader(this.loadStringFile(file)), JsonObject.class);
 		}
 		catch (Exception e)
 		{

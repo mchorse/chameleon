@@ -28,6 +28,7 @@ import javax.vecmath.Vector4f;
 public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 {
 	private String boneName;
+	private Vector4f vertex = new Vector4f();
 
 	public void setBoneName(String boneName)
 	{
@@ -72,10 +73,11 @@ public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 		{
 			for (GeoVertex vertex : quad.vertices)
 			{
-				Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0F);
+				this.vertex.set(vertex.position);
+				this.vertex.w = 1;
+				stack.getModelMatrix().transform(this.vertex);
 
-				stack.getModelMatrix().transform(vector4f);
-				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).endVertex();
+				builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
 			}
 		}
 

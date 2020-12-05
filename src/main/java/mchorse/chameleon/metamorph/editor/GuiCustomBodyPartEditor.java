@@ -45,6 +45,7 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements IBoneP
 			this.pickLimb(limb);
 			this.limbs.setCurrent(limb);
 		}
-		catch (Exception e) {}
+		catch (Exception e)
+		{}
 	}
 }

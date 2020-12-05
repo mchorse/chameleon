@@ -9,7 +9,6 @@ import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.builder.Animation;
 import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 import software.bernie.geckolib3.molang.MolangRegistrar;
@@ -79,7 +78,7 @@ public class ClientProxy extends CommonProxy
 			return;
 		}
 
-		List<String> updated = new ArrayList<String>();
+		List<String> toCheck = new ArrayList<String>(chameleonModels.keySet());
 
 		for (File modelFolder : files)
 		{
@@ -88,28 +87,22 @@ public class ClientProxy extends CommonProxy
 				continue;
 			}
 
-			this.reloadModelFolder(modelFolder, updated);
+			this.reloadModelFolder(modelFolder, toCheck);
 		}
 
-		Iterator<Map.Entry<String, ChameleonModel>> it = chameleonModels.entrySet().iterator();
-
-		while (it.hasNext())
+		/* Check and remove model if it got removed */
+		for (String key : toCheck)
 		{
-			Map.Entry<String, ChameleonModel> entry = it.next();
+			ChameleonModel model = chameleonModels.get(key);
 
-			if (updated.contains(entry.getKey()))
+			if (model != null && !model.isStillPresent())
 			{
-				continue;
-			}
-
-			if (!entry.getValue().isStillPresent())
-			{
-				it.remove();
+				chameleonModels.remove(key);
 			}
 		}
 	}
 
-	private void reloadModelFolder(File modelFolder, List<String> updated)
+	private void reloadModelFolder(File modelFolder, List<String> toCheck)
 	{
 		File model = null;
 		List<File> animations = new ArrayList<File>();
@@ -170,7 +163,7 @@ public class ClientProxy extends CommonProxy
 
 				trackingFiles.add(model);
 				chameleonModels.put(key, new ChameleonModel(geoModel, animationFile, trackingFiles, lastUpdated));
-				updated.add(key);
+				toCheck.remove(key);
 			}
 		}
 	}
@@ -181,15 +174,7 @@ public class ClientProxy extends CommonProxy
 
 		for (File animationFile : files)
 		{
-			AnimationFile file = this.loader.loadAllAnimations(parser, animationFile);
-
-			if (file != null)
-			{
-				for (Animation animation : file.getAllAnimations())
-				{
-					animations.putAnimation(animation.animationName, animation);
-				}
-			}
+			this.loader.loadAllAnimations(parser, animationFile, animations);
 		}
 
 		return animations;

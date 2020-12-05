@@ -26,6 +26,7 @@ import java.util.List;
 public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 {
 	private List<String> bones;
+	private Vector4f vertex = new Vector4f();
 
 	public void setBones(List<String> bones)
 	{
@@ -35,8 +36,7 @@ public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 	@Override
 	public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
 	{
-		int index = this.bones.indexOf(bone.name) + 1;
-		GL11.glStencilFunc(GL11.GL_ALWAYS, index, -1);
+		GL11.glStencilFunc(GL11.GL_ALWAYS, this.bones.indexOf(bone.name) + 1, -1);
 
 		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
@@ -61,10 +61,11 @@ public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 		{
 			for (GeoVertex vertex : quad.vertices)
 			{
-				Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0F);
+				this.vertex.set(vertex.position);
+				this.vertex.w = 1;
+				stack.getModelMatrix().transform(this.vertex);
 
-				stack.getModelMatrix().transform(vector4f);
-				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).endVertex();
+				builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
 			}
 		}
 

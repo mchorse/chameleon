@@ -25,6 +25,10 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 	private float b;
 	private float a;
 
+	/* Temporary variables to avoid allocating and GC vectors */
+	private Vector3f normal = new Vector3f();
+	private Vector4f vertex = new Vector4f();
+
 	public void setColor(float r, float g, float b, float a)
 	{
 		this.r = r;
@@ -53,9 +57,8 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 
 		for (GeoQuad quad : cube.quads)
 		{
-			Vector3f normal = new Vector3f(quad.normal.getX(), quad.normal.getY(), quad.normal.getZ());
-
-			stack.getNormalMatrix().transform(normal);
+			this.normal.set(quad.normal.getX(), quad.normal.getY(), quad.normal.getZ());
+			stack.getNormalMatrix().transform(this.normal);
 
 			/* For 0 sized cubes on either axis, to avoid getting dark shading on models
 			 * which didn't correctly setup the UV faces.
@@ -64,27 +67,21 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 			 * and second wing uses bottom face as a flap. In the end, the second wing
 			 * will appear dark shaded without this fix.
 			 */
-			if ((cube.size.y == 0.0F || cube.size.z == 0.0F) && normal.getX() < 0.0F)
-			{
-				normal.x *= -1.0F;
-			}
-
-			if ((cube.size.x == 0.0F || cube.size.z == 0.0F) && normal.getY() < 0.0F)
-			{
-				normal.y *= -1.0F;
-			}
-
-			if ((cube.size.x == 0.0F || cube.size.y == 0.0F) && normal.getZ() < 0.0F)
-			{
-				normal.z *= -1.0F;
-			}
+			if (this.normal.getX() < 0 && (cube.size.y == 0 || cube.size.z == 0)) this.normal.x *= -1;
+			if (this.normal.getY() < 0 && (cube.size.x == 0 || cube.size.z == 0)) this.normal.y *= -1;
+			if (this.normal.getZ() < 0 && (cube.size.x == 0 || cube.size.y == 0)) this.normal.z *= -1;
 
 			for (GeoVertex vertex : quad.vertices)
 			{
-				Vector4f vector4f = new Vector4f(vertex.position.getX(), vertex.position.getY(), vertex.position.getZ(), 1.0F);
+				this.vertex.set(vertex.position);
+				this.vertex.w = 1;
+				stack.getModelMatrix().transform(this.vertex);
 
-				stack.getModelMatrix().transform(vector4f);
-				builder.pos(vector4f.getX(), vector4f.getY(), vector4f.getZ()).tex(vertex.textureU, vertex.textureV).color(this.r, this.g, this.b, this.a).normal(normal.getX(), normal.getY(), normal.getZ()).endVertex();
+				builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ())
+					.tex(vertex.textureU, vertex.textureV)
+					.color(this.r, this.g, this.b, this.a)
+					.normal(this.normal.getX(), this.normal.getY(), this.normal.getZ())
+					.endVertex();
 			}
 		}
 

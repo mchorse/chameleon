@@ -20,6 +20,8 @@ import javax.vecmath.Matrix4f;
 @SideOnly(Side.CLIENT)
 public class ChameleonPostRenderer implements IChameleonRenderProcessor
 {
+	private static Matrix4f matrix = new Matrix4f();
+
 	private String boneName = "";
 
 	/**
@@ -27,17 +29,16 @@ public class ChameleonPostRenderer implements IChameleonRenderProcessor
 	 */
 	public static void multiplyMatrix(MatrixStack stack, GeoBone bone)
 	{
-		Matrix4f matrix4f = new Matrix4f(stack.getModelMatrix());
+		matrix.set(stack.getModelMatrix());
+		matrix.transpose();
 
-		matrix4f.transpose();
-		MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix4f);
-
+		MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix);
 		MatrixUtils.buffer.clear();
 		MatrixUtils.buffer.put(MatrixUtils.floats);
 		MatrixUtils.buffer.flip();
 
 		GlStateManager.multMatrix(MatrixUtils.buffer);
-		GlStateManager.translate(bone.rotationPointX / 16.0F, bone.rotationPointY / 16.0F, bone.rotationPointZ / 16.0F);
+		GlStateManager.translate(bone.rotationPointX / 16, bone.rotationPointY / 16, bone.rotationPointZ / 16);
 	}
 
 	public void setBoneName(String boneName)
