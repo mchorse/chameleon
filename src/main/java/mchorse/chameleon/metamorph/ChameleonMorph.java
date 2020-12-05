@@ -181,7 +181,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		this.checkAnimator();
 
 		GeoModel model = chameleonModel.model;
-		boolean applied = this.getAnimator().applyActions(target, model, partialTicks);
+		boolean applied = !chameleonModel.isStatic() && this.getAnimator().applyActions(target, model, partialTicks);
 
 		this.applyPose(model, applied, partialTicks);
 
@@ -311,6 +311,13 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	@SideOnly(Side.CLIENT)
 	private void updateClient(EntityLivingBase target)
 	{
+		ChameleonModel model = getModel();
+
+		if (model == null || model.isStatic())
+		{
+			return;
+		}
+
 		this.checkAnimator();
 		this.getAnimator().update(target);
 	}

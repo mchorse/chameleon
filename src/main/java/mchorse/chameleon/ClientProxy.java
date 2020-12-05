@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class ClientProxy extends CommonProxy
 			return;
 		}
 
-		chameleonModels.clear();
+		List<String> updated = new ArrayList<String>();
 
 		for (File modelFolder : files)
 		{
@@ -87,11 +88,28 @@ public class ClientProxy extends CommonProxy
 				continue;
 			}
 
-			this.reloadModelFolder(modelFolder);
+			this.reloadModelFolder(modelFolder, updated);
+		}
+
+		Iterator<Map.Entry<String, ChameleonModel>> it = chameleonModels.entrySet().iterator();
+
+		while (it.hasNext())
+		{
+			Map.Entry<String, ChameleonModel> entry = it.next();
+
+			if (updated.contains(entry.getKey()))
+			{
+				continue;
+			}
+
+			if (!entry.getValue().isStillPresent())
+			{
+				it.remove();
+			}
 		}
 	}
 
-	private void reloadModelFolder(File modelFolder)
+	private void reloadModelFolder(File modelFolder, List<String> updated)
 	{
 		File model = null;
 		List<File> animations = new ArrayList<File>();
@@ -138,7 +156,8 @@ public class ClientProxy extends CommonProxy
 		}
 
 		/* Load model and animation */
-		ChameleonModel oldModel = chameleonModels.get(modelFolder.getName());
+		String key = modelFolder.getName();
+		ChameleonModel oldModel = chameleonModels.get(key);
 
 		if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
 		{
@@ -147,7 +166,11 @@ public class ClientProxy extends CommonProxy
 
 			if (geoModel != null)
 			{
-				chameleonModels.put(modelFolder.getName(), new ChameleonModel(geoModel, animationFile, lastUpdated));
+				List<File> trackingFiles = new ArrayList<File>();
+
+				trackingFiles.add(model);
+				chameleonModels.put(key, new ChameleonModel(geoModel, animationFile, trackingFiles, lastUpdated));
+				updated.add(key);
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import software.bernie.geckolib3.file.AnimationFile;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +18,16 @@ public class ChameleonModel
 	public long lastUpdate;
 
 	private List<String> boneNames;
+	private boolean isStatic;
+	private List<File> files;
 
-	public ChameleonModel(GeoModel model, AnimationFile file, long lastUpdate)
+	public ChameleonModel(GeoModel model, AnimationFile file, List<File> files, long lastUpdate)
 	{
 		this.model = model;
 		this.animation = file;
+		this.files = files;
 		this.lastUpdate = lastUpdate;
+		this.isStatic = file == null || file.getAllAnimations().isEmpty();
 
 		/* This is VERY IMPORTANT, if initial bone snapshots won't be saved,
 		 * there will be rotation inconsistencies! */
@@ -59,5 +64,23 @@ public class ChameleonModel
 		}
 
 		return boneNames;
+	}
+
+	public boolean isStatic()
+	{
+		return this.isStatic;
+	}
+
+	public boolean isStillPresent()
+	{
+		for (File file : this.files)
+		{
+			if (!file.exists())
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
