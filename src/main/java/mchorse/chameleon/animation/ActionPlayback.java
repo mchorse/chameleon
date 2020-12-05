@@ -16,10 +16,10 @@ public class ActionPlayback
     private int fade;
     private float ticks;
     private int duration;
-    private float speed = 1;
+    private double speed = 1;
 
     private boolean looping;
-    private boolean fading = false;
+    private Fade fading = Fade.FINISHED;
     public boolean playing = true;
     public int priority;
 
@@ -55,7 +55,7 @@ public class ActionPlayback
             this.ticks = Math.copySign(1, this.speed) < 0 ? this.duration : 0;
         }
 
-        this.unfade();
+        this.stopFade();
     }
 
     /**
@@ -63,7 +63,17 @@ public class ActionPlayback
      */
     public boolean finishedFading()
     {
-        return this.fading == true && this.fade <= 0;
+        return this.fading != Fade.FINISHED && this.fade <= 0;
+    }
+
+    public boolean isFadingModeOut()
+    {
+        return this.fading == Fade.OUT;
+    }
+
+    public boolean isFadingModeIn()
+    {
+        return this.fading == Fade.IN;
     }
 
     /**
@@ -71,25 +81,39 @@ public class ActionPlayback
      */
     public boolean isFading()
     {
-        return this.fading == true && this.fade > 0;
+        return this.fading != Fade.FINISHED && this.fade > 0;
     }
 
     /**
-     * Start fading
+     * Start fading out
      */
-    public void fade()
+    public void fadeOut()
     {
         this.fade = (int) this.config.fade;
-        this.fading = true;
+        this.fading = Fade.OUT;
+    }
+
+    /**
+     * Start fading in
+     */
+    public void fadeIn()
+    {
+        this.fade = (int) this.config.fade;
+        this.fading = Fade.IN;
     }
 
     /**
      * Reset fading
      */
-    public void unfade()
+    public void stopFade()
     {
         this.fade = 0;
-        this.fading = false;
+        this.fading = Fade.FINISHED;
+    }
+
+    public int getFade()
+    {
+        return this.fade;
     }
 
     /**
@@ -100,13 +124,15 @@ public class ActionPlayback
      */
     public float getFadeFactor(float partialTicks)
     {
-        return (this.fade - partialTicks) / this.config.fade;
+        float factor = (this.fade - partialTicks) / this.config.fade;
+
+        return this.fading == Fade.OUT ? factor : 1 - factor;
     }
 
     /**
      * Set speed of an action playback
      */
-    public void setSpeed(float speed)
+    public void setSpeed(double speed)
     {
         this.speed = speed * this.config.speed;
     }
@@ -115,20 +141,18 @@ public class ActionPlayback
 
     public void update()
     {
-        if (this.fading && this.fade > 0)
+        if (this.fading != Fade.FINISHED && this.fade > 0)
         {
             this.fade--;
-
-            return;
         }
 
         if (!this.playing) return;
 
         this.ticks += this.speed;
 
-        if (!this.looping && !this.fading && this.ticks >= this.duration)
+        if (!this.looping && this.fading != Fade.OUT && this.ticks >= this.duration)
         {
-            this.fade();
+            this.fadeOut();
         }
 
         if (this.looping)
@@ -148,7 +172,7 @@ public class ActionPlayback
 
     public float getTick(float partialTick)
     {
-        float ticks = this.ticks + partialTick * this.speed;
+        float ticks = this.ticks + (float) (partialTick * this.speed);
 
         if (this.looping)
         {
@@ -168,5 +192,10 @@ public class ActionPlayback
     public void apply(EntityLivingBase target, GeoModel armature, float partialTick, float blend, boolean skipInitial)
     {
         ChameleonAnimator.animate(target, armature, this.action, this.getTick(partialTick), blend, skipInitial);
+    }
+
+    public static enum Fade
+    {
+        OUT, FINISHED, IN
     }
 }

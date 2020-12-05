@@ -177,9 +177,9 @@ public class Animator
 
             action.update();
 
-            if (action.finishedFading())
+            if (action.finishedFading() && action.isFadingModeOut())
             {
-                action.unfade();
+                action.stopFade();
                 it.remove();
             }
         }
@@ -226,11 +226,11 @@ public class Animator
         }
         else
         {
-            float speed = (float) (Math.round(Math.sqrt(dx * dx + dz * dz) * 1000) / 1000.0);
+            double speed = Math.round(Math.sqrt(dx * dx + dz * dz) * 1000) / 1000.0;
 
             if (target.isSneaking())
             {
-                speed /= 0.065F;
+                speed /= 0.065;
 
                 this.setActiveAction(!moves ? this.crouchingIdle : this.crouching);
                 if (this.crouching != null) this.crouching.setSpeed(target.moveForward > 0 ? speed : -speed);
@@ -243,13 +243,13 @@ public class Animator
             {
                 this.setActiveAction(this.sprinting);
 
-                this.sprinting.setSpeed(speed / 0.281F);
+                this.sprinting.setSpeed(speed / 0.281);
             }
             else
             {
                 this.setActiveAction(!moves ? this.idle : this.running);
 
-                speed /= 0.216F;
+                speed /= 0.216;
 
                 if (this.running != null) this.running.setSpeed(target.moveForward >= 0 ? speed : -speed);
                 if (this.walking != null) this.walking.setSpeed(target.moveForward > 0 ? speed : -speed);
@@ -311,12 +311,12 @@ public class Animator
 
         if (shooting && !this.wasShooting && this.shoot != null)
         {
-            this.shoot.fade();
+            this.shoot.fadeOut();
         }
 
         if (consuming && !this.wasConsuming && this.consume != null)
         {
-            this.consume.fade();
+            this.consume.fadeOut();
         }
 
         if (target.hurtTime == target.maxHurtTime - 1)
@@ -353,12 +353,14 @@ public class Animator
 
         if (this.active != null)
         {
+            System.out.println("Changed");
             this.lastActive = this.active;
-            this.lastActive.fade();
+            this.lastActive.fadeOut();
         }
 
         this.active = action;
         this.active.reset();
+        this.active.fadeIn();
     }
 
     /**
@@ -379,6 +381,7 @@ public class Animator
         }
 
         action.reset();
+        action.fadeIn();
         this.actions.add(action);
     }
 
@@ -391,7 +394,9 @@ public class Animator
 
         if (this.active != null)
         {
-            this.active.apply(target, armature, partialTicks, 1F, false);
+            float fade = this.active.isFading() ? this.active.getFadeFactor(partialTicks) : 1F;
+
+            this.active.apply(target, armature, partialTicks, fade, false);
             applied = true;
         }
 
