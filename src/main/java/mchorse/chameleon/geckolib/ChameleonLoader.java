@@ -25,6 +25,7 @@ import software.bernie.shadowed.eliotlash.molang.MolangParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -109,6 +110,11 @@ public class ChameleonLoader
 
 	private String loadStringFile(File file) throws IOException
 	{
-		return IOUtils.toString(new FileInputStream(file), Charset.defaultCharset());
+		InputStream stream = new FileInputStream(file);
+		String content = IOUtils.toString(stream, Charset.defaultCharset());
+
+		stream.close();
+
+		return content;
 	}
 }
