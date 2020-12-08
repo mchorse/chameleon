@@ -46,7 +46,6 @@ public class MolangHelper
 		parser.setValue("query.distance_from_camera", distance);
 		parser.setValue("query.is_on_ground", MolangUtils.booleanToFloat(target.onGround));
 		parser.setValue("query.is_in_water", MolangUtils.booleanToFloat(target.isInWater()));
-		//Should probably check specifically whether it's in rain?
 		parser.setValue("query.is_in_water_or_rain", MolangUtils.booleanToFloat(target.isWet()));
 
 		parser.setValue("query.health", target.getHealth());
@@ -66,6 +65,19 @@ public class MolangHelper
 
 		parser.setValue("query.head_yaw", yaw - bodyYaw);
 		parser.setValue("query.head_pitch", Interpolations.lerp(target.prevRotationPitch, target.rotationPitch, partialTick));
+
+		double velocity = Math.sqrt(target.motionX * target.motionX + target.motionY * target.motionY + target.motionZ * target.motionZ);
+		float limbSwingAmount = Interpolations.lerp(target.prevLimbSwingAmount, target.limbSwingAmount, partialTick);
+		float limbSwing = target.limbSwing - target.limbSwingAmount * (1.0F - partialTick);
+
+		if (limbSwingAmount > 1.0F)
+		{
+			limbSwingAmount = 1.0F;
+		}
+
+		parser.setValue("query.velocity", velocity);
+		parser.setValue("query.limb_swing", limbSwing);
+		parser.setValue("query.limb_swing_amount", limbSwingAmount);
 	}
 
 	/**

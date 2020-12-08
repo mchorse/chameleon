@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +44,10 @@ public class ClientProxy extends CommonProxy
 		/* Additional Chameleon specific variables */
 		parser.register(new Variable("query.head_yaw", 0));
 		parser.register(new Variable("query.head_pitch", 0));
+
+		parser.register(new Variable("query.velocity", 0));
+		parser.register(new Variable("query.limb_swing", 0));
+		parser.register(new Variable("query.limb_swing_amount", 0));
 	}
 
 	@Override

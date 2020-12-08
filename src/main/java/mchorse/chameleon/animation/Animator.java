@@ -224,18 +224,9 @@ public class Animator
         }
         else
         {
-            double speed = target.limbSwingAmount;
-
             if (target.isSneaking())
             {
-                speed /= 0.65;
-
                 this.setActiveAction(!moves ? this.crouchingIdle : this.crouching);
-
-                if (this.crouching != null)
-                {
-                    this.crouching.setSpeed(target.moveForward > 0 ? speed : -speed);
-                }
             }
             else if (!target.onGround && target.motionY < 0 && target.fallDistance > 1.25)
             {
@@ -244,19 +235,10 @@ public class Animator
             else if (target.isSprinting() && this.sprinting != null)
             {
                 this.setActiveAction(this.sprinting);
-
-                this.sprinting.setSpeed(speed);
             }
             else
             {
                 this.setActiveAction(!moves ? this.idle : this.running);
-
-                speed /= 0.85;
-
-                if (this.running != null)
-                {
-                    this.running.setSpeed(target.moveForward >= 0 ? speed : -speed);
-                }
             }
 
             if (target.onGround && !this.wasOnGround && !target.isSprinting() && this.prevMY < -0.5)
