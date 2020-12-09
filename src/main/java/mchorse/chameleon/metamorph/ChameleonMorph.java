@@ -45,6 +45,10 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	public ActionsConfig actions = new ActionsConfig();
 	public BodyPartManager parts = new BodyPartManager();
 
+	public float scale = 1F;
+	public float scaleGui = 1F;
+	private float lastScale = 1F;
+
 	public PoseAnimation animation = new PoseAnimation();
 
 	/**
@@ -56,6 +60,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	private Animator animator;
 
 	private boolean updateAnimator = false;
+
+	public float getScale(float partialTick)
+	{
+		if (this.animation.isInProgress())
+		{
+			return this.animation.interp.interpolate(this.lastScale, this.scale, this.animation.getFactor(partialTick));
+		}
+
+		return this.scale;
+	}
 
 	@SideOnly(Side.CLIENT)
 	protected Animator getAnimator()
@@ -128,6 +142,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	@SideOnly(Side.CLIENT)
 	public void renderOnScreen(EntityPlayer target, int x, int y, float scale, float alpha)
 	{
+		scale *= this.scaleGui;
+
 		GlStateManager.enableDepth();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
@@ -150,8 +166,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	@SideOnly(Side.CLIENT)
 	public void render(EntityLivingBase target, double x, double y, double z, float entityYaw, float partialTicks)
 	{
+		float scale = this.getScale(partialTicks);
+
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
+		GlStateManager.scale(scale, scale, scale);
 
 		boolean captured = MatrixUtils.captureMatrix();
 		float renderYawOffset = Interpolations.lerp(target.prevRenderYawOffset, target.renderYawOffset, partialTicks);
@@ -326,6 +345,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			result = result && Objects.equals(morph.pose, this.pose);
 			result = result && Objects.equals(morph.parts, this.parts);
 			result = result && Objects.equals(morph.actions, this.actions);
+			result = result && morph.scale == this.scale;
+			result = result && morph.scaleGui == this.scaleGui;
 		}
 
 		return result;
@@ -340,6 +361,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 			if (Objects.equals(this.getKey(), animated.getKey()))
 			{
+				this.lastScale = this.getScale(0);
 				this.animation.paused = false;
 
 				this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
@@ -347,6 +369,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 				this.actions.copy(animated.actions);
 				this.parts.merge(animated.parts);
 				this.animation.merge(animated.animation);
+				this.scale = animated.scale;
+				this.scaleGui = animated.scaleGui;
 
 				this.updateAnimator = true;
 
@@ -382,6 +406,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			this.actions.copy(morph.actions);
 			this.parts.copy(morph.parts);
 			this.animation.copy(morph.animation);
+			this.scale = morph.scale;
+			this.scaleGui = morph.scaleGui;
 		}
 	}
 
@@ -407,6 +433,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		this.pose = null;
 		this.actions = new ActionsConfig();
 		this.parts.reset();
+
+		this.scale = this.scaleGui = this.lastScale = 1;
 
 		this.updateAnimator = true;
 	}
@@ -446,6 +474,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		{
 			tag.setTag("Actions", actions);
 		}
+
+		if (this.scale != 1F)
+		{
+			tag.setFloat("Scale", this.scale);
+		}
+
+		if (this.scaleGui != 1F)
+		{
+			tag.setFloat("ScaleGUI", this.scaleGui);
+		}
 	}
 
 	@Override
@@ -477,6 +515,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		if (tag.hasKey("Actions"))
 		{
 			this.actions.fromNBT(tag.getCompoundTag("Actions"));
+		}
+
+		if (tag.hasKey("Scale"))
+		{
+			this.scale = tag.getFloat("Scale");
+		}
+
+		if (tag.hasKey("ScaleGUI"))
+		{
+			this.scaleGui = tag.getFloat("ScaleGUI");
 		}
 	}
 }

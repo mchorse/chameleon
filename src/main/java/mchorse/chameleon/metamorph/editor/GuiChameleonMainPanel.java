@@ -4,11 +4,14 @@ import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
 import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
+import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
+import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
@@ -33,6 +36,9 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 	public GuiToggleElement animated;
 	public GuiPoseTransformations transforms;
 	public GuiAnimation animation;
+
+	public GuiTrackpadElement scale;
+	public GuiTrackpadElement scaleGui;
 
 	private IKey createLabel = IKey.lang("chameleon.gui.editor.create_pose");
 	private IKey resetLabel = IKey.lang("chameleon.gui.editor.reset_pose");
@@ -59,8 +65,10 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.fixed = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.fixed"), this::toggleFixed);
 		this.animated = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.animated"), this::toggleAnimated);
 		this.transforms = new GuiPoseTransformations(mc);
-
 		this.animation = new GuiAnimation(mc, false);
+
+		this.scale = new GuiTrackpadElement(mc, (value) -> this.morph.scale = value.floatValue());
+		this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.morph.scaleGui = value.floatValue());
 
 		this.skin.flex().relative(this).set(10, 10, 110, 20);
 		this.picker.flex().relative(this).wh(1F, 1F);
@@ -70,10 +78,14 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.animated.flex().relative(this).x(10).y(1F, -10).w(110).anchorY(1);
 		this.fixed.flex().relative(this.animated).y(-1F, -5).w(1F);
 		this.transforms.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
-
 		this.animation.flex().relative(this).x(1F, -130).w(130);
 
-		this.add(this.skin, this.createPose, this.animated, this.fixed, this.bones, this.transforms, this.animation);
+		GuiElement lowerBottom = new GuiElement(mc);
+
+		lowerBottom.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
+		lowerBottom.add(this.scale, this.scaleGui);
+
+		this.add(this.skin, this.createPose, this.animated, this.fixed, this.bones, this.transforms, this.animation, lowerBottom);
 	}
 
 	private void createResetPose(GuiButtonElement button)
@@ -134,6 +146,8 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.setPoseEditorVisible();
 
 		this.animation.fill(morph.animation);
+		this.scale.setValue(morph.scale);
+		this.scaleGui.setValue(morph.scaleGui);
 	}
 
 	private void setPoseEditorVisible()
