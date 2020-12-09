@@ -48,6 +48,7 @@ public class ClientProxy extends CommonProxy
 		parser.register(new Variable("query.velocity", 0));
 		parser.register(new Variable("query.limb_swing", 0));
 		parser.register(new Variable("query.limb_swing_amount", 0));
+		parser.register(new Variable("query.age", 0));
 	}
 
 	@Override

@@ -85,6 +85,7 @@ public class MolangHelper
 		parser.setValue("query.velocity", velocity);
 		parser.setValue("query.limb_swing", limbSwing);
 		parser.setValue("query.limb_swing_amount", limbSwingAmount);
+		parser.setValue("query.age", target.ticksExisted + partialTick);
 	}
 
 	/**
