@@ -68,7 +68,9 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.animation = new GuiAnimation(mc, false);
 
 		this.scale = new GuiTrackpadElement(mc, (value) -> this.morph.scale = value.floatValue());
+		this.scale.tooltip(IKey.lang("chameleon.gui.editor.scale"));
 		this.scaleGui = new GuiTrackpadElement(mc, (value) -> this.morph.scaleGui = value.floatValue());
+		this.scaleGui.tooltip(IKey.lang("chameleon.gui.editor.scale_gui"));
 
 		this.skin.flex().relative(this).set(10, 10, 110, 20);
 		this.picker.flex().relative(this).wh(1F, 1F);
