@@ -105,6 +105,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		else
 		{
 			this.morph.pose = null;
+			this.editor.chameleonModelRenderer.boneName = "";
 		}
 
 		this.setPoseEditorVisible();
@@ -118,6 +119,11 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 	@Override
 	public void pickBone(String bone)
 	{
+		if (this.morph.pose == null)
+		{
+			return;
+		}
+
 		this.transform = this.morph.pose.bones.get(bone);
 
 		this.bones.setCurrentScroll(bone);
