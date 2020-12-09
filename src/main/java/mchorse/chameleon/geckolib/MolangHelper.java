@@ -70,6 +70,13 @@ public class MolangHelper
 		float limbSwingAmount = Interpolations.lerp(target.prevLimbSwingAmount, target.limbSwingAmount, partialTick);
 		float limbSwing = target.limbSwing - target.limbSwingAmount * (1.0F - partialTick);
 
+		/* There is still a tiny bit of vertical velocity (gravity) when an
+		 * entity stands still, so set it to zero in that case */
+		if (target.onGround && target.motionY < 0 && (Math.abs(target.motionX) < 0.001 || Math.abs(target.motionZ) < 0.001))
+		{
+			velocity = 0;
+		}
+
 		if (limbSwingAmount > 1.0F)
 		{
 			limbSwingAmount = 1.0F;
