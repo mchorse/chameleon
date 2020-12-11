@@ -45,7 +45,7 @@ dependencies
 {
     compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
     compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
-    compile files("run/libs/forge-1.12.2-geckolib-${geckolib}-beta.1-dev.jar")
+    compile files("run/libs/forge-1.12.2-geckolib-${geckolib}-beta.2-dev.jar")
 }
 
 processResources
