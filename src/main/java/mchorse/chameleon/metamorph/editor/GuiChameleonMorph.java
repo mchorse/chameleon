@@ -3,6 +3,7 @@ package mchorse.chameleon.metamorph.editor;
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
+import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.Label;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,6 +45,13 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 		this.registerPanel(this.actionsPanel, IKey.lang("chameleon.gui.editor.actions.actions"), Icons.MORE);
 		this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
 		this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.GEAR);
+
+		this.keys().register(IKey.lang("chameleon.gui.editor.pick_skin"), Keyboard.KEY_P, () ->
+		{
+			this.setPanel(this.mainPanel);
+
+			this.mainPanel.skin.clickItself(GuiBase.getCurrent());
+		}).held(Keyboard.KEY_LSHIFT);
 	}
 
 	@Override
