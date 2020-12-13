@@ -11,11 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.List;
 
 /**
- * Blockbuster morph factory
+ * Chameleon morph factory
  *
  * This factory is responsible for adding all custom modeled morphs provided by
- * a user (in his config folder), the server (in world save's blockbuster
- * folder) or added by API (steve, alex and fred).
+ * a user (in his config folder)
  */
 public class ChameleonFactory implements IMorphFactory
 {
