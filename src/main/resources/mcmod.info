@@ -8,9 +8,9 @@
         "url": "",
         "updateUrl": "",
         "authorList": ["mchorse"],
-        "credits": "Gecko and Eliot Lash for GeckoLib",
+        "credits": "Gecko and Eliot Lash for GeckoLib, and Jannis for Blockbench",
         "logoFile": "",
         "screenshots": [],
-        "dependencies": []
+        "dependencies": ["geckolib3"]
     }
 ]
