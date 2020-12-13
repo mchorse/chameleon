@@ -1,7 +1,7 @@
 {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/chameleon-morph/",
     "1.12.2": {
-        "1.0": ""
+        "1.0": "First version of Chameleon mod. This version provides essential tools to work with Chameleon animated morphs."
     },
     "promos": {
         "1.12.2-latest": "1.0",
