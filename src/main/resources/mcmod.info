@@ -6,7 +6,7 @@
         "version": "${version}",
         "mcversion": "${mcversion}",
         "url": "",
-        "updateUrl": "",
+        "updateUrl": "https://raw.githubusercontent.com/mchorse/chameleon/master/version.json",
         "authorList": ["mchorse"],
         "credits": "Gecko and Eliot Lash for GeckoLib, and Jannis for Blockbench",
         "logoFile": "",
