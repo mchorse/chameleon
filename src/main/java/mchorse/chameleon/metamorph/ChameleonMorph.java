@@ -363,8 +363,9 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 			{
 				this.lastScale = this.getScale(0);
 				this.animation.paused = false;
-
 				this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
+
+				this.skin = RLUtils.clone(animated.skin);
 				this.pose = animated.pose == null ? null : animated.pose.clone();
 				this.actions.copy(animated.actions);
 				this.parts.merge(animated.parts);
