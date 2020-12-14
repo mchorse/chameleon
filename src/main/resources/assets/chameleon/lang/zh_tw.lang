@@ -1,0 +1,37 @@
+#PARSE_ESCAPES
+
+# Config
+chameleon.config.title=Chameleon
+
+chameleon.config.general.title=常規
+chameleon.config.general.tooltip=常規選項
+
+# GUI
+chameleon.gui.editor.pick_skin=選擇皮膚
+chameleon.gui.editor.main=主面板
+chameleon.gui.editor.body_part=身體部分
+chameleon.gui.editor.create_pose=創建姿勢
+chameleon.gui.editor.reset_pose=重置姿勢
+chameleon.gui.editor.fixed=固定動作
+chameleon.gui.editor.animated=動畫姿勢
+
+chameleon.gui.editor.scale=全局縮放
+chameleon.gui.editor.scale_gui=GUI 縮放
+
+chameleon.gui.editor.actions.actions=動作
+chameleon.gui.editor.actions.action=動作
+
+chameleon.gui.editor.actions.clamp=回卷
+chameleon.gui.editor.actions.reset=歸位
+chameleon.gui.editor.actions.speed=速度
+chameleon.gui.editor.actions.fade=緩入緩出
+chameleon.gui.editor.actions.tick=Tick
+
+chameleon.gui.config.models=打開模型文件夾...
+chameleon.gui.config.tutorial=視頻教程
+chameleon.gui.config.discord=Discord
+chameleon.gui.config.wiki=Wiki
+
+# Morph stuff
+morph.section.chameleon=Chameleon (powered by GeckoLib)
+morph.category.chameleon=動畫模型
