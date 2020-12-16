@@ -29,6 +29,15 @@ public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements IBoneP
 	}
 
 	@Override
+	protected void setupNewBodyPart(BodyPart part)
+	{
+		super.setupNewBodyPart(part);
+
+		part.rotate.x = 0;
+		part.rotate.y = 180;
+	}
+
+	@Override
 	protected void pickLimb(String limbName)
 	{
 		GuiChameleonMorph parent = (GuiChameleonMorph) this.editor;
