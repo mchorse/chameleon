@@ -1,6 +1,6 @@
 [
     {
-        "modid": "chameleon",
+        "modid": "chameleon_morph",
         "name": "Chameleon",
         "description": "Loads animated Blockbench models as Metamorph morphs, powered by GeckoLib",
         "version": "${version}",

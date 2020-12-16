@@ -19,7 +19,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 @Mod(modid = Chameleon.MOD_ID, name = Chameleon.MODNAME, version = Chameleon.VERSION, dependencies = "required-after:mclib@[%MCLIB%,);required-after:metamorph@[%METAMORPH%,);required-after:geckolib3@[%GECKOLIB%,)", updateJSON = "https://raw.githubusercontent.com/mchorse/chameleon/master/version.json")
 public class Chameleon
 {
-    public static final String MOD_ID = "chameleon";
+    /* Sadly "chameleon" mod ID conflicts with another popular mod... */
+    public static final String MOD_ID = "chameleon_morph";
     public static final String MODNAME = "Chameleon";
     public static final String VERSION = "%VERSION%";
 
