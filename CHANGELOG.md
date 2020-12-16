@@ -1,3 +1,11 @@
+## Version 1.0.1
+
+Quick hotfix to fix Chameleon mod to work with another more popular Chameleon mod.
+
+**Compatible** with McLib `2.1.2`, Metamorph `1.2.4` and GeckoLib `3.0.0`. It doesn't mean that future versions of Metamorph, Aperture and GeckoLib would be incompatible, but older versions are most likely incompatible.
+
+* Changed the mod ID from `chameleon` to `chameleon_morph`
+
 ## Version 1.0
 
 First version of Chameleon mod. This version provides essential tools to work with Chameleon animated morphs.
