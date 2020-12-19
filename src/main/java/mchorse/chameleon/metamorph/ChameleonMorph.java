@@ -361,6 +361,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 			if (Objects.equals(this.getKey(), animated.getKey()))
 			{
+				this.mergeBasic(morph);
+
 				this.lastScale = this.getScale(0);
 				this.animation.paused = false;
 				this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
