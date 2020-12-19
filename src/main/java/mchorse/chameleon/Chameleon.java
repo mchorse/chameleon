@@ -38,7 +38,7 @@ public class Chameleon
     @SubscribeEvent
     public void onConfig(RegisterConfigEvent event)
     {
-        ConfigBuilder builder = event.createBuilder(MOD_ID);
+        ConfigBuilder builder = event.createBuilder("chameleon");
 
         /* General */
         builder.category("general").register(new ValueButtons("buttons"));
