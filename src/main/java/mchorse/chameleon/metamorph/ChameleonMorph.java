@@ -237,7 +237,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
 			if (ChameleonRenderer.postRender(model, part.limb))
 			{
-				part.render(target, partialTicks);
+				part.render(this, target, partialTicks);
 			}
 
 			GlStateManager.popMatrix();
@@ -309,6 +309,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	public void update(EntityLivingBase target)
 	{
 		this.animation.update();
+		this.parts.updateBodyLimbs(this, target);
 
 		super.update(target);
 
