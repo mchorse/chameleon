@@ -158,6 +158,12 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 		this.scaleGui.setValue(morph.scaleGui);
 	}
 
+	@Override
+	public void finishEditing()
+	{
+		this.picker.close();
+	}
+
 	private void setPoseEditorVisible()
 	{
 		ChameleonModel model = this.morph.getModel();
