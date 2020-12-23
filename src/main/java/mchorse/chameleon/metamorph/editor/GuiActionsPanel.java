@@ -45,7 +45,7 @@ public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonM
             this.configs.add(action);
         }
 
-        this.fields = new GuiElement(mc);
+        this.fields = new GuiElement(mc).noCulling();
         this.configs.sort();
         this.configs.flex().relative(this).set(10, 22, 110, 90).h(1, -35);
 

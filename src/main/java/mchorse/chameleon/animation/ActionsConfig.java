@@ -2,8 +2,6 @@ package mchorse.chameleon.animation;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +12,6 @@ import java.util.Objects;
  * responsible for storing configuration for the name of actions 
  * which should be used for particular <s>set of skills</s> actions. 
  */
-@SideOnly(Side.CLIENT)
 public class ActionsConfig
 {
     public Map<String, ActionConfig> actions = new HashMap<String, ActionConfig>();
