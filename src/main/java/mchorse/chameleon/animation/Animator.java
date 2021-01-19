@@ -1,5 +1,6 @@
 package mchorse.chameleon.animation;
 
+import mchorse.chameleon.geckolib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -63,12 +64,10 @@ public class Animator
     public boolean wasConsuming = false;
 
     private ChameleonMorph morph;
-    private AnimationFile animations;
 
-    public Animator(ChameleonMorph morph, AnimationFile animations)
+    public Animator(ChameleonMorph morph)
     {
         this.morph = morph;
-        this.animations = animations;
         this.refresh();
     }
 
@@ -115,12 +114,15 @@ public class Animator
      */
     public ActionPlayback createAction(ActionPlayback old, ActionConfig config, boolean looping, int priority)
     {
-        if (this.animations == null)
+        ChameleonModel model = this.morph.getModel();
+        AnimationFile animations = model == null ? null : model.animation;
+
+        if (animations == null)
         {
             return null;
         }
 
-        Animation action = this.animations.getAnimation(config.name);
+        Animation action = animations.getAnimation(config.name);
 
         /* If given action is missing, then omit creation of ActionPlayback */
         if (action == null)

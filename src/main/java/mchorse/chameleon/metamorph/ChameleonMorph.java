@@ -60,6 +60,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	private Animator animator;
 
 	private boolean updateAnimator = false;
+	private long lastUpdate;
 
 	public float getScale(float partialTick)
 	{
@@ -76,9 +77,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 	{
 		if (this.animator == null)
 		{
-			ChameleonModel model = this.getModel();
-
-			this.animator = new Animator(this, model == null ? null : model.animation);
+			this.animator = new Animator(this);
 		}
 
 		return this.animator;
@@ -327,6 +326,12 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 		if (model == null || model.isStatic())
 		{
 			return;
+		}
+
+		if (this.lastUpdate < model.lastUpdate)
+		{
+			this.lastScale = model.lastUpdate;
+			this.updateAnimator = true;
 		}
 
 		this.checkAnimator();
