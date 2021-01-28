@@ -16,7 +16,7 @@ chameleon.gui.editor.fixed=Фиксировать движение
 chameleon.gui.editor.animated=Анимированная поза
 
 chameleon.gui.editor.scale=Глобальный масштаб
-chameleon.gui.editor.scale_gui=Размер в GUI
+chameleon.gui.editor.scale_gui=Размер в интерфейсе
 
 chameleon.gui.editor.actions.actions=Действия
 chameleon.gui.editor.actions.action=Действие
