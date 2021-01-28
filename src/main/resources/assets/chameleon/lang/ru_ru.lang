@@ -1,0 +1,37 @@
+#PARSE_ESCAPES
+
+# Config
+chameleon.config.title=Хамелеон
+
+chameleon.config.general.title=Общие
+chameleon.config.general.tooltip=Общие опции
+
+# GUI
+chameleon.gui.editor.pick_skin=Выбрать скин
+chameleon.gui.editor.main=Главная панель
+chameleon.gui.editor.body_part=Части тела
+chameleon.gui.editor.create_pose=Создать позу
+chameleon.gui.editor.reset_pose=Сбросить позу
+chameleon.gui.editor.fixed=Фиксировать движение
+chameleon.gui.editor.animated=Анимированная поза
+
+chameleon.gui.editor.scale=Глобальный масштаб
+chameleon.gui.editor.scale_gui=Размер в GUI
+
+chameleon.gui.editor.actions.actions=Действия
+chameleon.gui.editor.actions.action=Действие
+
+chameleon.gui.editor.actions.clamp=Закольцовывание
+chameleon.gui.editor.actions.reset=Сбросить
+chameleon.gui.editor.actions.speed=Скорость
+chameleon.gui.editor.actions.fade=Затухание
+chameleon.gui.editor.actions.tick=Тик
+
+chameleon.gui.config.models=Открыть модели...
+chameleon.gui.config.tutorial=Видеоуроки
+chameleon.gui.config.discord=Дискорд
+chameleon.gui.config.wiki=Вики
+
+# Morph stuff
+morph.section.chameleon=Chameleon (создано с помощью GeckoLib)
+morph.category.chameleon=Анимированные модели
