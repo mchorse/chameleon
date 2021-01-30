@@ -1,11 +1,12 @@
 {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/chameleon-morph/",
     "1.12.2": {
+    	"1.0.2": "This is a small patch that is required for new versions of McLib.", 
         "1.0.1": "Quick hotfix to fix Chameleon mod to work with another more popular Chameleon mod.",
         "1.0": "First version of Chameleon mod. This version provides essential tools to work with Chameleon animated morphs."
     },
     "promos": {
-        "1.12.2-latest": "1.0.1",
-        "1.12.2-recommended": "1.0.1"
+        "1.12.2-latest": "1.0.2",
+        "1.12.2-recommended": "1.0.2"
     }
 }
