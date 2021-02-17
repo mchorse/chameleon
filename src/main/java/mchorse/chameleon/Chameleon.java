@@ -41,7 +41,7 @@ public class Chameleon
         ConfigBuilder builder = event.createBuilder("chameleon");
 
         /* General */
-        builder.category("general").register(new ValueButtons("buttons"));
+        builder.category("general").register(new ValueButtons("buttons").clientSide());
 
         event.modules.add(builder.build());
     }

@@ -6,7 +6,7 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.GuiUtils;
 import mchorse.mclib.client.gui.utils.keys.IKey;
-import mchorse.mclib.config.gui.GuiConfig;
+import mchorse.mclib.config.gui.GuiConfigPanel;
 import mchorse.mclib.config.values.ValueGUI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
@@ -25,7 +25,7 @@ public class ValueButtons extends ValueGUI
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public List<GuiElement> getFields(Minecraft mc, GuiConfig config)
+	public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
 	{
 		GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.models"), (button) -> GuiUtils.openWebLink(ClientProxy.modelsFile.toURI()));
 		GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.tutorial"), (button) -> GuiUtils.openWebLink(this.getTutorialURL()));
