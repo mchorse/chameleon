@@ -25,50 +25,50 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ChameleonStencilRenderer implements IChameleonRenderProcessor
 {
-	private List<String> bones;
-	private Vector4f vertex = new Vector4f();
+    private List<String> bones;
+    private Vector4f vertex = new Vector4f();
 
-	public void setBones(List<String> bones)
-	{
-		this.bones = bones;
-	}
+    public void setBones(List<String> bones)
+    {
+        this.bones = bones;
+    }
 
-	@Override
-	public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
-	{
-		GL11.glStencilFunc(GL11.GL_ALWAYS, this.bones.indexOf(bone.name) + 1, -1);
+    @Override
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    {
+        GL11.glStencilFunc(GL11.GL_ALWAYS, this.bones.indexOf(bone.name) + 1, -1);
 
-		builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-		for (GeoCube cube : bone.childCubes)
-		{
-			renderCube(builder, stack, cube);
-		}
+        for (GeoCube cube : bone.childCubes)
+        {
+            renderCube(builder, stack, cube);
+        }
 
-		Tessellator.getInstance().draw();
+        Tessellator.getInstance().draw();
 
-		return false;
-	}
+        return false;
+    }
 
-	private void renderCube(BufferBuilder builder, MatrixStack stack, GeoCube cube)
-	{
-		stack.push();
-		stack.moveToPivot(cube);
-		stack.rotate(cube);
-		stack.moveBackFromPivot(cube);
+    private void renderCube(BufferBuilder builder, MatrixStack stack, GeoCube cube)
+    {
+        stack.push();
+        stack.moveToPivot(cube);
+        stack.rotate(cube);
+        stack.moveBackFromPivot(cube);
 
-		for (GeoQuad quad : cube.quads)
-		{
-			for (GeoVertex vertex : quad.vertices)
-			{
-				this.vertex.set(vertex.position);
-				this.vertex.w = 1;
-				stack.getModelMatrix().transform(this.vertex);
+        for (GeoQuad quad : cube.quads)
+        {
+            for (GeoVertex vertex : quad.vertices)
+            {
+                this.vertex.set(vertex.position);
+                this.vertex.w = 1;
+                stack.getModelMatrix().transform(this.vertex);
 
-				builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
-			}
-		}
+                builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
+            }
+        }
 
-		stack.pop();
-	}
+        stack.pop();
+    }
 }

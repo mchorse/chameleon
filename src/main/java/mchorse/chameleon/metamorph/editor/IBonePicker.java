@@ -2,5 +2,5 @@ package mchorse.chameleon.metamorph.editor;
 
 public interface IBonePicker
 {
-	public void pickBone(String bone);
+    public void pickBone(String bone);
 }

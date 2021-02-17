@@ -10,20 +10,20 @@ import java.util.Collections;
 
 public class CommonProxy
 {
-	public File configFile;
+    public File configFile;
 
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		this.configFile = new File(event.getModConfigurationDirectory(), "chameleon");
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        this.configFile = new File(event.getModConfigurationDirectory(), "chameleon");
 
-		MorphManager.INSTANCE.factories.add(new ChameleonFactory());
-	}
+        MorphManager.INSTANCE.factories.add(new ChameleonFactory());
+    }
 
-	public void reloadModels()
-	{}
+    public void reloadModels()
+    {}
 
-	public Collection<String> getModelKeys()
-	{
-		return Collections.emptyList();
-	}
+    public Collection<String> getModelKeys()
+    {
+        return Collections.emptyList();
+    }
 }

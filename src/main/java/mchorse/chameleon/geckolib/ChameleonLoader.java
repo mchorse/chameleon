@@ -32,72 +32,72 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ChameleonLoader
 {
-	public void loadAllAnimations(MolangParser parser, File file, AnimationFile animationFile)
-	{
-		JsonObject json = this.loadFile(file);
+    public void loadAllAnimations(MolangParser parser, File file, AnimationFile animationFile)
+    {
+        JsonObject json = this.loadFile(file);
 
-		if (json != null)
-		{
-			for (Map.Entry<String, JsonElement> entry : JsonAnimationUtils.getAnimations(json))
-			{
-				String key = entry.getKey();
+        if (json != null)
+        {
+            for (Map.Entry<String, JsonElement> entry : JsonAnimationUtils.getAnimations(json))
+            {
+                String key = entry.getKey();
 
-				try
-				{
-					animationFile.putAnimation(key, JsonAnimationUtils.deserializeJsonToAnimation(JsonAnimationUtils.getAnimation(json, key), parser));
-				}
-				catch (JsonException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+                try
+                {
+                    animationFile.putAnimation(key, JsonAnimationUtils.deserializeJsonToAnimation(JsonAnimationUtils.getAnimation(json, key), parser));
+                }
+                catch (JsonException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
-	public GeoModel loadModel(File file)
-	{
-		try
-		{
-			RawGeoModel rawModel = Converter.fromJsonString(this.loadStringFile(file));
+    public GeoModel loadModel(File file)
+    {
+        try
+        {
+            RawGeoModel rawModel = Converter.fromJsonString(this.loadStringFile(file));
 
-			if (rawModel.getFormatVersion() != FormatVersion.VERSION_1_12_0)
-			{
-				throw new GeoModelException(new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath()), "Given geometry JSON version" + rawModel.getFormatVersion().toValue() + ", expected 1.12.0");
-			}
-			else
-			{
-				return GeoBuilder.constructGeoModel(RawGeometryTree.parseHierarchy(rawModel, new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath())));
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+            if (rawModel.getFormatVersion() != FormatVersion.VERSION_1_12_0)
+            {
+                throw new GeoModelException(new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath()), "Given geometry JSON version" + rawModel.getFormatVersion().toValue() + ", expected 1.12.0");
+            }
+            else
+            {
+                return GeoBuilder.constructGeoModel(RawGeometryTree.parseHierarchy(rawModel, new ResourceLocation(Chameleon.MOD_ID, file.getAbsolutePath())));
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private JsonObject loadFile(File file)
-	{
-		try
-		{
-			return JsonUtils.fromJson(new Gson(), new StringReader(this.loadStringFile(file)), JsonObject.class);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+    private JsonObject loadFile(File file)
+    {
+        try
+        {
+            return JsonUtils.fromJson(new Gson(), new StringReader(this.loadStringFile(file)), JsonObject.class);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private String loadStringFile(File file) throws IOException
-	{
-		InputStream stream = new FileInputStream(file);
-		String content = IOUtils.toString(stream, Charset.defaultCharset());
+    private String loadStringFile(File file) throws IOException
+    {
+        InputStream stream = new FileInputStream(file);
+        String content = IOUtils.toString(stream, Charset.defaultCharset());
 
-		stream.close();
+        stream.close();
 
-		return content;
-	}
+        return content;
+    }
 }

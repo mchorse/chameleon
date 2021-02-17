@@ -20,42 +20,42 @@ import javax.vecmath.Matrix4f;
 @SideOnly(Side.CLIENT)
 public class ChameleonPostRenderer implements IChameleonRenderProcessor
 {
-	private static Matrix4f matrix = new Matrix4f();
+    private static Matrix4f matrix = new Matrix4f();
 
-	private String boneName = "";
+    private String boneName = "";
 
-	/**
-	 * Multiply given matrix stack onto OpenGL's matrix stack
-	 */
-	public static void multiplyMatrix(MatrixStack stack, GeoBone bone)
-	{
-		matrix.set(stack.getModelMatrix());
-		matrix.transpose();
+    /**
+     * Multiply given matrix stack onto OpenGL's matrix stack
+     */
+    public static void multiplyMatrix(MatrixStack stack, GeoBone bone)
+    {
+        matrix.set(stack.getModelMatrix());
+        matrix.transpose();
 
-		MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix);
-		MatrixUtils.buffer.clear();
-		MatrixUtils.buffer.put(MatrixUtils.floats);
-		MatrixUtils.buffer.flip();
+        MatrixUtils.matrixToFloat(MatrixUtils.floats, matrix);
+        MatrixUtils.buffer.clear();
+        MatrixUtils.buffer.put(MatrixUtils.floats);
+        MatrixUtils.buffer.flip();
 
-		GlStateManager.multMatrix(MatrixUtils.buffer);
-		GlStateManager.translate(bone.rotationPointX / 16, bone.rotationPointY / 16, bone.rotationPointZ / 16);
-	}
+        GlStateManager.multMatrix(MatrixUtils.buffer);
+        GlStateManager.translate(bone.rotationPointX / 16, bone.rotationPointY / 16, bone.rotationPointZ / 16);
+    }
 
-	public void setBoneName(String boneName)
-	{
-		this.boneName = boneName;
-	}
+    public void setBoneName(String boneName)
+    {
+        this.boneName = boneName;
+    }
 
-	@Override
-	public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
-	{
-		if (bone.name.equals(this.boneName))
-		{
-			multiplyMatrix(stack, bone);
+    @Override
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    {
+        if (bone.name.equals(this.boneName))
+        {
+            multiplyMatrix(stack, bone);
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

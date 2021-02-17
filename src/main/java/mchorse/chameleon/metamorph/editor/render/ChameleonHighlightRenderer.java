@@ -27,60 +27,60 @@ import javax.vecmath.Vector4f;
 @SideOnly(Side.CLIENT)
 public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 {
-	private String boneName;
-	private Vector4f vertex = new Vector4f();
+    private String boneName;
+    private Vector4f vertex = new Vector4f();
 
-	public void setBoneName(String boneName)
-	{
-		this.boneName = boneName;
-	}
+    public void setBoneName(String boneName)
+    {
+        this.boneName = boneName;
+    }
 
-	@Override
-	public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
-	{
-		if (bone.name.equals(this.boneName))
-		{
-			builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
+    @Override
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    {
+        if (bone.name.equals(this.boneName))
+        {
+            builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-			for (GeoCube cube : bone.childCubes)
-			{
-				this.renderCubeForHighlight(builder, stack, cube);
-			}
+            for (GeoCube cube : bone.childCubes)
+            {
+                this.renderCubeForHighlight(builder, stack, cube);
+            }
 
-			Tessellator.getInstance().draw();
+            Tessellator.getInstance().draw();
 
-			GlStateManager.pushMatrix();
-			ChameleonPostRenderer.multiplyMatrix(stack, bone);
+            GlStateManager.pushMatrix();
+            ChameleonPostRenderer.multiplyMatrix(stack, bone);
 
-			Draw.axis(0.25F * 1.5F);
+            Draw.axis(0.25F * 1.5F);
 
-			GlStateManager.popMatrix();
+            GlStateManager.popMatrix();
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	private void renderCubeForHighlight(BufferBuilder builder, MatrixStack stack, GeoCube cube)
-	{
-		stack.push();
-		stack.moveToPivot(cube);
-		stack.rotate(cube);
-		stack.moveBackFromPivot(cube);
+    private void renderCubeForHighlight(BufferBuilder builder, MatrixStack stack, GeoCube cube)
+    {
+        stack.push();
+        stack.moveToPivot(cube);
+        stack.rotate(cube);
+        stack.moveBackFromPivot(cube);
 
-		for (GeoQuad quad : cube.quads)
-		{
-			for (GeoVertex vertex : quad.vertices)
-			{
-				this.vertex.set(vertex.position);
-				this.vertex.w = 1;
-				stack.getModelMatrix().transform(this.vertex);
+        for (GeoQuad quad : cube.quads)
+        {
+            for (GeoVertex vertex : quad.vertices)
+            {
+                this.vertex.set(vertex.position);
+                this.vertex.w = 1;
+                stack.getModelMatrix().transform(this.vertex);
 
-				builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
-			}
-		}
+                builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ()).endVertex();
+            }
+        }
 
-		stack.pop();
-	}
+        stack.pop();
+    }
 }

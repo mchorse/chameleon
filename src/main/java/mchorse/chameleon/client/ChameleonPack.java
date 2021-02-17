@@ -19,49 +19,49 @@ import java.util.Set;
 @SideOnly(Side.CLIENT)
 public class ChameleonPack implements IResourcePack
 {
-	private static final Set<String> DOMAINS = ImmutableSet.of("c.s");
+    private static final Set<String> DOMAINS = ImmutableSet.of("c.s");
 
-	public File file;
+    public File file;
 
-	public ChameleonPack(File file)
-	{
-		this.file = file;
-	}
+    public ChameleonPack(File file)
+    {
+        this.file = file;
+    }
 
-	@Override
-	public InputStream getInputStream(ResourceLocation location) throws IOException
-	{
-		return new FileInputStream(new File(this.file, location.getResourcePath()));
-	}
+    @Override
+    public InputStream getInputStream(ResourceLocation location) throws IOException
+    {
+        return new FileInputStream(new File(this.file, location.getResourcePath()));
+    }
 
-	@Override
-	public boolean resourceExists(ResourceLocation location)
-	{
-		return new File(this.file, location.getResourcePath()).exists();
-	}
+    @Override
+    public boolean resourceExists(ResourceLocation location)
+    {
+        return new File(this.file, location.getResourcePath()).exists();
+    }
 
-	@Override
-	public Set<String> getResourceDomains()
-	{
-		return DOMAINS;
-	}
+    @Override
+    public Set<String> getResourceDomains()
+    {
+        return DOMAINS;
+    }
 
-	@Nullable
-	@Override
-	public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
-	{
-		return null;
-	}
+    @Nullable
+    @Override
+    public <T extends IMetadataSection> T getPackMetadata(MetadataSerializer metadataSerializer, String metadataSectionName) throws IOException
+    {
+        return null;
+    }
 
-	@Override
-	public BufferedImage getPackImage() throws IOException
-	{
-		return null;
-	}
+    @Override
+    public BufferedImage getPackImage() throws IOException
+    {
+        return null;
+    }
 
-	@Override
-	public String getPackName()
-	{
-		return "Chameleon's skin pack";
-	}
+    @Override
+    public String getPackName()
+    {
+        return "Chameleon's skin pack";
+    }
 }

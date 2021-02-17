@@ -18,49 +18,49 @@ import java.util.List;
 
 public class ValueButtons extends ValueGUI
 {
-	public ValueButtons(String id)
-	{
-		super(id);
-	}
+    public ValueButtons(String id)
+    {
+        super(id);
+    }
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
-	{
-		GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.models"), (button) -> GuiUtils.openWebLink(ClientProxy.modelsFile.toURI()));
-		GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.tutorial"), (button) -> GuiUtils.openWebLink(this.getTutorialURL()));
-		GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.discord"), (button) -> GuiUtils.openWebLink(this.getDiscordURL()));
-		GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.wiki"), (button) -> GuiUtils.openWebLink(this.getWikiURL()));
+    @Override
+    @SideOnly(Side.CLIENT)
+    public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
+    {
+        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.models"), (button) -> GuiUtils.openWebLink(ClientProxy.modelsFile.toURI()));
+        GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.tutorial"), (button) -> GuiUtils.openWebLink(this.getTutorialURL()));
+        GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.discord"), (button) -> GuiUtils.openWebLink(this.getDiscordURL()));
+        GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.wiki"), (button) -> GuiUtils.openWebLink(this.getWikiURL()));
 
-		GuiElement first = Elements.row(mc, 5, 0, 20, models, tutorial);
-		GuiElement second = Elements.row(mc, 5, 0, 20, discord, wiki);
+        GuiElement first = Elements.row(mc, 5, 0, 20, models, tutorial);
+        GuiElement second = Elements.row(mc, 5, 0, 20, discord, wiki);
 
-		return Arrays.asList(first, second);
-	}
+        return Arrays.asList(first, second);
+    }
 
-	@SideOnly(Side.CLIENT)
-	private String getTutorialURL()
-	{
-		return this.getLangOrDefault("chameleon.gui.url.tutorial", "https://www.youtube.com/playlist?list=PLLnllO8nnzE94k_xh3tqX58_tJzx92NcG");
-	}
+    @SideOnly(Side.CLIENT)
+    private String getTutorialURL()
+    {
+        return this.getLangOrDefault("chameleon.gui.url.tutorial", "https://www.youtube.com/playlist?list=PLLnllO8nnzE94k_xh3tqX58_tJzx92NcG");
+    }
 
-	@SideOnly(Side.CLIENT)
-	private String getDiscordURL()
-	{
-		return this.getLangOrDefault("chameleon.gui.url.discord", "https://discord.gg/qfxrqUF");
-	}
+    @SideOnly(Side.CLIENT)
+    private String getDiscordURL()
+    {
+        return this.getLangOrDefault("chameleon.gui.url.discord", "https://discord.gg/qfxrqUF");
+    }
 
-	@SideOnly(Side.CLIENT)
-	private String getWikiURL()
-	{
-		return this.getLangOrDefault("chameleon.gui.url.wiki", "https://github.com/mchorse/chameleon/wiki");
-	}
+    @SideOnly(Side.CLIENT)
+    private String getWikiURL()
+    {
+        return this.getLangOrDefault("chameleon.gui.url.wiki", "https://github.com/mchorse/chameleon/wiki");
+    }
 
-	@SideOnly(Side.CLIENT)
-	private String getLangOrDefault(String key, String def)
-	{
-		String string = I18n.format(key);
+    @SideOnly(Side.CLIENT)
+    private String getLangOrDefault(String key, String def)
+    {
+        String string = I18n.format(key);
 
-		return key.equals(key) ? def : key;
-	}
+        return key.equals(key) ? def : key;
+    }
 }

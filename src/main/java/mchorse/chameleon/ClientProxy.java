@@ -25,168 +25,168 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy
 {
-	public static final Map<String, ChameleonModel> chameleonModels = new HashMap<String, ChameleonModel>();
-	public static final MolangParser parser;
+    public static final Map<String, ChameleonModel> chameleonModels = new HashMap<String, ChameleonModel>();
+    public static final MolangParser parser;
 
-	public static ChameleonPack pack;
-	public static ChameleonTree tree;
+    public static ChameleonPack pack;
+    public static ChameleonTree tree;
 
-	public static File modelsFile;
+    public static File modelsFile;
 
-	private ChameleonLoader loader = new ChameleonLoader();
+    private ChameleonLoader loader = new ChameleonLoader();
 
-	static
-	{
-		parser = new MolangParser();
+    static
+    {
+        parser = new MolangParser();
 
-		MolangRegistrar.registerVars(parser);
+        MolangRegistrar.registerVars(parser);
 
-		/* Additional Chameleon specific variables */
-		parser.register(new Variable("query.head_yaw", 0));
-		parser.register(new Variable("query.head_pitch", 0));
+        /* Additional Chameleon specific variables */
+        parser.register(new Variable("query.head_yaw", 0));
+        parser.register(new Variable("query.head_pitch", 0));
 
-		parser.register(new Variable("query.velocity", 0));
-		parser.register(new Variable("query.limb_swing", 0));
-		parser.register(new Variable("query.limb_swing_amount", 0));
-		parser.register(new Variable("query.age", 0));
-	}
+        parser.register(new Variable("query.velocity", 0));
+        parser.register(new Variable("query.limb_swing", 0));
+        parser.register(new Variable("query.limb_swing_amount", 0));
+        parser.register(new Variable("query.age", 0));
+    }
 
-	@Override
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		super.preInit(event);
+    @Override
+    public void preInit(FMLPreInitializationEvent event)
+    {
+        super.preInit(event);
 
-		modelsFile = new File(this.configFile, "models");
+        modelsFile = new File(this.configFile, "models");
 
-		this.reloadModels();
-		pack = new ChameleonPack(modelsFile);
+        this.reloadModels();
+        pack = new ChameleonPack(modelsFile);
 
-		ReflectionUtils.registerResourcePack(pack);
-		GlobalTree.TREE.register(tree = new ChameleonTree(modelsFile));
-	}
+        ReflectionUtils.registerResourcePack(pack);
+        GlobalTree.TREE.register(tree = new ChameleonTree(modelsFile));
+    }
 
-	@Override
-	public void reloadModels()
-	{
-		modelsFile.mkdirs();
+    @Override
+    public void reloadModels()
+    {
+        modelsFile.mkdirs();
 
-		if (!modelsFile.isDirectory())
-		{
-			return;
-		}
+        if (!modelsFile.isDirectory())
+        {
+            return;
+        }
 
-		File[] files = modelsFile.listFiles();
+        File[] files = modelsFile.listFiles();
 
-		if (files == null)
-		{
-			return;
-		}
+        if (files == null)
+        {
+            return;
+        }
 
-		List<String> toCheck = new ArrayList<String>(chameleonModels.keySet());
+        List<String> toCheck = new ArrayList<String>(chameleonModels.keySet());
 
-		for (File modelFolder : files)
-		{
-			if (!modelFolder.isDirectory())
-			{
-				continue;
-			}
+        for (File modelFolder : files)
+        {
+            if (!modelFolder.isDirectory())
+            {
+                continue;
+            }
 
-			this.reloadModelFolder(modelFolder, toCheck);
-		}
+            this.reloadModelFolder(modelFolder, toCheck);
+        }
 
-		/* Check and remove model if it got removed */
-		for (String key : toCheck)
-		{
-			ChameleonModel model = chameleonModels.get(key);
+        /* Check and remove model if it got removed */
+        for (String key : toCheck)
+        {
+            ChameleonModel model = chameleonModels.get(key);
 
-			if (model != null && !model.isStillPresent())
-			{
-				chameleonModels.remove(key);
-			}
-		}
-	}
+            if (model != null && !model.isStillPresent())
+            {
+                chameleonModels.remove(key);
+            }
+        }
+    }
 
-	private void reloadModelFolder(File modelFolder, List<String> toCheck)
-	{
-		File model = null;
-		List<File> animations = new ArrayList<File>();
-		File[] files = modelFolder.listFiles();
-		long lastUpdated = 0;
+    private void reloadModelFolder(File modelFolder, List<String> toCheck)
+    {
+        File model = null;
+        List<File> animations = new ArrayList<File>();
+        File[] files = modelFolder.listFiles();
+        long lastUpdated = 0;
 
-		if (files == null)
-		{
-			return;
-		}
+        if (files == null)
+        {
+            return;
+        }
 
-		for (File file : files)
-		{
-			if (model == null && file.getName().endsWith(".geo.json"))
-			{
-				model = file;
-				lastUpdated = Math.max(file.lastModified(), lastUpdated);
-			}
-			else if (animations.isEmpty() && file.getName().endsWith(".animation.json"))
-			{
-				animations.add(file);
-				lastUpdated = Math.max(file.lastModified(), lastUpdated);
-			}
-		}
+        for (File file : files)
+        {
+            if (model == null && file.getName().endsWith(".geo.json"))
+            {
+                model = file;
+                lastUpdated = Math.max(file.lastModified(), lastUpdated);
+            }
+            else if (animations.isEmpty() && file.getName().endsWith(".animation.json"))
+            {
+                animations.add(file);
+                lastUpdated = Math.max(file.lastModified(), lastUpdated);
+            }
+        }
 
-		/* Scan for animation files also in animations folder */
-		File animationsFolder = new File(modelFolder, "animations");
+        /* Scan for animation files also in animations folder */
+        File animationsFolder = new File(modelFolder, "animations");
 
-		if (animationsFolder.isDirectory())
-		{
-			File[] animationsInFolder = animationsFolder.listFiles();
+        if (animationsFolder.isDirectory())
+        {
+            File[] animationsInFolder = animationsFolder.listFiles();
 
-			if (animationsInFolder != null)
-			{
-				for (File animationFile : animationsInFolder)
-				{
-					if (animationFile.getName().endsWith(".animation.json"))
-					{
-						animations.add(animationFile);
-						lastUpdated = Math.max(animationFile.lastModified(), lastUpdated);
-					}
-				}
-			}
-		}
+            if (animationsInFolder != null)
+            {
+                for (File animationFile : animationsInFolder)
+                {
+                    if (animationFile.getName().endsWith(".animation.json"))
+                    {
+                        animations.add(animationFile);
+                        lastUpdated = Math.max(animationFile.lastModified(), lastUpdated);
+                    }
+                }
+            }
+        }
 
-		/* Load model and animation */
-		String key = modelFolder.getName();
-		ChameleonModel oldModel = chameleonModels.get(key);
+        /* Load model and animation */
+        String key = modelFolder.getName();
+        ChameleonModel oldModel = chameleonModels.get(key);
 
-		if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
-		{
-			GeoModel geoModel = this.loader.loadModel(model);
-			AnimationFile animationFile = this.loadAnimations(animations);
+        if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
+        {
+            GeoModel geoModel = this.loader.loadModel(model);
+            AnimationFile animationFile = this.loadAnimations(animations);
 
-			if (geoModel != null)
-			{
-				List<File> trackingFiles = new ArrayList<File>();
+            if (geoModel != null)
+            {
+                List<File> trackingFiles = new ArrayList<File>();
 
-				trackingFiles.add(model);
-				chameleonModels.put(key, new ChameleonModel(geoModel, animationFile, trackingFiles, lastUpdated));
-				toCheck.remove(key);
-			}
-		}
-	}
+                trackingFiles.add(model);
+                chameleonModels.put(key, new ChameleonModel(geoModel, animationFile, trackingFiles, lastUpdated));
+                toCheck.remove(key);
+            }
+        }
+    }
 
-	private AnimationFile loadAnimations(List<File> files)
-	{
-		AnimationFile animations = new AnimationFile();
+    private AnimationFile loadAnimations(List<File> files)
+    {
+        AnimationFile animations = new AnimationFile();
 
-		for (File animationFile : files)
-		{
-			this.loader.loadAllAnimations(parser, animationFile, animations);
-		}
+        for (File animationFile : files)
+        {
+            this.loader.loadAllAnimations(parser, animationFile, animations);
+        }
 
-		return animations;
-	}
+        return animations;
+    }
 
-	@Override
-	public Collection<String> getModelKeys()
-	{
-		return chameleonModels.keySet();
-	}
+    @Override
+    public Collection<String> getModelKeys()
+    {
+        return chameleonModels.keySet();
+    }
 }

@@ -10,51 +10,51 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiCustomBodyPartEditor extends GuiBodyPartEditor implements IBonePicker
 {
-	public GuiCustomBodyPartEditor(Minecraft mc, GuiAbstractMorph editor)
-	{
-		super(mc, editor);
-	}
+    public GuiCustomBodyPartEditor(Minecraft mc, GuiAbstractMorph editor)
+    {
+        super(mc, editor);
+    }
 
-	@Override
-	protected void setPart(BodyPart part)
-	{
-		super.setPart(part);
+    @Override
+    protected void setPart(BodyPart part)
+    {
+        super.setPart(part);
 
-		if (part != null)
-		{
-			GuiChameleonMorph parent = (GuiChameleonMorph) this.editor;
+        if (part != null)
+        {
+            GuiChameleonMorph parent = (GuiChameleonMorph) this.editor;
 
-			parent.chameleonModelRenderer.boneName = part.limb;
-		}
-	}
+            parent.chameleonModelRenderer.boneName = part.limb;
+        }
+    }
 
-	@Override
-	protected void setupNewBodyPart(BodyPart part)
-	{
-		super.setupNewBodyPart(part);
+    @Override
+    protected void setupNewBodyPart(BodyPart part)
+    {
+        super.setupNewBodyPart(part);
 
-		part.rotate.x = 0;
-		part.rotate.y = 180;
-	}
+        part.rotate.x = 0;
+        part.rotate.y = 180;
+    }
 
-	@Override
-	protected void pickLimb(String limbName)
-	{
-		GuiChameleonMorph parent = (GuiChameleonMorph) this.editor;
+    @Override
+    protected void pickLimb(String limbName)
+    {
+        GuiChameleonMorph parent = (GuiChameleonMorph) this.editor;
 
-		super.pickLimb(limbName);
-		parent.chameleonModelRenderer.boneName = limbName;
-	}
+        super.pickLimb(limbName);
+        parent.chameleonModelRenderer.boneName = limbName;
+    }
 
-	@Override
-	public void pickBone(String limb)
-	{
-		try
-		{
-			this.pickLimb(limb);
-			this.limbs.setCurrent(limb);
-		}
-		catch (Exception e)
-		{}
-	}
+    @Override
+    public void pickBone(String limb)
+    {
+        try
+        {
+            this.pickLimb(limb);
+            this.limbs.setCurrent(limb);
+        }
+        catch (Exception e)
+        {}
+    }
 }

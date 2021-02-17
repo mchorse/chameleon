@@ -13,74 +13,74 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ChameleonModel
 {
-	public GeoModel model;
-	public AnimationFile animation;
-	public long lastUpdate;
+    public GeoModel model;
+    public AnimationFile animation;
+    public long lastUpdate;
 
-	private List<String> boneNames;
-	private boolean isStatic;
-	private List<File> files;
+    private List<String> boneNames;
+    private boolean isStatic;
+    private List<File> files;
 
-	public ChameleonModel(GeoModel model, AnimationFile file, List<File> files, long lastUpdate)
-	{
-		this.model = model;
-		this.animation = file;
-		this.files = files;
-		this.lastUpdate = lastUpdate;
-		this.isStatic = file == null || file.getAllAnimations().isEmpty();
+    public ChameleonModel(GeoModel model, AnimationFile file, List<File> files, long lastUpdate)
+    {
+        this.model = model;
+        this.animation = file;
+        this.files = files;
+        this.lastUpdate = lastUpdate;
+        this.isStatic = file == null || file.getAllAnimations().isEmpty();
 
-		/* This is VERY IMPORTANT, if initial bone snapshots won't be saved,
-		 * there will be rotation inconsistencies! */
-		this.saveInitialBoneSnapshots(model.topLevelBones);
-	}
+        /* This is VERY IMPORTANT, if initial bone snapshots won't be saved,
+         * there will be rotation inconsistencies! */
+        this.saveInitialBoneSnapshots(model.topLevelBones);
+    }
 
-	private void saveInitialBoneSnapshots(List<GeoBone> bones)
-	{
-		for (GeoBone bone : bones)
-		{
-			bone.saveInitialSnapshot();
+    private void saveInitialBoneSnapshots(List<GeoBone> bones)
+    {
+        for (GeoBone bone : bones)
+        {
+            bone.saveInitialSnapshot();
 
-			this.saveInitialBoneSnapshots(bone.childBones);
-		}
-	}
+            this.saveInitialBoneSnapshots(bone.childBones);
+        }
+    }
 
-	public List<String> getBoneNames()
-	{
-		if (this.boneNames != null)
-		{
-			return this.boneNames;
-		}
+    public List<String> getBoneNames()
+    {
+        if (this.boneNames != null)
+        {
+            return this.boneNames;
+        }
 
-		return this.boneNames = this.getBoneNames(new ArrayList<String>(), this.model.topLevelBones);
-	}
+        return this.boneNames = this.getBoneNames(new ArrayList<String>(), this.model.topLevelBones);
+    }
 
-	private List<String> getBoneNames(List<String> boneNames, List<GeoBone> bones)
-	{
-		for (GeoBone bone : bones)
-		{
-			boneNames.add(bone.name);
+    private List<String> getBoneNames(List<String> boneNames, List<GeoBone> bones)
+    {
+        for (GeoBone bone : bones)
+        {
+            boneNames.add(bone.name);
 
-			this.getBoneNames(boneNames, bone.childBones);
-		}
+            this.getBoneNames(boneNames, bone.childBones);
+        }
 
-		return boneNames;
-	}
+        return boneNames;
+    }
 
-	public boolean isStatic()
-	{
-		return this.isStatic;
-	}
+    public boolean isStatic()
+    {
+        return this.isStatic;
+    }
 
-	public boolean isStillPresent()
-	{
-		for (File file : this.files)
-		{
-			if (!file.exists())
-			{
-				return false;
-			}
-		}
+    public boolean isStillPresent()
+    {
+        for (File file : this.files)
+        {
+            if (!file.exists())
+            {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 }

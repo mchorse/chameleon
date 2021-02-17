@@ -28,138 +28,138 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
 {
-	public GuiActionsPanel actionsPanel;
-	public GuiCustomBodyPartEditor bodyPart;
-	public GuiChameleonMainPanel mainPanel;
-	public GuiChameleonModelRenderer chameleonModelRenderer;
+    public GuiActionsPanel actionsPanel;
+    public GuiCustomBodyPartEditor bodyPart;
+    public GuiChameleonMainPanel mainPanel;
+    public GuiChameleonModelRenderer chameleonModelRenderer;
 
-	public GuiChameleonMorph(Minecraft mc)
-	{
-		super(mc);
+    public GuiChameleonMorph(Minecraft mc)
+    {
+        super(mc);
 
-		this.mainPanel = new GuiChameleonMainPanel(mc, this);
-		this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
-		this.actionsPanel = new GuiActionsPanel(mc, this);
-		this.defaultPanel = this.mainPanel;
+        this.mainPanel = new GuiChameleonMainPanel(mc, this);
+        this.bodyPart = new GuiCustomBodyPartEditor(mc, this);
+        this.actionsPanel = new GuiActionsPanel(mc, this);
+        this.defaultPanel = this.mainPanel;
 
-		this.registerPanel(this.actionsPanel, IKey.lang("chameleon.gui.editor.actions.actions"), Icons.MORE);
-		this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
-		this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.GEAR);
+        this.registerPanel(this.actionsPanel, IKey.lang("chameleon.gui.editor.actions.actions"), Icons.MORE);
+        this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
+        this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.GEAR);
 
-		this.keys().register(IKey.lang("chameleon.gui.editor.pick_skin"), Keyboard.KEY_P, () ->
-		{
-			this.setPanel(this.mainPanel);
+        this.keys().register(IKey.lang("chameleon.gui.editor.pick_skin"), Keyboard.KEY_P, () ->
+        {
+            this.setPanel(this.mainPanel);
 
-			this.mainPanel.skin.clickItself(GuiBase.getCurrent());
-		}).held(Keyboard.KEY_LSHIFT);
-	}
+            this.mainPanel.skin.clickItself(GuiBase.getCurrent());
+        }).held(Keyboard.KEY_LSHIFT);
+    }
 
-	@Override
-	protected GuiModelRenderer createMorphRenderer(Minecraft mc)
-	{
-		this.chameleonModelRenderer = new GuiChameleonModelRenderer(mc);
-		this.chameleonModelRenderer.picker(this::pickLimb);
+    @Override
+    protected GuiModelRenderer createMorphRenderer(Minecraft mc)
+    {
+        this.chameleonModelRenderer = new GuiChameleonModelRenderer(mc);
+        this.chameleonModelRenderer.picker(this::pickLimb);
 
-		return this.chameleonModelRenderer;
-	}
+        return this.chameleonModelRenderer;
+    }
 
-	private void pickLimb(String limb)
-	{
-		if (this.view.delegate instanceof IBonePicker)
-		{
-			((IBonePicker) this.view.delegate).pickBone(limb);
-		}
-	}
+    private void pickLimb(String limb)
+    {
+        if (this.view.delegate instanceof IBonePicker)
+        {
+            ((IBonePicker) this.view.delegate).pickBone(limb);
+        }
+    }
 
-	@Override
-	public boolean canEdit(AbstractMorph morph)
-	{
-		return morph instanceof ChameleonMorph;
-	}
+    @Override
+    public boolean canEdit(AbstractMorph morph)
+    {
+        return morph instanceof ChameleonMorph;
+    }
 
-	@Override
-	public void startEdit(ChameleonMorph morph)
-	{
-		super.startEdit(morph);
+    @Override
+    public void startEdit(ChameleonMorph morph)
+    {
+        super.startEdit(morph);
 
-		ChameleonModel model = morph.getModel();
+        ChameleonModel model = morph.getModel();
 
-		morph.parts.reinitBodyParts();
+        morph.parts.reinitBodyParts();
 
-		if (model == null)
-		{
-			this.bodyPart.setLimbs(Collections.emptyList());
-		}
-		else
-		{
-			this.bodyPart.setLimbs(model.getBoneNames());
-		}
-	}
+        if (model == null)
+        {
+            this.bodyPart.setLimbs(Collections.emptyList());
+        }
+        else
+        {
+            this.bodyPart.setLimbs(model.getBoneNames());
+        }
+    }
 
-	@Override
-	public void setPanel(GuiMorphPanel panel)
-	{
-		this.chameleonModelRenderer.boneName = "";
+    @Override
+    public void setPanel(GuiMorphPanel panel)
+    {
+        this.chameleonModelRenderer.boneName = "";
 
-		super.setPanel(panel);
-	}
+        super.setPanel(panel);
+    }
 
-	@Override
-	public List<Label<NBTTagCompound>> getPresets(ChameleonMorph morph)
-	{
-		List<Label<NBTTagCompound>> list = new ArrayList<Label<NBTTagCompound>>();
-		String key = morph.getKey();
+    @Override
+    public List<Label<NBTTagCompound>> getPresets(ChameleonMorph morph)
+    {
+        List<Label<NBTTagCompound>> list = new ArrayList<Label<NBTTagCompound>>();
+        String key = morph.getKey();
 
-		this.addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(key + "/skins", null));
+        this.addSkins(morph, list, "Skin", ClientProxy.tree.getByPath(key + "/skins", null));
 
-		return list;
-	}
+        return list;
+    }
 
-	public void addSkins(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, FolderEntry entry)
-	{
-		if (entry == null)
-		{
-			return;
-		}
+    public void addSkins(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, FolderEntry entry)
+    {
+        if (entry == null)
+        {
+            return;
+        }
 
-		for (AbstractEntry childEntry : entry.getEntries())
-		{
-			if (childEntry instanceof FileEntry)
-			{
-				ResourceLocation location = ((FileEntry) childEntry).resource;
-				String label = location.getResourcePath();
-				int index = label.indexOf("/skins/");
+        for (AbstractEntry childEntry : entry.getEntries())
+        {
+            if (childEntry instanceof FileEntry)
+            {
+                ResourceLocation location = ((FileEntry) childEntry).resource;
+                String label = location.getResourcePath();
+                int index = label.indexOf("/skins/");
 
-				if (index != -1)
-				{
-					label = label.substring(index + 7);
-				}
+                if (index != -1)
+                {
+                    label = label.substring(index + 7);
+                }
 
-				this.addPreset(morph, list, name, label, location);
-			}
-			else if (childEntry instanceof FolderEntry)
-			{
-				FolderEntry childFolder = (FolderEntry) childEntry;
+                this.addPreset(morph, list, name, label, location);
+            }
+            else if (childEntry instanceof FolderEntry)
+            {
+                FolderEntry childFolder = (FolderEntry) childEntry;
 
-				if (!childFolder.isTop())
-				{
-					this.addSkins(morph, list, name, childFolder);
-				}
-			}
-		}
-	}
+                if (!childFolder.isTop())
+                {
+                    this.addSkins(morph, list, name, childFolder);
+                }
+            }
+        }
+    }
 
-	public void addPreset(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, String label, ResourceLocation skin)
-	{
-		try
-		{
-			NBTTagCompound tag = morph.toNBT();
+    public void addPreset(AbstractMorph morph, List<Label<NBTTagCompound>> list, String name, String label, ResourceLocation skin)
+    {
+        try
+        {
+            NBTTagCompound tag = morph.toNBT();
 
-			tag.setString(name, skin.toString());
-			list.add(new Label<>(IKey.str(label), tag));
-		}
-		catch (Exception e)
-		{}
-	}
+            tag.setString(name, skin.toString());
+            list.add(new Label<>(IKey.str(label), tag));
+        }
+        catch (Exception e)
+        {}
+    }
 
 }

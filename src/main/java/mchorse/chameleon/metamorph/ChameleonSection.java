@@ -11,45 +11,45 @@ import net.minecraft.world.World;
 
 public class ChameleonSection extends MorphSection
 {
-	public MorphCategory models;
+    public MorphCategory models;
 
-	public ChameleonSection(String title)
-	{
-		super(title);
+    public ChameleonSection(String title)
+    {
+        super(title);
 
-		this.models = new MorphCategory(this, "chameleon");
-	}
+        this.models = new MorphCategory(this, "chameleon");
+    }
 
-	@Override
-	public void update(World world)
-	{
-		/* Reload models */
-		Chameleon.proxy.reloadModels();
+    @Override
+    public void update(World world)
+    {
+        /* Reload models */
+        Chameleon.proxy.reloadModels();
 
-		this.categories.clear();
-		this.models.clear();
+        this.categories.clear();
+        this.models.clear();
 
-		for (String key : Chameleon.proxy.getModelKeys())
-		{
-			ChameleonMorph morph = new ChameleonMorph();
-			FolderEntry skins = ClientProxy.tree.getByPath(key + "/skins/", null);
+        for (String key : Chameleon.proxy.getModelKeys())
+        {
+            ChameleonMorph morph = new ChameleonMorph();
+            FolderEntry skins = ClientProxy.tree.getByPath(key + "/skins/", null);
 
-			if (skins != null)
-			{
-				for (AbstractEntry entry : skins.getEntries())
-				{
-					if (entry instanceof FileEntry)
-					{
-						morph.skin = ((FileEntry) entry).resource;
-					}
-				}
-			}
+            if (skins != null)
+            {
+                for (AbstractEntry entry : skins.getEntries())
+                {
+                    if (entry instanceof FileEntry)
+                    {
+                        morph.skin = ((FileEntry) entry).resource;
+                    }
+                }
+            }
 
-			morph.name = "chameleon." + key;
+            morph.name = "chameleon." + key;
 
-			this.models.add(morph);
-		}
+            this.models.add(morph);
+        }
 
-		this.add(this.models);
-	}
+        this.add(this.models);
+    }
 }
