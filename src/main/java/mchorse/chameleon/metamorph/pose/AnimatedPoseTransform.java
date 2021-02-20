@@ -18,18 +18,23 @@ public class AnimatedPoseTransform extends AnimatedTransform
     {
         AnimatedPoseTransform item = new AnimatedPoseTransform(this.boneName);
 
-        item.x = this.x;
-        item.y = this.y;
-        item.z = this.z;
-        item.scaleX = this.scaleX;
-        item.scaleY = this.scaleY;
-        item.scaleZ = this.scaleZ;
-        item.rotateX = this.rotateX;
-        item.rotateY = this.rotateY;
-        item.rotateZ = this.rotateZ;
-        item.fixed = this.fixed;
+        item.copy(this);
 
         return item;
+    }
+
+    public void copy(AnimatedPoseTransform transform)
+    {
+        this.x = transform.x;
+        this.y = transform.y;
+        this.z = transform.z;
+        this.scaleX = transform.scaleX;
+        this.scaleY = transform.scaleY;
+        this.scaleZ = transform.scaleZ;
+        this.rotateX = transform.rotateX;
+        this.rotateY = transform.rotateY;
+        this.rotateZ = transform.rotateZ;
+        this.fixed = transform.fixed;
     }
 
     @Override

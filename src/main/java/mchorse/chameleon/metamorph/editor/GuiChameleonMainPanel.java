@@ -7,18 +7,25 @@ import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
+import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
+import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.utils.Elements;
+import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Custom model morph panel which allows editing custom textures
@@ -45,6 +52,35 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
     private AnimatedPoseTransform transform;
 
+    public static GuiContextMenu createCopyPasteMenu(Runnable copy, Consumer<AnimatedPose> paste)
+    {
+        GuiSimpleContextMenu menu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        AnimatedPose pose = null;
+
+        try
+        {
+            NBTTagCompound tag = JsonToNBT.getTagFromJson(GuiScreen.getClipboardString());
+            AnimatedPose loaded = new AnimatedPose();
+
+            loaded.fromNBT(tag);
+
+            pose = loaded;
+        }
+        catch (Exception e)
+        {}
+
+        menu.action(Icons.COPY, IKey.lang("chameleon.gui.editor.context.copy"), copy);
+
+        if (pose != null)
+        {
+            final AnimatedPose innerPose = pose;
+
+            menu.action(Icons.PASTE, IKey.lang("chameleon.gui.editor.context.paste"), () -> paste.accept(innerPose));
+        }
+
+        return menu;
+    }
+
     public GuiChameleonMainPanel(Minecraft mc, GuiChameleonMorph editor)
     {
         super(mc, editor);
@@ -61,7 +97,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
         this.createPose = new GuiButtonElement(mc, this.createLabel, this::createResetPose);
         this.bones = new GuiStringListElement(mc, this::pickBone);
-        this.bones.background();
+        this.bones.background().context(() -> createCopyPasteMenu(this::copyCurrentPose, this::pastePose));
         this.fixed = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.fixed"), this::toggleFixed);
         this.animated = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.animated"), this::toggleAnimated);
         this.transforms = new GuiPoseTransformations(mc);
@@ -88,6 +124,17 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         lowerBottom.add(this.scale, this.scaleGui);
 
         this.add(this.skin, this.createPose, this.animated, this.fixed, this.bones, this.transforms, this.animation, lowerBottom);
+    }
+
+    private void copyCurrentPose()
+    {
+        GuiScreen.setClipboardString(this.morph.pose.toNBT().toString());
+    }
+
+    private void pastePose(AnimatedPose pose)
+    {
+        this.morph.pose.copy(pose);
+        this.transforms.set(this.transforms.trans);
     }
 
     private void createResetPose(GuiButtonElement button)

@@ -10,6 +10,19 @@ public class AnimatedPose
     public final Map<String, AnimatedPoseTransform> bones = new HashMap<String, AnimatedPoseTransform>();
     public float animated = AnimatedPoseTransform.ANIMATED;
 
+    public void copy(AnimatedPose pose)
+    {
+        for (Map.Entry<String, AnimatedPoseTransform> entry : this.bones.entrySet())
+        {
+            AnimatedPoseTransform transform = pose.bones.get(entry.getKey());
+
+            if (transform != null)
+            {
+                entry.getValue().copy(transform);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object obj)
     {
