@@ -97,12 +97,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         if (previous instanceof ChameleonMorph)
         {
-            pose = ((ChameleonMorph) previous).pose;
+            ChameleonMorph morph = (ChameleonMorph) previous;
+
+            pose = morph.pose;
 
             if (pose != null)
             {
                 pose = pose.clone();
             }
+
+            this.lastScale = morph.scale;
         }
 
         this.animation.last = pose == null ? (previous == null ? this.pose : new AnimatedPose()) : pose;
@@ -330,7 +334,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         if (this.lastUpdate < model.lastUpdate)
         {
-            this.lastScale = model.lastUpdate;
+            this.lastUpdate = model.lastUpdate;
             this.updateAnimator = true;
         }
 

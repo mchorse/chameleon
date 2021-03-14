@@ -42,7 +42,5 @@ public class Chameleon
 
         /* General */
         builder.category("general").register(new ValueButtons("buttons").clientSide());
-
-        event.modules.add(builder.build());
     }
 }
