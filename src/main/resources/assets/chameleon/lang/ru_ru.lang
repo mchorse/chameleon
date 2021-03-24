@@ -14,6 +14,8 @@ chameleon.gui.editor.create_pose=Создать позу
 chameleon.gui.editor.reset_pose=Сбросить позу
 chameleon.gui.editor.fixed=Фиксировать движение
 chameleon.gui.editor.animated=Анимированная поза
+chameleon.gui.editor.context.copy=Скопировать позу
+chameleon.gui.editor.context.paste=Вставить позу
 
 chameleon.gui.editor.scale=Глобальный масштаб
 chameleon.gui.editor.scale_gui=Размер в интерфейсе
@@ -33,5 +35,5 @@ chameleon.gui.config.discord=Дискорд
 chameleon.gui.config.wiki=Вики
 
 # Morph stuff
-morph.section.chameleon=Chameleon (создано с помощью GeckoLib)
+morph.section.chameleon=Chameleon (при поддержке GeckoLib)
 morph.category.chameleon=Анимированные модели
