@@ -1,0 +1,39 @@
+#PARSE_ESCAPES
+
+# Config
+chameleon.config.title=Хамелеон
+
+chameleon.config.general.title=Загальне
+chameleon.config.general.tooltip=Загальні налаштування
+
+# GUI
+chameleon.gui.editor.pick_skin=Обрати скін
+chameleon.gui.editor.main=Головна панель
+chameleon.gui.editor.body_part=Частини тіла
+chameleon.gui.editor.create_pose=Створити позу
+chameleon.gui.editor.reset_pose=Скинути позу
+chameleon.gui.editor.fixed=Зафіксувати рух
+chameleon.gui.editor.animated=Анімована поза
+chameleon.gui.editor.context.copy=Скопіювати позу
+chameleon.gui.editor.context.paste=Вставити позу
+
+chameleon.gui.editor.scale=Загальний розмір
+chameleon.gui.editor.scale_gui=Розмір у інтерфейсі
+
+chameleon.gui.editor.actions.actions=Дії
+chameleon.gui.editor.actions.action=Дія
+
+chameleon.gui.editor.actions.clamp=Зациклення
+chameleon.gui.editor.actions.reset=Скидання
+chameleon.gui.editor.actions.speed=Швидкість
+chameleon.gui.editor.actions.fade=Перехід
+chameleon.gui.editor.actions.tick=Тік
+
+chameleon.gui.config.models=Відкрити моделі...
+chameleon.gui.config.tutorial=Відеозаняття
+chameleon.gui.config.discord=Діскорд
+chameleon.gui.config.wiki=Вікі
+
+# Morph stuff
+morph.section.chameleon=Хамелеон (за підтримки GeckoLib)
+morph.category.chameleon=Анімовані моделі
