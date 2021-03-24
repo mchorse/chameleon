@@ -24,13 +24,13 @@ chameleon.gui.editor.actions.actions=Дії
 chameleon.gui.editor.actions.action=Дія
 
 chameleon.gui.editor.actions.clamp=Зациклення
-chameleon.gui.editor.actions.reset=Скидання
+chameleon.gui.editor.actions.reset=Скинути
 chameleon.gui.editor.actions.speed=Швидкість
 chameleon.gui.editor.actions.fade=Перехід
 chameleon.gui.editor.actions.tick=Тік
 
 chameleon.gui.config.models=Відкрити моделі...
-chameleon.gui.config.tutorial=Відеозаняття
+chameleon.gui.config.tutorial=Відеоуроки
 chameleon.gui.config.discord=Діскорд
 chameleon.gui.config.wiki=Вікі
 
