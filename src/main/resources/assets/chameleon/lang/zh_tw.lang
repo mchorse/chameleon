@@ -9,7 +9,6 @@ chameleon.config.general.tooltip=常規選項
 # GUI
 chameleon.gui.editor.pick_skin=選擇皮膚
 chameleon.gui.editor.main=主面板
-chameleon.gui.editor.body_part=身體部分
 chameleon.gui.editor.create_pose=創建姿勢
 chameleon.gui.editor.reset_pose=重置姿勢
 chameleon.gui.editor.fixed=固定動作

@@ -9,7 +9,6 @@ chameleon.config.general.tooltip=General options
 # GUI
 chameleon.gui.editor.pick_skin=Pick skin
 chameleon.gui.editor.main=Main panel
-chameleon.gui.editor.body_part=Body parts
 chameleon.gui.editor.create_pose=Create pose
 chameleon.gui.editor.reset_pose=Reset pose
 chameleon.gui.editor.fixed=Fixate movement

@@ -9,7 +9,6 @@ chameleon.config.general.tooltip=Общие опции
 # GUI
 chameleon.gui.editor.pick_skin=Выбрать скин
 chameleon.gui.editor.main=Главная панель
-chameleon.gui.editor.body_part=Части тела
 chameleon.gui.editor.create_pose=Создать позу
 chameleon.gui.editor.reset_pose=Сбросить позу
 chameleon.gui.editor.fixed=Фиксировать движение

@@ -43,7 +43,7 @@ public class GuiChameleonMorph extends GuiAbstractMorph<ChameleonMorph>
         this.defaultPanel = this.mainPanel;
 
         this.registerPanel(this.actionsPanel, IKey.lang("chameleon.gui.editor.actions.actions"), Icons.MORE);
-        this.registerPanel(this.bodyPart, IKey.lang("chameleon.gui.editor.body_part"), Icons.LIMB);
+        this.registerPanel(this.bodyPart, IKey.lang("metamorph.gui.body_parts.parts"), Icons.LIMB);
         this.registerPanel(this.mainPanel, IKey.lang("chameleon.gui.editor.main"), Icons.GEAR);
 
         this.keys().register(IKey.lang("chameleon.gui.editor.pick_skin"), Keyboard.KEY_P, () ->
