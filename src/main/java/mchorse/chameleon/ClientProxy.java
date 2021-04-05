@@ -75,24 +75,9 @@ public class ClientProxy extends CommonProxy
             return;
         }
 
-        File[] files = modelsFile.listFiles();
-
-        if (files == null)
-        {
-            return;
-        }
-
         List<String> toCheck = new ArrayList<String>(chameleonModels.keySet());
 
-        for (File modelFolder : files)
-        {
-            if (!modelFolder.isDirectory())
-            {
-                continue;
-            }
-
-            this.reloadModelFolder(modelFolder, toCheck);
-        }
+        this.recursiveReloadModel(modelsFile, "", toCheck);
 
         /* Check and remove model if it got removed */
         for (String key : toCheck)
@@ -106,7 +91,28 @@ public class ClientProxy extends CommonProxy
         }
     }
 
-    private void reloadModelFolder(File modelFolder, List<String> toCheck)
+    private void recursiveReloadModel(File folder, String prefix, List<String> toCheck)
+    {
+        File[] files = folder.listFiles();
+
+        if (files == null)
+        {
+            return;
+        }
+
+        for (File modelFile : files)
+        {
+            if (modelFile.isDirectory())
+            {
+                if (!this.reloadModelFolder(modelFile, prefix, toCheck) && !modelFile.getName().equals("skins"))
+                {
+                    this.recursiveReloadModel(modelFile, prefix + modelFile.getName() + "/", toCheck);
+                }
+            }
+        }
+    }
+
+    private boolean reloadModelFolder(File modelFolder, String prefix, List<String> toCheck)
     {
         File model = null;
         List<File> animations = new ArrayList<File>();
@@ -115,7 +121,7 @@ public class ClientProxy extends CommonProxy
 
         if (files == null)
         {
-            return;
+            return false;
         }
 
         for (File file : files)
@@ -153,7 +159,7 @@ public class ClientProxy extends CommonProxy
         }
 
         /* Load model and animation */
-        String key = modelFolder.getName();
+        String key = prefix + modelFolder.getName();
         ChameleonModel oldModel = chameleonModels.get(key);
 
         if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
@@ -170,6 +176,8 @@ public class ClientProxy extends CommonProxy
                 toCheck.remove(key);
             }
         }
+
+        return chameleonModels.containsKey(key);
     }
 
     private AnimationFile loadAnimations(List<File> files)

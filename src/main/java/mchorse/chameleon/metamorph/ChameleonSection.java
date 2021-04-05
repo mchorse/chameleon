@@ -8,16 +8,17 @@ import mchorse.mclib.utils.files.entries.FolderEntry;
 import mchorse.metamorph.api.creative.categories.MorphCategory;
 import mchorse.metamorph.api.creative.sections.MorphSection;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChameleonSection extends MorphSection
 {
-    public MorphCategory models;
-
     public ChameleonSection(String title)
     {
         super(title);
-
-        this.models = new MorphCategory(this, "chameleon");
     }
 
     @Override
@@ -27,7 +28,8 @@ public class ChameleonSection extends MorphSection
         Chameleon.proxy.reloadModels();
 
         this.categories.clear();
-        this.models.clear();
+
+        Map<String, ChameleonCategory> categories = new HashMap<String, ChameleonCategory>();
 
         for (String key : Chameleon.proxy.getModelKeys())
         {
@@ -41,15 +43,51 @@ public class ChameleonSection extends MorphSection
                     if (entry instanceof FileEntry)
                     {
                         morph.skin = ((FileEntry) entry).resource;
+
+                        break;
                     }
                 }
             }
 
             morph.name = "chameleon." + key;
 
-            this.models.add(morph);
+            String categoryKey = key.contains("/") ? key.substring(0, key.lastIndexOf("/")) : "";
+            ChameleonCategory category = categories.get(categoryKey);
+
+            if (category == null)
+            {
+                category = new ChameleonCategory(this, "chameleon", categoryKey);
+                categories.put(categoryKey, category);
+            }
+
+            category.add(morph);
         }
 
-        this.add(this.models);
+        for (ChameleonCategory category : categories.values())
+        {
+            category.sort();
+            this.categories.add(category);
+        }
+
+        this.categories.sort((a, b) -> a.getTitle().compareTo(b.getTitle()));
+    }
+
+    public static class ChameleonCategory extends MorphCategory
+    {
+        private String subtitle;
+
+        public ChameleonCategory(MorphSection parent, String title, String subtitle)
+        {
+            super(parent, title);
+
+            this.subtitle = subtitle;
+        }
+
+        @Override
+        @SideOnly(Side.CLIENT)
+        public String getTitle()
+        {
+            return super.getTitle() + (this.subtitle == null || this.subtitle.isEmpty() ? "" : " (" + this.subtitle + ")");
+        }
     }
 }
