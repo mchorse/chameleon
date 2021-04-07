@@ -194,6 +194,10 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     @SideOnly(Side.CLIENT)
     private void renderModel(EntityLivingBase target, float partialTicks)
     {
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableAlpha();
+
         ChameleonModel chameleonModel = this.getModel();
 
         if (chameleonModel == null)
