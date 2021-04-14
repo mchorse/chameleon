@@ -173,9 +173,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, z);
-        GlStateManager.scale(scale, scale, scale);
 
         boolean captured = MatrixUtils.captureMatrix();
+
+        GlStateManager.scale(scale, scale, scale);
+
         float renderYawOffset = Interpolations.lerp(target.prevRenderYawOffset, target.renderYawOffset, partialTicks);
 
         GlStateManager.rotate(-renderYawOffset + 180, 0, 1, 0);
