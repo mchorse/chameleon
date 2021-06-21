@@ -218,7 +218,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             this.getAnimator().applyActions(target, model, partialTicks);
         }
 
-        this.applyPose(model, partialTicks);
+        AnimatedPose current = this.applyPose(model, partialTicks);
 
         /* Render the model */
         if (this.skin != null)
@@ -228,7 +228,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         boolean hurtLight = RenderLightmap.set(target, partialTicks);
 
-        ChameleonRenderer.render(model);
+        ChameleonRenderer.render(model, current);
 
         if (hurtLight)
         {
@@ -264,7 +264,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     }
 
     @SideOnly(Side.CLIENT)
-    private void applyPose(Model model, float partialTicks)
+    private AnimatedPose applyPose(Model model, float partialTicks)
     {
         AnimatedPose pose = this.pose;
         boolean inProgress = this.animation.isInProgress();
@@ -278,6 +278,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         {
             this.applyPose(bone, pose);
         }
+        
+        return pose;
     }
 
     @SideOnly(Side.CLIENT)
