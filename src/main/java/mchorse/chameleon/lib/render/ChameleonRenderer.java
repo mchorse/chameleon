@@ -3,11 +3,11 @@ package mchorse.chameleon.lib.render;
 import mchorse.chameleon.lib.data.model.ModelBone;
 import mchorse.chameleon.lib.data.model.Model;
 import mchorse.chameleon.lib.utils.MatrixStack;
+import mchorse.chameleon.metamorph.pose.AnimatedPose;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -27,9 +27,9 @@ public class ChameleonRenderer
      *
      * The texture should be bind beforehand
      */
-    public static void render(Model model)
+    public static void render(Model model, AnimatedPose current)
     {
-        CUBE_RENDERER.setColor(1F, 1F, 1F, 1F);
+        CUBE_RENDERER.setPose(current);
 
         GlStateManager.disableCull();
         GlStateManager.enableRescaleNormal();
@@ -38,7 +38,7 @@ public class ChameleonRenderer
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
+        builder.begin(GL11.GL_QUADS, ChameleonCubeRenderer.FORMAT);
 
         processRenderModel(CUBE_RENDERER, builder, MATRIX_STACK, model);
 

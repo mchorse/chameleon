@@ -1,16 +1,22 @@
 package mchorse.chameleon.lib.render;
 
+import javax.vecmath.Vector3f;
+import javax.vecmath.Vector4f;
+
 import mchorse.chameleon.lib.data.model.ModelBone;
 import mchorse.chameleon.lib.data.model.ModelCube;
 import mchorse.chameleon.lib.data.model.ModelQuad;
 import mchorse.chameleon.lib.data.model.ModelVertex;
 import mchorse.chameleon.lib.utils.MatrixStack;
+import mchorse.chameleon.metamorph.pose.AnimatedPose;
+import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
+import mchorse.mclib.utils.Interpolation;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
 
 /**
  * Cube renderer
@@ -20,6 +26,18 @@ import javax.vecmath.Vector4f;
 @SideOnly(Side.CLIENT)
 public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 {
+    public static final VertexFormat FORMAT = new VertexFormat();
+
+    static
+    {
+        FORMAT.addElement(DefaultVertexFormats.POSITION_3F);
+        FORMAT.addElement(DefaultVertexFormats.TEX_2F);
+        FORMAT.addElement(DefaultVertexFormats.TEX_2S);
+        FORMAT.addElement(DefaultVertexFormats.COLOR_4UB);
+        FORMAT.addElement(DefaultVertexFormats.NORMAL_3B);
+        FORMAT.addElement(DefaultVertexFormats.PADDING_1B);
+    }
+
     private float r;
     private float g;
     private float b;
@@ -29,26 +47,43 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
     private Vector3f normal = new Vector3f();
     private Vector4f vertex = new Vector4f();
 
-    public void setColor(float r, float g, float b, float a)
+    private AnimatedPose pose;
+
+    public void setPose(AnimatedPose pose)
     {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+        this.pose = pose;
     }
 
     @Override
     public boolean renderBone(BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
+        int lightX = (int) OpenGlHelper.lastBrightnessX;
+        int lightY = (int) OpenGlHelper.lastBrightnessY;
+
+        this.r = this.g = this.b = this.a = 1.0F;
+
+        if (this.pose != null)
+        {
+            AnimatedPoseTransform transform = this.pose.bones.get(bone.id);
+
+            this.r = transform.color.r;
+            this.g = transform.color.g;
+            this.b = transform.color.b;
+            this.a = transform.color.a;
+
+            lightX = (int) Interpolation.LINEAR.interpolate(OpenGlHelper.lastBrightnessX, 240, transform.glow);
+            lightY = (int) Interpolation.LINEAR.interpolate(OpenGlHelper.lastBrightnessY, 240, transform.glow);
+        }
+
         for (ModelCube cube : bone.cubes)
         {
-            renderCube(builder, stack, cube);
+            renderCube(builder, stack, cube, lightX, lightY);
         }
 
         return false;
     }
 
-    private void renderCube(BufferBuilder builder, MatrixStack stack, ModelCube cube)
+    private void renderCube(BufferBuilder builder, MatrixStack stack, ModelCube cube, int lightX, int lightY)
     {
         stack.push();
         stack.moveToCubePivot(cube);
@@ -79,6 +114,7 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 
                 builder.pos(this.vertex.x, this.vertex.y, this.vertex.z)
                     .tex(vertex.uv.x, vertex.uv.y)
+                    .lightmap(lightY, lightX)
                     .color(this.r, this.g, this.b, this.a)
                     .normal(this.normal.x, this.normal.y, this.normal.z)
                     .endVertex();

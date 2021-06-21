@@ -9,12 +9,14 @@ import mchorse.mclib.client.gui.framework.elements.buttons.GuiButtonElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
 import mchorse.mclib.client.gui.framework.elements.context.GuiContextMenu;
 import mchorse.mclib.client.gui.framework.elements.context.GuiSimpleContextMenu;
+import mchorse.mclib.client.gui.framework.elements.input.GuiColorElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
+import mchorse.mclib.utils.Direction;
 import mchorse.mclib.utils.resources.RLUtils;
 import mchorse.metamorph.client.gui.editor.GuiAnimation;
 import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
@@ -38,6 +40,8 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
     public GuiButtonElement createPose;
     public GuiStringListElement bones;
+    public GuiTrackpadElement glow;
+    public GuiColorElement color;
     public GuiToggleElement fixed;
     public GuiToggleElement animated;
     public GuiPoseTransformations transforms;
@@ -97,6 +101,11 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.createPose = new GuiButtonElement(mc, this.createLabel, this::createResetPose);
         this.bones = new GuiStringListElement(mc, this::pickBone);
         this.bones.background().context(() -> createCopyPasteMenu(this::copyCurrentPose, this::pastePose));
+        this.glow = new GuiTrackpadElement(mc, this::setGlow).limit(0, 1).values(0.01, 0.1, 0.001);
+        this.glow.tooltip(IKey.lang("chameleon.gui.editor.glow"));
+        this.color = new GuiColorElement(mc, this::setColor).direction(Direction.RIGHT);
+        this.color.tooltip(IKey.lang("chameleon.gui.editor.color"));
+        this.color.picker.editAlpha();
         this.fixed = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.fixed"), this::toggleFixed);
         this.animated = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.animated"), this::toggleAnimated);
         this.transforms = new GuiPoseTransformations(mc);
@@ -111,9 +120,11 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.picker.flex().relative(this).wh(1F, 1F);
 
         this.createPose.flex().relative(this.skin).y(1F, 5).w(1F).h(20);
-        this.bones.flex().relative(this.createPose).y(1F, 5).w(1F).hTo(this.fixed.flex(), -5);
+        this.bones.flex().relative(this.createPose).y(1F, 5).w(1F).hTo(this.glow.flex(), -10);
         this.animated.flex().relative(this).x(10).y(1F, -10).w(110).anchorY(1);
         this.fixed.flex().relative(this.animated).y(-1F, -5).w(1F);
+        this.color.flex().relative(this.fixed).y(-1F, -10).w(1F);
+        this.glow.flex().relative(this.color).y(-1F, -10).w(1F);
         this.transforms.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
         this.animation.flex().relative(this).x(1F, -130).w(130);
 
@@ -122,7 +133,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         lowerBottom.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
         lowerBottom.add(this.scale, this.scaleGui);
 
-        this.add(this.skin, this.createPose, this.animated, this.fixed, this.bones, this.transforms, this.animation, lowerBottom);
+        this.add(this.skin, this.createPose, this.animated, this.fixed, this.color, this.glow, this.bones, this.transforms, this.animation, lowerBottom);
     }
 
     private void copyCurrentPose()
@@ -177,8 +188,20 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.bones.setCurrentScroll(bone);
         this.animated.toggled(this.morph.pose.animated == AnimatedPoseTransform.ANIMATED);
         this.fixed.toggled(this.transform.fixed == AnimatedPoseTransform.FIXED);
+        this.color.picker.setColor(this.transform.color.getRGBAColor());
+        this.glow.setValue(this.transform.glow);
         this.transforms.set(this.transform);
         this.editor.chameleonModelRenderer.boneName = bone;
+    }
+    
+    private void setGlow(Double value)
+    {
+        this.transform.glow = value.floatValue();
+    }
+    
+    private void setColor(int color)
+    {
+        this.transform.color.set(color);
     }
 
     private void toggleFixed(GuiToggleElement toggle)
@@ -218,6 +241,8 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.createPose.setVisible(model != null && !model.getBoneNames().isEmpty());
         this.createPose.label = pose == null ? this.createLabel : this.resetLabel;
         this.bones.setVisible(model != null && pose != null);
+        this.glow.setVisible(model != null && pose != null);
+        this.color.setVisible(model != null && pose != null);
         this.fixed.setVisible(model != null && pose != null);
         this.animated.setVisible(model != null && pose != null);
         this.transforms.setVisible(model != null && pose != null);
