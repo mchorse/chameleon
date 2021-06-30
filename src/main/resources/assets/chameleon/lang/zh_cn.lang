@@ -13,6 +13,8 @@ chameleon.gui.editor.create_pose=创建姿势
 chameleon.gui.editor.reset_pose=重置姿势
 chameleon.gui.editor.fixed=固定动作
 chameleon.gui.editor.animated=动画姿势
+chameleon.gui.editor.context.copy=拷贝姿势
+chameleon.gui.editor.context.paste=粘贴姿势
 
 chameleon.gui.editor.scale=全局缩放
 chameleon.gui.editor.scale_gui=GUI 缩放
@@ -32,5 +34,5 @@ chameleon.gui.config.discord=Discord
 chameleon.gui.config.wiki=Wiki
 
 # Morph stuff
-morph.section.chameleon=Chameleon (powered by GeckoLib)
+morph.section.chameleon=Chameleon (由 GeckoLib 驱动)
 morph.category.chameleon=动画模型
