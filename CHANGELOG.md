@@ -1,3 +1,14 @@
+## Version 1.0.3
+
+This is a small patch has 2 features and bug fixes.
+
+**Compatible** with McLib `2.3`, Metamorph `1.2.7` and GeckoLib `3.0.0`. It doesn't mean that future versions of Metamorph, Aperture and GeckoLib would be incompatible, but older versions are most likely incompatible.
+
+* Added copy/paste context menu to Chameleon's pose editor
+* Added support for folders (nested models) in Chameleon's models folder (suggested by The Minebox)
+* Fixed Chameleon morphs disappearing when changing animations
+* Fixed face alpha culling due to global OpenGL leaking (reported by Moris)
+
 ## Version 1.0.2
 
 This is a small patch that is required for new versions of McLib.

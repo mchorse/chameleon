@@ -1,3 +1,5 @@
+**ATTENTION**: This mod is **no longer being developed**, and it's maintained (bugs and crash fixes) until August/September of 2021. If you wish to continue the mod, feel free to check out the [source code](https://github.com/mchorse/chameleon).  
+
 ![Chameleon](https://i.imgur.com/Iobi4O0.png)
 
 [CurseForge page](https://curseforge.com/minecraft/mc-mods/chameleon-morph) – [GitHub](https://github.com/mchorse/chameleon) – [Wiki](https://github.com/mchorse/chameleon/wiki) 
@@ -18,19 +20,11 @@ If you don't know how to import Blockbench models into Chameleon, check out this
 
 <a href="https://youtu.be/97romIu2DGo?list=PLLnllO8nnzE94k_xh3tqX58_tJzx92NcG"><img src="https://img.youtube.com/vi/97romIu2DGo/0.jpg"></a> 
 
-If you're interested in this project, you might as well follow me on any of social media accounts listed below:
-
-[![YouTube](http://i.imgur.com/yA4qam9.png)](https://www.youtube.com/channel/UCSLuDXxxql4EVK_Ktd6PNbw) [![Discord](http://i.imgur.com/gI6JEpJ.png)](https://discord.gg/qfxrqUF) [![Twitter](http://i.imgur.com/6b8vHcX.png)](https://twitter.com/McHorsy) [![GitHub](http://i.imgur.com/DmTn1f1.png)](https://github.com/mchorse) 
-
-Also, I would really appreciate if you will support me on Patreon!
-
-[![Become my Patron](https://i.imgur.com/4pQZ2xW.png)](https://www.patreon.com/McHorse) 
-
 ## Bug reports
 
 If you found a bug, or this mod crashed your game, make sure to check this [compatibility table and incompatible mod list](https://github.com/mchorse/mclib/wiki/Compatibility-table-of-McHorse%27s-mods) page. The most frequent issue people encounter is that they didn't install the compatible versions of my mods. Or updated only one mod while using older version of my other mods.
 
-If the versions of the mod are correct, then you can report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/chameleon/issues/), or on my [Discord server](https://discord.gg/qfxrqUF). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash and the way to reproduce it. Thanks! 
+If the versions of the mod are correct, then you can report a bug or a crash to me either on [issue tracker](https://github.com/mchorse/chameleon/issues/), or on my [Discord server](https://discord.gg/qfxrqUF). Please, make sure to attach a crash log ([pastebin](http://pastebin.com) please) and description of a bug or crash, and the way to reproduce it. Thanks! 
 
 ## License
 
