@@ -20,6 +20,7 @@ import mchorse.metamorph.api.models.IMorphProvider;
 import mchorse.metamorph.api.morphs.AbstractMorph;
 import mchorse.metamorph.api.morphs.utils.Animation;
 import mchorse.metamorph.api.morphs.utils.IAnimationProvider;
+import mchorse.metamorph.api.morphs.utils.IMorphGenerator;
 import mchorse.metamorph.api.morphs.utils.ISyncableMorph;
 import mchorse.metamorph.bodypart.BodyPart;
 import mchorse.metamorph.bodypart.BodyPartManager;
@@ -38,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Objects;
 
-public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph, IAnimationProvider
+public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, ISyncableMorph, IAnimationProvider, IMorphGenerator
 {
     public ResourceLocation skin;
     public AnimatedPose pose;
@@ -129,6 +130,30 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     public BodyPartManager getBodyPart()
     {
         return this.parts;
+    }
+
+    @Override
+    public boolean canGenerate()
+    {
+        return this.animation.isInProgress();
+    }
+
+    @Override
+    public AbstractMorph genCurrentMorph(float partialTicks)
+    {
+        ChameleonMorph morph = (ChameleonMorph) this.copy();
+
+        morph.pose = this.animation.calculatePose(this.pose, this.getModel(), partialTicks);
+        morph.animation.duration = this.animation.progress;
+
+        morph.parts.parts.clear();
+
+        for (BodyPart part : this.parts.parts)
+        {
+            morph.parts.parts.add(part.genCurrentBodyPart(this, partialTicks));
+        }
+
+        return morph.copy();
     }
 
     public String getKey()
