@@ -61,7 +61,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
         GlStateManager.disableDepth();
         GlStateManager.pushMatrix();
         GlStateManager.color(0, 0.5F, 1, 0.33F);
-        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.rotate(180 - (this.customEntity ? this.entityYawBody : 0), 0, 1, 0);
         GlStateManager.scale(scale, scale, scale);
 
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -101,7 +101,7 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
         GlStateManager.disableTexture2D();
         GlStateManager.pushMatrix();
         GlStateManager.color(1, 1, 1, 1);
-        GlStateManager.rotate(180, 0, 1, 0);
+        GlStateManager.rotate(180 - (this.customEntity ? this.entityYawBody : 0), 0, 1, 0);
         GlStateManager.scale(scale, scale, scale);
 
         STENCIL_RENDERER.setBones(model.getBoneNames());
