@@ -1,6 +1,7 @@
 package mchorse.chameleon.metamorph;
 
 import mchorse.chameleon.ClientProxy;
+import mchorse.chameleon.animation.ActionPlayback;
 import mchorse.chameleon.animation.ActionsConfig;
 import mchorse.chameleon.animation.Animator;
 import mchorse.chameleon.lib.ChameleonAnimator;
@@ -34,6 +35,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,6 +53,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     private float lastScale = 1F;
 
     public PoseAnimation animation = new PoseAnimation();
+
+    /* Syncable action */
+    public boolean isActionPlayer;
+
+    public ActionPlayback lastAnimAction;
 
     /**
      * Cached key value
@@ -108,10 +115,20 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             }
 
             this.lastScale = morph.scale;
+
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && morph.isActionPlayer)
+            {
+                morph.checkAnimator();
+
+                this.lastAnimAction = morph.animator.createAction(morph.animator.animation, morph.actions.getConfig("animation").clone(), false);
+                this.lastAnimAction.config.tick += morph.animation.getFactor(0F) * morph.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+            }
         }
 
         this.animation.last = pose == null ? (previous == null ? this.pose : new AnimatedPose()) : pose;
         this.parts.pause(previous, offset);
+        
+        this.updateAnimator = true;
     }
 
     @Override
@@ -164,6 +181,12 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         }
 
         return this.key;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void updateAnimator()
+    {
+        this.updateAnimator = true;
     }
 
     @Override
@@ -392,6 +415,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             result = result && Objects.equals(morph.actions, this.actions);
             result = result && morph.scale == this.scale;
             result = result && morph.scaleGui == this.scaleGui;
+            result = result && morph.isActionPlayer == this.isActionPlayer;
         }
 
         return result;
@@ -412,6 +436,16 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
                 this.animation.paused = false;
                 this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
 
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
+                {
+                    this.checkAnimator();
+ 
+                    this.lastAnimAction = this.animator.createAction(this.animator.animation, this.actions.getConfig("animation").clone(), false);
+                    this.lastAnimAction.config.tick += this.animation.getFactor(0F) * this.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+                }
+
+                this.isActionPlayer = animated.isActionPlayer;
+
                 this.skin = RLUtils.clone(animated.skin);
                 this.pose = animated.pose == null ? null : animated.pose.clone();
                 this.actions.copy(animated.actions);
@@ -419,7 +453,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
                 this.animation.merge(animated.animation);
                 this.scale = animated.scale;
                 this.scaleGui = animated.scaleGui;
-
+                
                 this.updateAnimator = true;
 
                 return true;
@@ -456,6 +490,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             this.animation.copy(morph.animation);
             this.scale = morph.scale;
             this.scaleGui = morph.scaleGui;
+            this.isActionPlayer = morph.isActionPlayer;
         }
     }
 
@@ -483,6 +518,8 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         this.parts.reset();
 
         this.scale = this.scaleGui = this.lastScale = 1;
+
+        this.isActionPlayer = false;
 
         this.updateAnimator = true;
     }
@@ -532,6 +569,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         {
             tag.setFloat("ScaleGUI", this.scaleGui);
         }
+
+        if (this.isActionPlayer)
+        {
+            tag.setBoolean("ActionPlayer", this.isActionPlayer);
+        }
     }
 
     @Override
@@ -573,6 +615,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         if (tag.hasKey("ScaleGUI"))
         {
             this.scaleGui = tag.getFloat("ScaleGUI");
+        }
+
+        if (tag.hasKey("ActionPlayer"))
+        {
+            this.isActionPlayer = tag.getBoolean("ActionPlayer");
         }
     }
 }

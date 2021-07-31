@@ -21,6 +21,9 @@ chameleon.gui.editor.context.paste=Paste pose
 chameleon.gui.editor.scale=Global scale
 chameleon.gui.editor.scale_gui=GUI scale
 
+chameleon.gui.editor.player=Action player mode
+chameleon.gui.editor.player_tooltip=It will let this morph to play the synchronizable action "Animated"
+
 chameleon.gui.editor.actions.actions=Actions
 chameleon.gui.editor.actions.action=Action
 

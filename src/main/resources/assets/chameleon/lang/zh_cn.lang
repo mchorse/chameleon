@@ -21,6 +21,9 @@ chameleon.gui.editor.context.paste=粘贴姿势
 chameleon.gui.editor.scale=全局缩放
 chameleon.gui.editor.scale_gui=GUI 缩放
 
+chameleon.gui.editor.player=动作播放模式
+chameleon.gui.editor.player_tooltip=这会使当前伪装播放可同步的 “Animation” 动作
+
 chameleon.gui.editor.actions.actions=动作
 chameleon.gui.editor.actions.action=动作
 
