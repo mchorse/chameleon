@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonMorph>
 {
-    public static final String[] ACTIONS = new String[] {"Idle", "Running", "Sprinting", "Crouching", "CrouchingIdle", "Swimming", "SwimmingIdle", "Flying", "FlyingIdle", "Riding", "RidingIdle", "Dying", "Falling", "Sleeping", "Jump", "Swipe", "Hurt", "Land", "Shoot", "Consume"};
+    public static final String[] ACTIONS = new String[] {"Idle", "Running", "Sprinting", "Crouching", "CrouchingIdle", "Swimming", "SwimmingIdle", "Flying", "FlyingIdle", "Riding", "RidingIdle", "Dying", "Falling", "Sleeping", "Jump", "Swipe", "Hurt", "Land", "Shoot", "Consume", "Animation"};
 
     public ActionConfig config;
 
@@ -49,7 +49,11 @@ public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonM
         this.configs.sort();
         this.configs.flex().relative(this).set(10, 22, 110, 90).h(1, -35);
 
-        this.action = new GuiStringSearchListElement(mc, (value) -> this.config.name = value.get(0));
+        this.action = new GuiStringSearchListElement(mc, (value) -> 
+        {
+            this.config.name = value.get(0);
+            this.morph.updateAnimator();
+        });
         this.clamp = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.actions.clamp"), false, (b) -> this.config.clamp = b.isToggled());
         this.reset = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.actions.reset"), false, (b) -> this.config.reset = b.isToggled());
         this.speed = new GuiTrackpadElement(mc, (value) -> this.config.speed = value.floatValue());
@@ -67,6 +71,7 @@ public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonM
         fields.add(this.clamp, this.reset, this.speed, this.fade, this.tick);
 
         this.action.flex().relative(this.area).x(1F, -10).y(22).w(110).hTo(fields.area, 5).anchorX(1F);
+        this.action.createContextMenu(null);
 
         this.fields.add(fields, this.action);
         this.fields.setVisible(false);

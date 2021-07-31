@@ -1,5 +1,6 @@
 package mchorse.chameleon.animation;
 
+import mchorse.chameleon.animation.ActionPlayback.Fade;
 import mchorse.chameleon.lib.ChameleonModel;
 import mchorse.chameleon.lib.data.animation.Animation;
 import mchorse.chameleon.lib.data.animation.Animations;
@@ -10,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -48,6 +50,9 @@ public class Animator
     public ActionPlayback land;
     public ActionPlayback shoot;
     public ActionPlayback consume;
+
+    /* Syncable action */
+    public ActionPlayback animation;
 
     /* Action pipeline properties */
     public ActionPlayback active;
@@ -96,6 +101,8 @@ public class Animator
         this.land = this.createAction(this.land, actions.getConfig("land"), false);
         this.shoot = this.createAction(this.shoot, actions.getConfig("shoot"), true);
         this.consume = this.createAction(this.consume, actions.getConfig("consume"), true);
+
+        this.animation = this.createAction(this.animation, actions.getConfig("animation"), false);
     }
 
     /**
@@ -376,6 +383,24 @@ public class Animator
      */
     public void applyActions(EntityLivingBase target, Model armature, float partialTicks)
     {
+        if (this.animation != null && this.morph.isActionPlayer)
+        {
+            float ticks = this.morph.animation.getFactor(partialTicks) * this.morph.animation.duration;
+            boolean doFade = this.morph.lastAnimAction != null;
+
+            if (doFade)
+            {
+                this.applyAnimation(this.morph.lastAnimAction, target, armature, ticks, Fade.OUT);
+                this.applyAnimation(this.animation, target, armature, ticks, Fade.IN);
+            }
+            else
+            {
+                this.applyAnimation(this.animation, target, armature, ticks, Fade.FINISHED);
+            }
+
+            return;
+        }
+
         if (this.lastActive != null && this.active.isFading())
         {
             this.lastActive.apply(target, armature, partialTicks, 1F, false);
@@ -399,5 +424,34 @@ public class Animator
                 action.apply(target, armature, partialTicks, 1F, true);
             }
         }
+    }
+
+    public void applyAnimation(ActionPlayback animation, EntityLivingBase target, Model armature, float ticks, Fade fade)
+    {
+        float progress = ticks * Math.abs(animation.config.speed);
+        float fadeFactor = animation.config.fade < 0.0001F ? 1F : MathHelper.clamp(progress / animation.config.fade, 0F, 1F);
+
+        if (fade == Fade.FINISHED)
+        {
+            fadeFactor = 1F;
+        }
+        else if (fade == Fade.OUT)
+        {
+            fadeFactor = fadeFactor >= 0.999F ? 0F : 1F;
+        }
+
+        if (fadeFactor < 0.0001F)
+        {
+            return;
+        }
+
+        progress += animation.config.clamp ? animation.config.tick : 0F;
+
+        if (animation.config.speed < 0)
+        {
+            progress = (float) (animation.action.length) - progress;
+        }
+
+        animation.apply(target, armature, animation.config.speed == 0F ? 0F : progress / animation.config.speed, fadeFactor, false);
     }
 }
