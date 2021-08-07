@@ -18,7 +18,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +95,7 @@ public class ChameleonLoader
     private String loadStringFile(File file) throws IOException
     {
         InputStream stream = new FileInputStream(file);
-        String content = IOUtils.toString(stream, Charset.defaultCharset());
+        String content = IOUtils.toString(stream, StandardCharsets.UTF_8);
 
         stream.close();
 
