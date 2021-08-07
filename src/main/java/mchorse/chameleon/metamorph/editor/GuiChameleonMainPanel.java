@@ -127,7 +127,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.fixed.flex().relative(this.animated).y(-1F, -5).w(1F);
         this.color.flex().relative(this.fixed).y(-1F, -10).w(1F);
         this.glow.flex().relative(this.color).y(-1F, -10).w(1F);
-        this.transforms.flex().relative(this).set(0, 0, 190, 70).x(0.5F, -95).y(1, -80);
+        this.transforms.flex().relative(this).set(0, 0, 256, 70).x(0.5F, -128).y(1, -80);
         this.animation.flex().relative(this).x(1F, -130).w(130);
         this.player.flex().relative(this.animation.pickInterpolation).x(0F).y(1F, 5).w(1F);
         this.player.tooltip(IKey.lang("chameleon.gui.editor.player_tooltip"));
@@ -285,7 +285,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
             if (trans != null)
             {
-                this.fillT(trans.x, trans.y, trans.z);
+                this.fillT(-trans.x, trans.y, trans.z);
                 this.fillS(trans.scaleX, trans.scaleY, trans.scaleZ);
                 this.fillR(trans.rotateX / (float) Math.PI * 180, trans.rotateY / (float) Math.PI * 180, trans.rotateZ / (float) Math.PI * 180);
             }
@@ -294,7 +294,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         @Override
         public void setT(double x, double y, double z)
         {
-            this.trans.x = (float) x;
+            this.trans.x = (float) -x;
             this.trans.y = (float) y;
             this.trans.z = (float) z;
         }
