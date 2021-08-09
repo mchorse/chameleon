@@ -413,6 +413,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             result = result && Objects.equals(morph.pose, this.pose);
             result = result && Objects.equals(morph.parts, this.parts);
             result = result && Objects.equals(morph.actions, this.actions);
+            result = result && Objects.equals(morph.animation, this.animation);
             result = result && morph.scale == this.scale;
             result = result && morph.scaleGui == this.scaleGui;
             result = result && morph.isActionPlayer == this.isActionPlayer;
