@@ -13,8 +13,6 @@ import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
 import mchorse.mclib.utils.Interpolation;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -26,18 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 {
-    public static final VertexFormat FORMAT = new VertexFormat();
-
-    static
-    {
-        FORMAT.addElement(DefaultVertexFormats.POSITION_3F);
-        FORMAT.addElement(DefaultVertexFormats.TEX_2F);
-        FORMAT.addElement(DefaultVertexFormats.TEX_2S);
-        FORMAT.addElement(DefaultVertexFormats.COLOR_4UB);
-        FORMAT.addElement(DefaultVertexFormats.NORMAL_3B);
-        FORMAT.addElement(DefaultVertexFormats.PADDING_1B);
-    }
-
     private float r;
     private float g;
     private float b;
@@ -113,9 +99,9 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
                 stack.getModelMatrix().transform(this.vertex);
 
                 builder.pos(this.vertex.x, this.vertex.y, this.vertex.z)
+                    .color(this.r, this.g, this.b, this.a)
                     .tex(vertex.uv.x, vertex.uv.y)
                     .lightmap(lightY, lightX)
-                    .color(this.r, this.g, this.b, this.a)
                     .normal(this.normal.x, this.normal.y, this.normal.z)
                     .endVertex();
             }

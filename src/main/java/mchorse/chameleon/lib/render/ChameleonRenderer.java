@@ -4,6 +4,7 @@ import mchorse.chameleon.lib.data.model.ModelBone;
 import mchorse.chameleon.lib.data.model.Model;
 import mchorse.chameleon.lib.utils.MatrixStack;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
+import mchorse.mclib.client.render.VertexBuilder;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,7 +39,7 @@ public class ChameleonRenderer
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 
         BufferBuilder builder = Tessellator.getInstance().getBuffer();
-        builder.begin(GL11.GL_QUADS, ChameleonCubeRenderer.FORMAT);
+        builder.begin(GL11.GL_QUADS, VertexBuilder.getFormat(true, true, true, true));
 
         processRenderModel(CUBE_RENDERER, builder, MATRIX_STACK, model);
 
