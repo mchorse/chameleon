@@ -26,11 +26,11 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- * Custom model morph panel which allows editing custom textures
- * for materials of the custom model morph
+ * Custom model morph panel which allows editing custom textures for materials of the custom model morph
  */
 public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonMorph> implements IBonePicker
 {
@@ -71,7 +71,8 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
             pose = loaded;
         }
         catch (Exception e)
-        {}
+        {
+        }
 
         menu.action(Icons.COPY, IKey.lang("chameleon.gui.editor.context.copy"), copy);
 
@@ -132,6 +133,18 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.player.flex().relative(this.animation.pickInterpolation).x(0F).y(1F, 5).w(1F);
         this.player.tooltip(IKey.lang("chameleon.gui.editor.player_tooltip"));
 
+        GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+        GuiSimpleContextMenu fixateMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
+
+        glowMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.glow = p.glow));
+        colorMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.color.copy(p.color)));
+        fixateMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.fixed = p.fixed));
+
+        this.glow.context(() -> glowMenu);
+        this.color.context(() -> colorMenu);
+        this.fixed.context(() -> fixateMenu);
+
         GuiElement lowerBottom = new GuiElement(mc);
 
         lowerBottom.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
@@ -149,6 +162,23 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
     {
         this.morph.pose.copy(pose);
         this.transforms.set(this.transforms.trans);
+    }
+
+    private Runnable applyToChildren(BiConsumer<AnimatedPoseTransform, AnimatedPoseTransform> apply)
+    {
+        return () ->
+        {
+            String bone = this.bones.getCurrentFirst();
+            AnimatedPoseTransform anim = this.morph.pose.bones.get(bone);
+            List<String> children = this.morph.getModel().getChildren(bone);
+
+            for (String child : children)
+            {
+                AnimatedPoseTransform childAnim = this.morph.pose.bones.get(child);
+
+                apply.accept(anim, childAnim);
+            }
+        };
     }
 
     private void createResetPose(GuiButtonElement button)
@@ -197,12 +227,12 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.transforms.set(this.transform);
         this.editor.chameleonModelRenderer.boneName = bone;
     }
-    
+
     private void setGlow(Double value)
     {
         this.transform.glow = value.floatValue();
     }
-    
+
     private void setColor(int color)
     {
         this.transform.color.set(color);

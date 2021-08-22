@@ -17,6 +17,7 @@ chameleon.gui.editor.fixed=Fixate movement
 chameleon.gui.editor.animated=Animated pose
 chameleon.gui.editor.context.copy=Copy pose
 chameleon.gui.editor.context.paste=Paste pose
+chameleon.gui.editor.context.children=Apply to children
 
 chameleon.gui.editor.scale=Global scale
 chameleon.gui.editor.scale_gui=GUI scale
