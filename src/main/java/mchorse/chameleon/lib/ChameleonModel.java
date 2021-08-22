@@ -9,6 +9,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import com.google.common.collect.ImmutableList;
 
 @SideOnly(Side.CLIENT)
 public class ChameleonModel
@@ -38,6 +41,23 @@ public class ChameleonModel
         }
 
         return this.boneNames = this.getBoneNames(new ArrayList<String>(), this.model.bones);
+    }
+
+    public List<String> getChildren(String parent)
+    {
+        List<String> children = new ArrayList<String>();
+
+        for (ModelBone bone : this.model.bones)
+        {
+            if (Objects.equals(bone.id, parent))
+            {
+                this.getBoneNames(children, ImmutableList.of(bone));
+
+                break;
+            }
+        }
+
+        return children;
     }
 
     private List<String> getBoneNames(List<String> boneNames, List<ModelBone> bones)

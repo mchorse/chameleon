@@ -17,6 +17,7 @@ chameleon.gui.editor.fixed=固定动作
 chameleon.gui.editor.animated=动画姿势
 chameleon.gui.editor.context.copy=拷贝姿势
 chameleon.gui.editor.context.paste=粘贴姿势
+chameleon.gui.editor.context.children=应用至子肢体
 
 chameleon.gui.editor.scale=全局缩放
 chameleon.gui.editor.scale_gui=GUI 缩放
