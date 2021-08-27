@@ -219,6 +219,12 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
         this.transform = this.morph.pose.bones.get(bone);
 
+        if (this.transform == null)
+        {
+            this.transform = new AnimatedPoseTransform(bone);
+            this.morph.pose.bones.put(bone, this.transform);
+        }
+
         this.bones.setCurrentScroll(bone);
         this.animated.toggled(this.morph.pose.animated == AnimatedPoseTransform.ANIMATED);
         this.fixed.toggled(this.transform.fixed == AnimatedPoseTransform.FIXED);

@@ -48,7 +48,7 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
 
         this.r = this.g = this.b = this.a = 1.0F;
 
-        if (this.pose != null)
+        if (this.pose != null && this.pose.bones.containsKey(bone.id))
         {
             AnimatedPoseTransform transform = this.pose.bones.get(bone.id);
 
