@@ -130,8 +130,10 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.glow.flex().relative(this.color).y(-1F, -10).w(1F);
         this.transforms.flex().relative(this).set(0, 0, 256, 70).x(0.5F, -128).y(1, -80);
         this.animation.flex().relative(this).x(1F, -130).w(130);
+
         this.player.flex().relative(this.animation.pickInterpolation).x(0F).y(1F, 5).w(1F);
         this.player.tooltip(IKey.lang("chameleon.gui.editor.player_tooltip"));
+        this.animation.addBefore(this.animation.interpolations, this.player);
 
         GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
@@ -150,7 +152,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         lowerBottom.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
         lowerBottom.add(this.scale, this.scaleGui);
 
-        this.add(this.skin, this.createPose, this.animated, this.fixed, this.color, this.glow, this.bones, this.transforms, this.animation, this.player, lowerBottom);
+        this.add(this.skin, this.createPose, this.animated, this.fixed, this.color, this.glow, this.bones, this.transforms, this.animation, lowerBottom);
     }
 
     private void copyCurrentPose()
