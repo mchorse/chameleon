@@ -74,7 +74,8 @@ public class ModelParser
             /* Setup initial transformations */
             if (boneElement.has("pivot"))
             {
-                parsePositionVector(boneElement.get("pivot"), bone.initial.translate);
+                parseVector(boneElement.get("pivot"), bone.initial.translate);
+                bone.initial.translate.x *= -1;
             }
 
             if (boneElement.has("scale"))
@@ -85,6 +86,9 @@ public class ModelParser
             if (boneElement.has("rotation"))
             {
                 parseVector(boneElement.get("rotation"), bone.initial.rotation);
+
+                bone.initial.rotation.x *= -1;
+                bone.initial.rotation.y *= -1;
             }
 
             /* Setup cubes */
@@ -134,6 +138,11 @@ public class ModelParser
     private static ModelCube parseCube(Model model, JsonObject object)
     {
         ModelCube cube = new ModelCube();
+
+        if (object.has("inflate"))
+        {
+            cube.inflate = object.get("inflate").getAsFloat();
+        }
 
         parseVector(object.get("origin"), cube.origin);
         parseVector(object.get("size"), cube.size);

@@ -41,69 +41,129 @@ public class ModelCube
         if (this.boxUV != null)
         {
             /* North */
-            float tx = this.boxUV.x + this.size.z;
-            float ty = this.boxUV.y + this.size.z;
+            float tMinX = this.boxUV.x + this.size.z;
+            float tMinY = this.boxUV.y + this.size.z;
+            float tMaxX = tMinX + this.size.x;
+            float tMaxY = tMinY + this.size.y;
+
+            if (this.mirror)
+            {
+                float tmp = tMaxX;
+
+                tMaxX = tMinX;
+                tMinX = tmp;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(maxX, minY, minZ, (tx + this.size.x) * tw, (ty + this.size.y) * th)
-                .vertex(minX, minY, minZ, (tx) * tw, (ty + this.size.y) * th)
-                .vertex(minX, maxY, minZ, (tx) * tw, (ty) * th)
-                .vertex(maxX, maxY, minZ, (tx + this.size.x) * tw, (ty) * th)
+                .vertex(maxX, minY, minZ, tMaxX * tw, tMaxY * th)
+                .vertex(minX, minY, minZ, tMinX * tw, tMaxY * th)
+                .vertex(minX, maxY, minZ, tMinX * tw, tMinY * th)
+                .vertex(maxX, maxY, minZ, tMaxX * tw, tMinY * th)
                 .normal(0, 0, -1));
 
             /* East */
-            tx = this.boxUV.x;
-            ty = this.boxUV.y + this.size.z;
+            tMinX = this.boxUV.x;
+            tMinY = this.boxUV.y + this.size.z;
+            tMaxX = tMinX + this.size.z;
+            tMaxY = tMinY + this.size.y;
+
+            if (this.mirror)
+            {
+                tMinX = this.boxUV.x + this.size.z + this.size.x;
+                tMinY = this.boxUV.y + this.size.z;
+                tMaxX = tMinX + this.size.z;
+                tMaxY = tMinY + this.size.y;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(maxX, minY, maxZ, (tx) * tw, (ty + this.size.y) * th)
-                .vertex(maxX, minY, minZ, (tx + this.size.z) * tw, (ty + this.size.y) * th)
-                .vertex(maxX, maxY, minZ, (tx + this.size.z) * tw, (ty) * th)
-                .vertex(maxX, maxY, maxZ, (tx) * tw, (ty) * th)
+                .vertex(maxX, minY, maxZ, tMinX * tw, tMaxY * th)
+                .vertex(maxX, minY, minZ, tMaxX * tw, tMaxY * th)
+                .vertex(maxX, maxY, minZ, tMaxX * tw, tMinY * th)
+                .vertex(maxX, maxY, maxZ, tMinX * tw, tMinY * th)
                 .normal(1, 0, 0));
 
             /* South */
-            tx = this.boxUV.x + this.size.z * 2 + this.size.x;
-            ty = this.boxUV.y + this.size.z;
+            tMinX = this.boxUV.x + this.size.z * 2 + this.size.x;
+            tMinY = this.boxUV.y + this.size.z;
+            tMaxX = tMinX + this.size.x;
+            tMaxY = tMinY + this.size.y;
+
+            if (this.mirror)
+            {
+                float tmp = tMaxX;
+
+                tMaxX = tMinX;
+                tMinX = tmp;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(minX, minY, maxZ, (tx) * tw, (ty + this.size.y) * th)
-                .vertex(maxX, minY, maxZ, (tx + this.size.x) * tw, (ty + this.size.y) * th)
-                .vertex(maxX, maxY, maxZ, (tx + this.size.x) * tw, (ty) * th)
-                .vertex(minX, maxY, maxZ, (tx) * tw, (ty) * th)
+                .vertex(minX, minY, maxZ, tMinX * tw, tMaxY * th)
+                .vertex(maxX, minY, maxZ, tMaxX * tw, tMaxY * th)
+                .vertex(maxX, maxY, maxZ, tMaxX * tw, tMinY * th)
+                .vertex(minX, maxY, maxZ, tMinX * tw, tMinY * th)
                 .normal(0, 0, 1));
 
             /* West */
-            tx = this.boxUV.x + this.size.z;
-            ty = this.boxUV.y + this.size.z;
+            tMinX = this.boxUV.x + this.size.z + this.size.x;
+            tMinY = this.boxUV.y + this.size.z;
+            tMaxX = tMinX + this.size.z;
+            tMaxY = tMinY + this.size.y;
+
+            if (this.mirror)
+            {
+                tMinX = this.boxUV.x;
+                tMinY = this.boxUV.y + this.size.z;
+                tMaxX = tMinX + this.size.z;
+                tMaxY = tMinY + this.size.y;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(minX, minY, minZ, (tx) * tw, (ty + this.size.y) * th)
-                .vertex(minX, minY, maxZ, (tx + this.size.z) * tw, (ty + this.size.y) * th)
-                .vertex(minX, maxY, maxZ, (tx + this.size.z) * tw, (ty) * th)
-                .vertex(minX, maxY, minZ, (tx) * tw, (ty) * th)
+                .vertex(minX, minY, minZ, tMinX * tw, tMaxY * th)
+                .vertex(minX, minY, maxZ, tMaxX * tw, tMaxY * th)
+                .vertex(minX, maxY, maxZ, tMaxX * tw, tMinY * th)
+                .vertex(minX, maxY, minZ, tMinX * tw, tMinY * th)
                 .normal(-1, 0, 0));
 
             /* Up */
-            tx = this.boxUV.x + this.size.z;
-            ty = this.boxUV.y;
+            tMinX = this.boxUV.x + this.size.z;
+            tMinY = this.boxUV.y;
+            tMaxX = tMinX + this.size.x;
+            tMaxY = tMinY + this.size.z;
+
+            if (this.mirror)
+            {
+                float tmp = tMaxX;
+
+                tMaxX = tMinX;
+                tMinX = tmp;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(maxX, maxY, minZ, (tx + this.size.x) * tw, (ty + this.size.z) * th)
-                .vertex(minX, maxY, minZ, (tx) * tw, (ty + this.size.z) * th)
-                .vertex(minX, maxY, maxZ, (tx) * tw, (ty) * th)
-                .vertex(maxX, maxY, maxZ, (tx + this.size.x) * tw, (ty) * th)
+                .vertex(maxX, maxY, minZ, tMaxX * tw, tMaxY * th)
+                .vertex(minX, maxY, minZ, tMinX * tw, tMaxY * th)
+                .vertex(minX, maxY, maxZ, tMinX * tw, tMinY * th)
+                .vertex(maxX, maxY, maxZ, tMaxX * tw, tMinY * th)
                 .normal(0, 1, 0));
 
             /* Down */
-            tx = this.boxUV.x + this.size.z + this.size.x;
-            ty = this.boxUV.y;
+            tMinX = this.boxUV.x + this.size.z + this.size.x;
+            tMinY = this.boxUV.y;
+            tMaxX = tMinX + this.size.x;
+            tMaxY = tMinY + this.size.z;
+
+            if (this.mirror)
+            {
+                float tmp = tMaxX;
+
+                tMaxX = tMinX;
+                tMinX = tmp;
+            }
 
             this.quads.add(new ModelQuad()
-                .vertex(minX, minY, minZ, (tx) * tw, (ty + this.size.z) * th)
-                .vertex(maxX, minY, minZ, (tx + this.size.x) * tw, (ty + this.size.z) * th)
-                .vertex(maxX, minY, maxZ, (tx + this.size.x) * tw, (ty) * th)
-                .vertex(minX, minY, maxZ, (tx) * tw, (ty) * th)
+                .vertex(minX, minY, minZ, tMinX * tw, tMaxY * th)
+                .vertex(maxX, minY, minZ, tMaxX * tw, tMaxY * th)
+                .vertex(maxX, minY, maxZ, tMaxX * tw, tMinY * th)
+                .vertex(minX, minY, maxZ, tMinX * tw, tMinY * th)
                 .normal(0, -1, 0));
         }
         else
