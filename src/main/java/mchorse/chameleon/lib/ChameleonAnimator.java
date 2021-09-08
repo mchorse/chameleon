@@ -129,7 +129,7 @@ public class ChameleonAnimator
 
         AnimationVector first = keyframes.get(0);
 
-        if (frame < first.getLengthInTicks())
+        if (frame < first.time * 20)
         {
             return MolangHelper.getValue(first.getStart(axis), component, axis);
         }
@@ -144,7 +144,7 @@ public class ChameleonAnimator
             if (frame >= duration && frame < duration + length)
             {
                 // TODO: double factor = EasingManager.ease((frame - duration) / length, vector.easingType, vector.easingArgs);
-                double factor = Interpolations.lerp(0, 1, (frame - duration) / length);
+                double factor = (frame - duration) / length;
                 double start = MolangHelper.getValue(vector.getStart(axis), component, axis);
                 double destination = MolangHelper.getValue(vector.getEnd(axis), component, axis);
 

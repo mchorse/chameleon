@@ -14,7 +14,7 @@ public class AnimationVector
 
     public double getLengthInTicks()
     {
-        return this.next == null ? 0 : (this.next.time - this.time) * 20;
+        return this.next == null ? 0 : (this.next.time - this.time) * 20D;
     }
 
     public MolangExpression getStart(EnumFacing.Axis axis)
@@ -39,7 +39,7 @@ public class AnimationVector
         }
         else if (axis == EnumFacing.Axis.Y)
         {
-            return this.next == null ? this.y : this.next.z;
+            return this.next == null ? this.y : this.next.y;
         }
 
         return this.next == null ? this.z : this.next.z;

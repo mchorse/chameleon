@@ -26,6 +26,6 @@ public class Animation
 
     public int getLengthInTicks()
     {
-        return (int) Math.round(this.length * 20);
+        return (int) Math.floor(this.length * 20);
     }
 }
