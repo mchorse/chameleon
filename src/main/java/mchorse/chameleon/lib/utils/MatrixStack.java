@@ -77,28 +77,28 @@ public class MatrixStack
     {
         Vector3f pivot = cube.pivot;
 
-        this.translate(pivot.x, pivot.y, pivot.z);
+        this.translate(pivot.x / 16F, pivot.y / 16F, pivot.z / 16F);
     }
 
     public void moveBackFromCubePivot(ModelCube cube)
     {
         Vector3f pivot = cube.pivot;
 
-        this.translate(-pivot.x, -pivot.y, -pivot.z);
+        this.translate(-pivot.x / 16F, -pivot.y / 16F, -pivot.z / 16F);
     }
 
     public void moveToBonePivot(ModelBone bone)
     {
         Vector3f pivot = bone.initial.translate;
 
-        this.translate(pivot.x, pivot.y, pivot.z);
+        this.translate(pivot.x / 16F, pivot.y / 16F, pivot.z / 16F);
     }
 
     public void moveBackFromBonePivot(ModelBone bone)
     {
         Vector3f pivot = bone.initial.translate;
 
-        this.translate(-pivot.x, -pivot.y, -pivot.z);
+        this.translate(-pivot.x / 16F, -pivot.y / 16F, -pivot.z / 16F);
     }
 
     public void translateBone(ModelBone bone)
@@ -106,7 +106,7 @@ public class MatrixStack
         Vector3f translate = bone.current.translate;
         Vector3f pivot = bone.initial.translate;
 
-        this.translate(-(translate.x - pivot.x), translate.y - pivot.y, translate.z - pivot.z);
+        this.translate(-(translate.x - pivot.x) / 16F, (translate.y - pivot.y) / 16F, (translate.z - pivot.z) / 16F);
     }
 
     /* Scale */

@@ -30,13 +30,13 @@ public class ModelCube
         float tw = 1F / model.textureWidth;
         float th = 1F / model.textureHeight;
 
-        float minX = this.origin.x - this.inflate;
-        float minY = this.origin.y - this.inflate;
-        float minZ = this.origin.z - this.inflate;
+        float minX = (this.origin.x - this.inflate) / 16F;
+        float minY = (this.origin.y - this.inflate) / 16F;
+        float minZ = (this.origin.z - this.inflate) / 16F;
 
-        float maxX = this.origin.x + this.size.x + this.inflate;
-        float maxY = this.origin.y + this.size.y + this.inflate;
-        float maxZ = this.origin.z + this.size.z + this.inflate;
+        float maxX = (this.origin.x + this.size.x + this.inflate) / 16F;
+        float maxY = (this.origin.y + this.size.y + this.inflate) / 16F;
+        float maxZ = (this.origin.z + this.size.z + this.inflate) / 16F;
 
         if (this.boxUV != null)
         {

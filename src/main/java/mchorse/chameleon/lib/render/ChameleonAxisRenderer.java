@@ -20,7 +20,7 @@ public class ChameleonAxisRenderer implements IChameleonRenderProcessor
         GlStateManager.pushMatrix();
         ChameleonPostRenderer.multiplyMatrix(stack, bone);
 
-        Draw.axis(2F);
+        Draw.axis(0.2F);
 
         GlStateManager.popMatrix();
 
