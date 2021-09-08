@@ -42,7 +42,7 @@ public class ChameleonPostRenderer implements IChameleonRenderProcessor
         Vector3f pivot = bone.initial.translate;
 
         GlStateManager.multMatrix(MatrixUtils.buffer);
-        GlStateManager.translate(pivot.x / 16, pivot.y / 16, pivot.z / 16);
+        GlStateManager.translate(pivot.x, pivot.y, pivot.z);
     }
 
     public void setBoneName(String boneName)

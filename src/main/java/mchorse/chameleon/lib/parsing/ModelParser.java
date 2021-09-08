@@ -75,7 +75,6 @@ public class ModelParser
             if (boneElement.has("pivot"))
             {
                 parseVector(boneElement.get("pivot"), bone.initial.translate);
-                bone.initial.translate.x *= -1;
             }
 
             if (boneElement.has("scale"))
@@ -88,7 +87,7 @@ public class ModelParser
                 parseVector(boneElement.get("rotation"), bone.initial.rotation);
 
                 bone.initial.rotation.x *= -1;
-                bone.initial.rotation.y *= -1;
+                bone.initial.rotation.z *= -1;
             }
 
             /* Setup cubes */
@@ -159,6 +158,9 @@ public class ModelParser
         if (object.has("rotation"))
         {
             parseVector(object.get("rotation"), cube.rotation);
+
+            cube.rotation.x *= -1;
+            cube.rotation.z *= -1;
         }
 
         if (object.has("uv"))
@@ -214,15 +216,6 @@ public class ModelParser
         vector.x = array.get(0).getAsFloat();
         vector.y = array.get(1).getAsFloat();
         vector.z = array.get(2).getAsFloat();
-    }
-
-    private static void parsePositionVector(JsonElement element, Vector3f vector)
-    {
-        parseVector(element, vector);
-
-        vector.x /= 16F;
-        vector.y /= 16F;
-        vector.z /= 16F;
     }
 
     private static void parseVector(JsonElement element, Vector2f vector)

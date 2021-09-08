@@ -3,6 +3,7 @@ package mchorse.chameleon.lib.render;
 import mchorse.chameleon.lib.data.model.ModelBone;
 import mchorse.chameleon.lib.data.model.Model;
 import mchorse.chameleon.lib.utils.MatrixStack;
+import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -17,6 +18,7 @@ public class ChameleonRenderer
     private static final MatrixStack MATRIX_STACK = new MatrixStack();
     private static final ChameleonCubeRenderer CUBE_RENDERER = new ChameleonCubeRenderer();
     private static final ChameleonPostRenderer POST_RENDERER = new ChameleonPostRenderer();
+    private static final ChameleonAxisRenderer AXIS_RENDERER = new ChameleonAxisRenderer();
 
     /* Specific utility methods */
 
@@ -45,6 +47,16 @@ public class ChameleonRenderer
         GlStateManager.disableBlend();
         GlStateManager.disableRescaleNormal();
         GlStateManager.enableCull();
+
+        GlStateManager.disableLighting();
+        GlStateManager.disableTexture2D();
+        GlStateManager.disableDepth();
+
+        // processRenderModel(AXIS_RENDERER, null, MATRIX_STACK, model);
+
+        GlStateManager.enableDepth();
+        GlStateManager.enableTexture2D();
+        GlStateManager.enableLighting();
     }
 
     /**

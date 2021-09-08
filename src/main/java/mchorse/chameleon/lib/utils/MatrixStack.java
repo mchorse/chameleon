@@ -104,8 +104,9 @@ public class MatrixStack
     public void translateBone(ModelBone bone)
     {
         Vector3f translate = bone.current.translate;
+        Vector3f pivot = bone.initial.translate;
 
-        this.translate(-translate.x, translate.y, translate.z);
+        this.translate(-(translate.x - pivot.x), translate.y - pivot.y, translate.z - pivot.z);
     }
 
     /* Scale */
