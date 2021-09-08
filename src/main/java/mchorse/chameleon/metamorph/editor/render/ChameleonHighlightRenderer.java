@@ -1,7 +1,12 @@
 package mchorse.chameleon.metamorph.editor.render;
 
-import mchorse.chameleon.geckolib.render.ChameleonPostRenderer;
-import mchorse.chameleon.geckolib.render.IChameleonRenderProcessor;
+import mchorse.chameleon.lib.data.model.ModelBone;
+import mchorse.chameleon.lib.data.model.ModelCube;
+import mchorse.chameleon.lib.data.model.ModelQuad;
+import mchorse.chameleon.lib.data.model.ModelVertex;
+import mchorse.chameleon.lib.render.ChameleonPostRenderer;
+import mchorse.chameleon.lib.render.IChameleonRenderProcessor;
+import mchorse.chameleon.lib.utils.MatrixStack;
 import mchorse.mclib.client.Draw;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,11 +15,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoCube;
-import software.bernie.geckolib3.geo.render.built.GeoQuad;
-import software.bernie.geckolib3.geo.render.built.GeoVertex;
-import software.bernie.geckolib3.util.MatrixStack;
 
 import javax.vecmath.Vector4f;
 
@@ -36,13 +36,13 @@ public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
     }
 
     @Override
-    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
-        if (bone.name.equals(this.boneName))
+        if (bone.id.equals(this.boneName))
         {
             builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-            for (GeoCube cube : bone.childCubes)
+            for (ModelCube cube : bone.cubes)
             {
                 this.renderCubeForHighlight(builder, stack, cube);
             }
@@ -62,16 +62,16 @@ public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
         return false;
     }
 
-    private void renderCubeForHighlight(BufferBuilder builder, MatrixStack stack, GeoCube cube)
+    private void renderCubeForHighlight(BufferBuilder builder, MatrixStack stack, ModelCube cube)
     {
         stack.push();
-        stack.moveToPivot(cube);
-        stack.rotate(cube);
-        stack.moveBackFromPivot(cube);
+        stack.moveToCubePivot(cube);
+        stack.rotateCube(cube);
+        stack.moveBackFromCubePivot(cube);
 
-        for (GeoQuad quad : cube.quads)
+        for (ModelQuad quad : cube.quads)
         {
-            for (GeoVertex vertex : quad.vertices)
+            for (ModelVertex vertex : quad.vertices)
             {
                 this.vertex.set(vertex.position);
                 this.vertex.w = 1;

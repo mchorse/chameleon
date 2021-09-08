@@ -3,9 +3,12 @@ package mchorse.chameleon.metamorph;
 import mchorse.chameleon.ClientProxy;
 import mchorse.chameleon.animation.ActionsConfig;
 import mchorse.chameleon.animation.Animator;
-import mchorse.chameleon.geckolib.ChameleonAnimator;
-import mchorse.chameleon.geckolib.ChameleonModel;
-import mchorse.chameleon.geckolib.render.ChameleonRenderer;
+import mchorse.chameleon.lib.ChameleonAnimator;
+import mchorse.chameleon.lib.ChameleonModel;
+import mchorse.chameleon.lib.data.model.Model;
+import mchorse.chameleon.lib.data.model.ModelBone;
+import mchorse.chameleon.lib.data.model.ModelTransform;
+import mchorse.chameleon.lib.render.ChameleonRenderer;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
 import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
 import mchorse.chameleon.metamorph.pose.PoseAnimation;
@@ -32,9 +35,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.snapshot.BoneSnapshot;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import java.util.Objects;
 
@@ -209,7 +209,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         this.checkAnimator();
 
-        GeoModel model = chameleonModel.model;
+        Model model = chameleonModel.model;
 
         ChameleonAnimator.resetPose(model);
 
@@ -264,7 +264,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     }
 
     @SideOnly(Side.CLIENT)
-    private void applyPose(GeoModel model, float partialTicks)
+    private void applyPose(Model model, float partialTicks)
     {
         AnimatedPose pose = this.pose;
         boolean inProgress = this.animation.isInProgress();
@@ -274,35 +274,37 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             pose = this.animation.calculatePose(this.pose, this.getModel(), partialTicks);
         }
 
-        for (GeoBone bone : model.topLevelBones)
+        for (ModelBone bone : model.bones)
         {
             this.applyPose(bone, pose);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private void applyPose(GeoBone bone, AnimatedPose pose)
+    private void applyPose(ModelBone bone, AnimatedPose pose)
     {
-        if (pose != null && pose.bones.containsKey(bone.name))
+        if (pose != null && pose.bones.containsKey(bone.id))
         {
-            AnimatedPoseTransform transform = pose.bones.get(bone.name);
-            BoneSnapshot snapshot = bone.getInitialSnapshot();
+            AnimatedPoseTransform transform = pose.bones.get(bone.id);
+            ModelTransform initial = bone.initial;
+            ModelTransform current = bone.current;
             float factor = transform.fixed * pose.animated;
+            final float piToDegrees = (float) (180D / Math.PI);
 
-            bone.setPositionX(Interpolations.lerp(snapshot.positionOffsetX, bone.getPositionX(), factor) + transform.x);
-            bone.setPositionY(Interpolations.lerp(snapshot.positionOffsetY, bone.getPositionY(), factor) + transform.y);
-            bone.setPositionZ(Interpolations.lerp(snapshot.positionOffsetZ, bone.getPositionZ(), factor) + transform.z);
+            current.translate.x = Interpolations.lerp(initial.translate.x, current.translate.x, factor) + transform.x;
+            current.translate.y = Interpolations.lerp(initial.translate.y, current.translate.y, factor) + transform.y;
+            current.translate.z = Interpolations.lerp(initial.translate.z, current.translate.z, factor) + transform.z;
 
-            bone.setRotationX(Interpolations.lerp(snapshot.rotationValueX, bone.getRotationX(), factor) + transform.rotateX);
-            bone.setRotationY(Interpolations.lerp(snapshot.rotationValueY, bone.getRotationY(), factor) + transform.rotateY);
-            bone.setRotationZ(Interpolations.lerp(snapshot.rotationValueZ, bone.getRotationZ(), factor) + transform.rotateZ);
+            current.rotation.x = Interpolations.lerp(initial.rotation.x, current.rotation.x, factor) + transform.rotateX * piToDegrees;
+            current.rotation.y = Interpolations.lerp(initial.rotation.y, current.rotation.y, factor) + transform.rotateY * piToDegrees;
+            current.rotation.z = Interpolations.lerp(initial.rotation.z, current.rotation.z, factor) + transform.rotateZ * piToDegrees;
 
-            bone.setScaleX(Interpolations.lerp(snapshot.scaleValueX, bone.getScaleX(), factor) + (transform.scaleX - 1));
-            bone.setScaleY(Interpolations.lerp(snapshot.scaleValueY, bone.getScaleY(), factor) + (transform.scaleY - 1));
-            bone.setScaleZ(Interpolations.lerp(snapshot.scaleValueZ, bone.getScaleZ(), factor) + (transform.scaleZ - 1));
+            current.scale.x = Interpolations.lerp(initial.scale.x, current.scale.x, factor) + (transform.scaleX - 1);
+            current.scale.y = Interpolations.lerp(initial.scale.y, current.scale.y, factor) + (transform.scaleY - 1);
+            current.scale.z = Interpolations.lerp(initial.scale.z, current.scale.z, factor) + (transform.scaleZ - 1);
         }
 
-        for (GeoBone childBone : bone.childBones)
+        for (ModelBone childBone : bone.children)
         {
             this.applyPose(childBone, pose);
         }

@@ -1,7 +1,7 @@
 package mchorse.chameleon.metamorph.editor;
 
 import mchorse.chameleon.ClientProxy;
-import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.lib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.mclib.client.gui.framework.GuiBase;
 import mchorse.mclib.client.gui.framework.elements.GuiModelRenderer;

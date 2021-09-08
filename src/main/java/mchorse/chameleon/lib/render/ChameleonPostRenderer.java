@@ -1,14 +1,16 @@
-package mchorse.chameleon.geckolib.render;
+package mchorse.chameleon.lib.render;
 
+import mchorse.chameleon.lib.data.model.ModelBone;
+import mchorse.chameleon.lib.data.model.ModelTransform;
+import mchorse.chameleon.lib.utils.MatrixStack;
 import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.util.MatrixStack;
 
 import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3f;
 
 /**
  * Post render processor
@@ -27,7 +29,7 @@ public class ChameleonPostRenderer implements IChameleonRenderProcessor
     /**
      * Multiply given matrix stack onto OpenGL's matrix stack
      */
-    public static void multiplyMatrix(MatrixStack stack, GeoBone bone)
+    public static void multiplyMatrix(MatrixStack stack, ModelBone bone)
     {
         matrix.set(stack.getModelMatrix());
         matrix.transpose();
@@ -37,8 +39,10 @@ public class ChameleonPostRenderer implements IChameleonRenderProcessor
         MatrixUtils.buffer.put(MatrixUtils.floats);
         MatrixUtils.buffer.flip();
 
+        Vector3f pivot = bone.initial.translate;
+
         GlStateManager.multMatrix(MatrixUtils.buffer);
-        GlStateManager.translate(bone.rotationPointX / 16, bone.rotationPointY / 16, bone.rotationPointZ / 16);
+        GlStateManager.translate(pivot.x / 16, pivot.y / 16, pivot.z / 16);
     }
 
     public void setBoneName(String boneName)
@@ -47,9 +51,9 @@ public class ChameleonPostRenderer implements IChameleonRenderProcessor
     }
 
     @Override
-    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
-        if (bone.name.equals(this.boneName))
+        if (bone.id.equals(this.boneName))
         {
             multiplyMatrix(stack, bone);
 

@@ -1,5 +1,8 @@
-package mchorse.chameleon.geckolib;
+package mchorse.chameleon.lib;
 
+import mchorse.mclib.math.Variable;
+import mchorse.mclib.math.molang.MolangParser;
+import mchorse.mclib.math.molang.expressions.MolangExpression;
 import mchorse.mclib.utils.Interpolations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -10,14 +13,28 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.ConstantValue;
-import software.bernie.geckolib3.util.MolangUtils;
-import software.bernie.shadowed.eliotlash.mclib.math.IValue;
-import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
 @SideOnly(Side.CLIENT)
 public class MolangHelper
 {
+    public static void registerVars(MolangParser parser)
+    {
+        parser.register(new Variable("query.anim_time", 0));
+        parser.register(new Variable("query.life_time", 0));
+        parser.register(new Variable("query.actor_count", 0));
+        parser.register(new Variable("query.time_of_day", 0));
+        parser.register(new Variable("query.moon_phase", 0));
+        parser.register(new Variable("query.distance_from_camera", 0));
+        parser.register(new Variable("query.is_on_ground", 0));
+        parser.register(new Variable("query.is_in_water", 0));
+        parser.register(new Variable("query.is_in_water_or_rain", 0));
+        parser.register(new Variable("query.health", 0));
+        parser.register(new Variable("query.max_health", 0));
+        parser.register(new Variable("query.is_on_fire", 0));
+        parser.register(new Variable("query.ground_speed", 0));
+        parser.register(new Variable("query.yaw_speed", 0));
+    }
+
     public static void setMolangVariables(MolangParser parser, EntityLivingBase target, float frame)
     {
         parser.setValue("query.anim_time", frame / 20);
@@ -27,7 +44,7 @@ public class MolangHelper
         float partialTick = mc.getRenderPartialTicks();
 
         parser.setValue("query.actor_count", mc.world.loadedEntityList.size());
-        parser.setValue("query.time_of_day", MolangUtils.normalizeTime(mc.world.getTotalWorldTime()));
+        parser.setValue("query.time_of_day", normalizeTime(mc.world.getTotalWorldTime()));
         parser.setValue("query.moon_phase", mc.world.getMoonPhase());
 
         Entity camera = mc.getRenderViewEntity();
@@ -44,13 +61,13 @@ public class MolangHelper
         double distance = entityCamera.add(ActiveRenderInfo.getCameraPosition()).distanceTo(entityPosition);
 
         parser.setValue("query.distance_from_camera", distance);
-        parser.setValue("query.is_on_ground", MolangUtils.booleanToFloat(target.onGround));
-        parser.setValue("query.is_in_water", MolangUtils.booleanToFloat(target.isInWater()));
-        parser.setValue("query.is_in_water_or_rain", MolangUtils.booleanToFloat(target.isWet()));
+        parser.setValue("query.is_on_ground", booleanToDouble(target.onGround));
+        parser.setValue("query.is_in_water", booleanToDouble(target.isInWater()));
+        parser.setValue("query.is_in_water_or_rain", booleanToDouble(target.isWet()));
 
         parser.setValue("query.health", target.getHealth());
         parser.setValue("query.max_health", target.getMaxHealth());
-        parser.setValue("query.is_on_fire", MolangUtils.booleanToFloat(target.isBurning()));
+        parser.setValue("query.is_on_fire", booleanToDouble(target.isBurning()));
 
         double dx = target.motionX;
         double dz = target.motionZ;
@@ -88,6 +105,16 @@ public class MolangHelper
         parser.setValue("query.age", target.ticksExisted + partialTick);
     }
 
+    private static double normalizeTime(long totalWorldTime)
+    {
+        return totalWorldTime / 24000D;
+    }
+
+    private static double booleanToDouble(boolean bool)
+    {
+        return bool ? 1D : 0D;
+    }
+
     /**
      * Get value from given value of a keyframe (end or start)
      *
@@ -97,17 +124,17 @@ public class MolangHelper
      *
      * Plus X and Y axis of rotation are inverted for some reason ...
      */
-    public static double getValue(IValue value, Component component, EnumFacing.Axis axis)
+    public static double getValue(MolangExpression value, Component component, EnumFacing.Axis axis)
     {
         double out = value.get();
 
         if (component == Component.ROTATION)
         {
-            if (value instanceof ConstantValue)
+            /* if (value instanceof Constant)
             {
                 out = Math.toDegrees(out);
             }
-            else if (axis == EnumFacing.Axis.X || axis == EnumFacing.Axis.Y)
+            else*/ if (axis == EnumFacing.Axis.X || axis == EnumFacing.Axis.Y)
             {
                 out *= -1;
             }

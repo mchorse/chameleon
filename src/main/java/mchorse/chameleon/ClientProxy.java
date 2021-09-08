@@ -1,19 +1,19 @@
 package mchorse.chameleon;
 
 import mchorse.chameleon.client.ChameleonPack;
-import mchorse.chameleon.geckolib.ChameleonLoader;
-import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.lib.ChameleonLoader;
+import mchorse.chameleon.lib.ChameleonModel;
+import mchorse.chameleon.lib.MolangHelper;
+import mchorse.chameleon.lib.data.animation.Animations;
+import mchorse.chameleon.lib.data.model.Model;
 import mchorse.chameleon.mclib.ChameleonTree;
+import mchorse.mclib.math.Variable;
+import mchorse.mclib.math.molang.MolangParser;
 import mchorse.mclib.utils.ReflectionUtils;
 import mchorse.mclib.utils.files.GlobalTree;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.file.AnimationFile;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.molang.MolangRegistrar;
-import software.bernie.shadowed.eliotlash.mclib.math.Variable;
-import software.bernie.shadowed.eliotlash.molang.MolangParser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class ClientProxy extends CommonProxy
     {
         parser = new MolangParser();
 
-        MolangRegistrar.registerVars(parser);
+        MolangHelper.registerVars(parser);
 
         /* Additional Chameleon specific variables */
         parser.register(new Variable("query.head_yaw", 0));
@@ -164,15 +164,15 @@ public class ClientProxy extends CommonProxy
 
         if (model != null && (oldModel == null || oldModel.lastUpdate < lastUpdated))
         {
-            GeoModel geoModel = this.loader.loadModel(model);
-            AnimationFile animationFile = this.loadAnimations(animations);
+            Model theModel = this.loader.loadModel(model);
+            Animations theAnimations = this.loadAnimations(animations);
 
-            if (geoModel != null)
+            if (theModel != null)
             {
                 List<File> trackingFiles = new ArrayList<File>();
 
                 trackingFiles.add(model);
-                chameleonModels.put(key, new ChameleonModel(geoModel, animationFile, trackingFiles, lastUpdated));
+                chameleonModels.put(key, new ChameleonModel(theModel, theAnimations, trackingFiles, lastUpdated));
                 toCheck.remove(key);
             }
         }
@@ -180,9 +180,9 @@ public class ClientProxy extends CommonProxy
         return chameleonModels.containsKey(key);
     }
 
-    private AnimationFile loadAnimations(List<File> files)
+    private Animations loadAnimations(List<File> files)
     {
-        AnimationFile animations = new AnimationFile();
+        Animations animations = new Animations();
 
         for (File animationFile : files)
         {

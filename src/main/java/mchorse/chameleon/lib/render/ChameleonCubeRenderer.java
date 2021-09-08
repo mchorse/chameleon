@@ -1,13 +1,13 @@
-package mchorse.chameleon.geckolib.render;
+package mchorse.chameleon.lib.render;
 
+import mchorse.chameleon.lib.data.model.ModelBone;
+import mchorse.chameleon.lib.data.model.ModelCube;
+import mchorse.chameleon.lib.data.model.ModelQuad;
+import mchorse.chameleon.lib.data.model.ModelVertex;
+import mchorse.chameleon.lib.utils.MatrixStack;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoCube;
-import software.bernie.geckolib3.geo.render.built.GeoQuad;
-import software.bernie.geckolib3.geo.render.built.GeoVertex;
-import software.bernie.geckolib3.util.MatrixStack;
 
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
@@ -38,9 +38,9 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
     }
 
     @Override
-    public boolean renderBone(BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    public boolean renderBone(BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
-        for (GeoCube cube : bone.childCubes)
+        for (ModelCube cube : bone.cubes)
         {
             renderCube(builder, stack, cube);
         }
@@ -48,16 +48,16 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
         return false;
     }
 
-    private void renderCube(BufferBuilder builder, MatrixStack stack, GeoCube cube)
+    private void renderCube(BufferBuilder builder, MatrixStack stack, ModelCube cube)
     {
         stack.push();
-        stack.moveToPivot(cube);
-        stack.rotate(cube);
-        stack.moveBackFromPivot(cube);
+        stack.moveToCubePivot(cube);
+        stack.rotateCube(cube);
+        stack.moveBackFromCubePivot(cube);
 
-        for (GeoQuad quad : cube.quads)
+        for (ModelQuad quad : cube.quads)
         {
-            this.normal.set(quad.normal.getX(), quad.normal.getY(), quad.normal.getZ());
+            this.normal.set(quad.normal.x, quad.normal.y, quad.normal.z);
             stack.getNormalMatrix().transform(this.normal);
 
             /* For 0 sized cubes on either axis, to avoid getting dark shading on models
@@ -71,16 +71,16 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
             if (this.normal.getY() < 0 && (cube.size.x == 0 || cube.size.z == 0)) this.normal.y *= -1;
             if (this.normal.getZ() < 0 && (cube.size.x == 0 || cube.size.y == 0)) this.normal.z *= -1;
 
-            for (GeoVertex vertex : quad.vertices)
+            for (ModelVertex vertex : quad.vertices)
             {
                 this.vertex.set(vertex.position);
                 this.vertex.w = 1;
                 stack.getModelMatrix().transform(this.vertex);
 
-                builder.pos(this.vertex.getX(), this.vertex.getY(), this.vertex.getZ())
-                    .tex(vertex.textureU, vertex.textureV)
+                builder.pos(this.vertex.x, this.vertex.y, this.vertex.z)
+                    .tex(vertex.uv.x, vertex.uv.y)
                     .color(this.r, this.g, this.b, this.a)
-                    .normal(this.normal.getX(), this.normal.getY(), this.normal.getZ())
+                    .normal(this.normal.x, this.normal.y, this.normal.z)
                     .endVertex();
             }
         }

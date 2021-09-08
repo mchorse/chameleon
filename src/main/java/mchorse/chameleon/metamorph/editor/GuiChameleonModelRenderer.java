@@ -1,7 +1,8 @@
 package mchorse.chameleon.metamorph.editor;
 
-import mchorse.chameleon.geckolib.ChameleonModel;
-import mchorse.chameleon.geckolib.render.ChameleonRenderer;
+import mchorse.chameleon.lib.ChameleonModel;
+import mchorse.chameleon.lib.render.ChameleonRenderer;
+import mchorse.chameleon.lib.utils.MatrixStack;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.chameleon.metamorph.editor.render.ChameleonHighlightRenderer;
 import mchorse.chameleon.metamorph.editor.render.ChameleonStencilRenderer;
@@ -13,7 +14,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import software.bernie.geckolib3.util.MatrixStack;
 
 import java.util.List;
 

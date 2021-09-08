@@ -1,6 +1,7 @@
 package mchorse.chameleon.metamorph.editor;
 
 import mchorse.chameleon.animation.ActionConfig;
+import mchorse.chameleon.lib.data.animation.Animation;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.mclib.client.gui.framework.elements.GuiElement;
 import mchorse.mclib.client.gui.framework.elements.buttons.GuiToggleElement;
@@ -13,7 +14,6 @@ import mchorse.metamorph.client.gui.editor.GuiMorphPanel;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.builder.Animation;
 
 @SideOnly(Side.CLIENT)
 public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonMorph>
@@ -100,9 +100,9 @@ public class GuiActionsPanel extends GuiMorphPanel<ChameleonMorph, GuiChameleonM
 
         this.action.list.clear();
 
-        for (Animation animation : morph.getModel().animation.getAllAnimations())
+        for (Animation animation : morph.getModel().animations.getAll())
         {
-            this.action.list.add(animation.animationName);
+            this.action.list.add(animation.id);
         }
 
         this.action.list.sort();

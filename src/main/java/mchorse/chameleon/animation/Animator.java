@@ -1,6 +1,9 @@
 package mchorse.chameleon.animation;
 
-import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.lib.ChameleonModel;
+import mchorse.chameleon.lib.data.animation.Animation;
+import mchorse.chameleon.lib.data.animation.Animations;
+import mchorse.chameleon.lib.data.model.Model;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,9 +12,6 @@ import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.builder.Animation;
-import software.bernie.geckolib3.file.AnimationFile;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -115,14 +115,14 @@ public class Animator
     public ActionPlayback createAction(ActionPlayback old, ActionConfig config, boolean looping, int priority)
     {
         ChameleonModel model = this.morph.getModel();
-        AnimationFile animations = model == null ? null : model.animation;
+        Animations animations = model == null ? null : model.animations;
 
         if (animations == null)
         {
             return null;
         }
 
-        Animation action = animations.getAnimation(config.name);
+        Animation action = animations.get(config.name);
 
         /* If given action is missing, then omit creation of ActionPlayback */
         if (action == null)
@@ -374,7 +374,7 @@ public class Animator
     /**
      * Apply currently running action pipeline onto given armature
      */
-    public void applyActions(EntityLivingBase target, GeoModel armature, float partialTicks)
+    public void applyActions(EntityLivingBase target, Model armature, float partialTicks)
     {
         if (this.lastActive != null && this.active.isFading())
         {

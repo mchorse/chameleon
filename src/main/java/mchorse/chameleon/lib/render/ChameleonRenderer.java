@@ -1,5 +1,8 @@
-package mchorse.chameleon.geckolib.render;
+package mchorse.chameleon.lib.render;
 
+import mchorse.chameleon.lib.data.model.ModelBone;
+import mchorse.chameleon.lib.data.model.Model;
+import mchorse.chameleon.lib.utils.MatrixStack;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -7,9 +10,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-import software.bernie.geckolib3.geo.render.built.GeoBone;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.util.MatrixStack;
 
 @SideOnly(Side.CLIENT)
 public class ChameleonRenderer
@@ -25,7 +25,7 @@ public class ChameleonRenderer
      *
      * The texture should be bind beforehand
      */
-    public static void render(GeoModel model)
+    public static void render(Model model)
     {
         CUBE_RENDERER.setColor(1F, 1F, 1F, 1F);
 
@@ -51,7 +51,7 @@ public class ChameleonRenderer
      * Post render (multiply the current matrix stack by bone's
      * transformations by given name)
      */
-    public static boolean postRender(GeoModel model, String boneName)
+    public static boolean postRender(Model model, String boneName)
     {
         POST_RENDERER.setBoneName(boneName);
 
@@ -68,9 +68,9 @@ public class ChameleonRenderer
      * applies given render processor. Processor may return true from its
      * sole method which means that iteration should be halted
      */
-    public static boolean processRenderModel(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoModel model)
+    public static boolean processRenderModel(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, Model model)
     {
-        for (GeoBone bone : model.topLevelBones)
+        for (ModelBone bone : model.bones)
         {
             if (processRenderRecursively(renderProcessor, builder, stack, bone))
             {
@@ -84,16 +84,16 @@ public class ChameleonRenderer
     /**
      * Apply the render processor, recursively
      */
-    private static boolean processRenderRecursively(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, GeoBone bone)
+    private static boolean processRenderRecursively(IChameleonRenderProcessor renderProcessor, BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
         stack.push();
-        stack.translate(bone);
-        stack.moveToPivot(bone);
-        stack.rotate(bone);
-        stack.scale(bone);
-        stack.moveBackFromPivot(bone);
+        stack.translateBone(bone);
+        stack.moveToBonePivot(bone);
+        stack.rotateBone(bone);
+        stack.scaleBone(bone);
+        stack.moveBackFromBonePivot(bone);
 
-        if (!bone.isHidden)
+        if (bone.visible)
         {
             if (renderProcessor.renderBone(builder, stack, bone))
             {
@@ -102,7 +102,7 @@ public class ChameleonRenderer
                 return true;
             }
 
-            for (GeoBone childBone : bone.childBones)
+            for (ModelBone childBone : bone.children)
             {
                 if (processRenderRecursively(renderProcessor, builder, stack, childBone))
                 {

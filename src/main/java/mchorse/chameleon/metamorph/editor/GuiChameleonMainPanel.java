@@ -1,6 +1,6 @@
 package mchorse.chameleon.metamorph.editor;
 
-import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.lib.ChameleonModel;
 import mchorse.chameleon.metamorph.ChameleonMorph;
 import mchorse.chameleon.metamorph.pose.AnimatedPose;
 import mchorse.chameleon.metamorph.pose.AnimatedPoseTransform;
@@ -13,7 +13,6 @@ import mchorse.mclib.client.gui.framework.elements.input.GuiTexturePicker;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTrackpadElement;
 import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
 import mchorse.mclib.client.gui.framework.elements.list.GuiStringListElement;
-import mchorse.mclib.client.gui.utils.Elements;
 import mchorse.mclib.client.gui.utils.Icons;
 import mchorse.mclib.client.gui.utils.keys.IKey;
 import mchorse.mclib.utils.resources.RLUtils;
@@ -276,6 +275,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         @Override
         public void setR(double x, double y, double z)
         {
+            /* That was a bad idea... */
             this.trans.rotateX = (float) (x / 180F * (float) Math.PI);
             this.trans.rotateY = (float) (y / 180F * (float) Math.PI);
             this.trans.rotateZ = (float) (z / 180F * (float) Math.PI);

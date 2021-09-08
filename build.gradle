@@ -38,14 +38,12 @@ minecraft
     replace("%VERSION%", project.version)
     replace("%MCLIB%", project.mclib)
     replace("%METAMORPH%", project.metamorph)
-    replace("%GECKOLIB%", project.geckolib)
 }
 
 dependencies
 {
     compile files("run/libs/mclib-${mclib}-${project.minecraft.version}-dev.jar")
     compile files("run/libs/metamorph-${metamorph}-${project.minecraft.version}-dev.jar")
-    compile files("run/libs/forge-1.12.2-geckolib-${geckolib}-beta.2-dev.jar")
 }
 
 processResources

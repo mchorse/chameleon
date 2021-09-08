@@ -1,11 +1,11 @@
 package mchorse.chameleon.animation;
 
-import mchorse.chameleon.geckolib.ChameleonAnimator;
+import mchorse.chameleon.lib.ChameleonAnimator;
+import mchorse.chameleon.lib.data.animation.Animation;
+import mchorse.chameleon.lib.data.model.Model;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import software.bernie.geckolib3.core.builder.Animation;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
 
 @SideOnly(Side.CLIENT)
 public class ActionPlayback
@@ -32,7 +32,7 @@ public class ActionPlayback
     {
         this.action = action;
         this.config = config;
-        this.duration = action.animationLength.intValue();
+        this.duration = action.getLengthInTicks();
         this.looping = looping;
         this.setSpeed(1);
     }
@@ -189,7 +189,7 @@ public class ActionPlayback
         return ticks;
     }
 
-    public void apply(EntityLivingBase target, GeoModel armature, float partialTick, float blend, boolean skipInitial)
+    public void apply(EntityLivingBase target, Model armature, float partialTick, float blend, boolean skipInitial)
     {
         ChameleonAnimator.animate(target, armature, this.action, this.getTick(partialTick), blend, skipInitial);
     }

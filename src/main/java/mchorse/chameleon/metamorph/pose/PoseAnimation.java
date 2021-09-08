@@ -1,6 +1,6 @@
 package mchorse.chameleon.metamorph.pose;
 
-import mchorse.chameleon.geckolib.ChameleonModel;
+import mchorse.chameleon.lib.ChameleonModel;
 import mchorse.metamorph.api.morphs.utils.Animation;
 
 /**
