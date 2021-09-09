@@ -135,7 +135,6 @@ public class ChameleonAnimator
         }
 
         double duration = 0;
-        AnimationVector previous = null;
 
         for (AnimationVector vector : keyframes)
         {
@@ -143,18 +142,12 @@ public class ChameleonAnimator
 
             if (frame >= duration && frame < duration + length)
             {
-                // TODO: double factor = EasingManager.ease((frame - duration) / length, vector.easingType, vector.easingArgs);
-                double factor = (frame - duration) / length;
-                double start = MolangHelper.getValue(vector.getStart(axis), component, axis);
-                double destination = MolangHelper.getValue(vector.getEnd(axis), component, axis);
-
-                return Interpolations.lerp(start, destination, factor);
+                return vector.interp.interpolate(vector, component, axis, (frame - duration) / length);
             }
 
             duration += length;
-            previous = vector;
         }
 
-        return MolangHelper.getValue(previous.getEnd(axis), component, axis);
+        return MolangHelper.getValue(keyframes.get(keyframes.size() - 1).getEnd(axis), component, axis);
     }
 }

@@ -5,9 +5,11 @@ import net.minecraft.util.EnumFacing;
 
 public class AnimationVector
 {
+    public AnimationVector prev;
     public AnimationVector next;
 
     public double time;
+    public AnimationInterpolation interp = AnimationInterpolation.LINEAR;
     public MolangExpression x;
     public MolangExpression y;
     public MolangExpression z;
