@@ -6,11 +6,14 @@
 
 **Chameleon** is a Minecraft mod, and a Metamorph add-on, which allows to import static and animated [Blockbench](https://blockbench.net/) models into Metamorph's morph system, which allows using loaded Blockbench models as morphs (i.e. you can morph into animated models), actors, decorations or custom projectiles (through Blockbuster mod). 
 
-This mod works only with Forge for Minecraft **1.12.2**. Chameleon mod is powered by [GeckoLib](https://curseforge.com/minecraft/mc-mods/geckolib) (**3.0.0 or above**), an amazing animation library for Minecraft mod!
+This mod works only with Forge for Minecraft **1.12.2**. 
+
+Chameleon **1.1** and up doesn't require [GeckoLib](https://curseforge.com/minecraft/mc-mods/geckolib) anymore.  
+Chameleon mod below version **1.1** is powered by [GeckoLib](https://curseforge.com/minecraft/mc-mods/geckolib) (**3.0.0 or above** but below versiob **3.0.0-beta8**), an amazing animation library for Minecraft mod!
 
 ## Install
 
-Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://www.curseforge.com/minecraft/mc-mods/mchorses-mclib), [Metamorph](https://www.curseforge.com/minecraft/mc-mods/metamorph), and [GeckoLib](https://curseforge.com/minecraft/mc-mods/geckolib). Put it in minecraft's `mods` folder, and launch the game.
+Install [Minecraft Forge](http://files.minecraftforge.net/), download the latest stable version of jar file for available Minecraft version. Also install following mods: [McLib](https://www.curseforge.com/minecraft/mc-mods/mchorses-mclib), and [Metamorph](https://www.curseforge.com/minecraft/mc-mods/metamorph). Put it in minecraft's `mods` folder, and launch the game.
 
 After that, Chameleon mod should be installed and will appear in Minecraft's mods menu. If Chameleon didn't appear in the mods menu, then something went wrong. 
 

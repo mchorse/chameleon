@@ -1,3 +1,16 @@
+## Version 1.1
+
+This is a major internal rewrite whose purpose is to make Chameleon independent from GeckoLib. [GeckoLib](https://www.curseforge.com/minecraft/mc-mods/geckolib) is still an awesome library that I would recommend anyone who is doing animated entities and blocks, however, it doesn't personally satisfy me anymore.
+
+The motivation behind this update is to be able to fix bugs on my end, rather than on GeckoLib's end. 
+
+* Added support for Bedrock Smooth keyframes (`catmullrom`)
+* Added new base code (written from scratch) that replaces GeckoLib's animation and model loading code
+* Fixed the crash with missing faces in per-face UV mode
+* Removed `geckolib` from dependencies
+
+I tried to replace everything that GeckoLib was offering, however there are a couple of features that are missing: step interpolation, and support for overshoot/bounciness factor for back, elastic and bounce interpolations. Beside that, everything else should be the same.
+
 ## Version 1.0.3
 
 This is a small patch has 2 features and bug fixes.
