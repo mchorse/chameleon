@@ -170,12 +170,9 @@ public class ModelParser
 
         if (object.has("uv"))
         {
-            if (object.has("mirror"))
-            {
-                cube.mirror = object.get("mirror").getAsBoolean();
-            }
+            boolean mirror = object.has("mirror") && object.get("mirror").getAsBoolean();
 
-            parseUV(cube, object.get("uv"));
+            parseUV(cube, object.get("uv"), mirror);
         }
 
         cube.generateQuads(model);
@@ -183,13 +180,14 @@ public class ModelParser
         return cube;
     }
 
-    private static void parseUV(ModelCube cube, JsonElement element)
+    private static void parseUV(ModelCube cube, JsonElement element, boolean mirror)
     {
         if (element.isJsonArray())
         {
-            cube.boxUV = new Vector2f();
+            Vector2f boxUV = new Vector2f();
 
-            parseVector(element.getAsJsonArray(), cube.boxUV);
+            parseVector(element.getAsJsonArray(), boxUV);
+            cube.setupBoxUV(boxUV, mirror);
         }
         else if (element.isJsonObject())
         {
