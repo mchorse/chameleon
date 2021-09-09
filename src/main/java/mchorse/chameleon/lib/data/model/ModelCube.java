@@ -30,11 +30,11 @@ public class ModelCube
         float tw = 1F / model.textureWidth;
         float th = 1F / model.textureHeight;
 
-        float minX = (this.origin.x - this.inflate) / 16F;
+        float minX = (this.origin.x - this.size.x - this.inflate) / 16F;
         float minY = (this.origin.y - this.inflate) / 16F;
         float minZ = (this.origin.z - this.inflate) / 16F;
 
-        float maxX = (this.origin.x + this.size.x + this.inflate) / 16F;
+        float maxX = (this.origin.x + this.inflate) / 16F;
         float maxY = (this.origin.y + this.size.y + this.inflate) / 16F;
         float maxZ = (this.origin.z + this.size.z + this.inflate) / 16F;
 
@@ -55,10 +55,10 @@ public class ModelCube
             }
 
             this.quads.add(new ModelQuad()
-                .vertex(maxX, minY, minZ, tMaxX * tw, tMaxY * th)
-                .vertex(minX, minY, minZ, tMinX * tw, tMaxY * th)
-                .vertex(minX, maxY, minZ, tMinX * tw, tMinY * th)
-                .vertex(maxX, maxY, minZ, tMaxX * tw, tMinY * th)
+                .vertex(maxX, minY, minZ, tMinX * tw, tMaxY * th)
+                .vertex(minX, minY, minZ, tMaxX * tw, tMaxY * th)
+                .vertex(minX, maxY, minZ, tMaxX * tw, tMinY * th)
+                .vertex(maxX, maxY, minZ, tMinX * tw, tMinY * th)
                 .normal(0, 0, -1));
 
             /* East */
@@ -130,7 +130,7 @@ public class ModelCube
             tMaxX = tMinX + this.size.x;
             tMaxY = tMinY + this.size.z;
 
-            if (this.mirror)
+            if (!this.mirror)
             {
                 float tmp = tMaxX;
 
@@ -151,7 +151,7 @@ public class ModelCube
             tMaxX = tMinX + this.size.x;
             tMaxY = tMinY + this.size.z;
 
-            if (this.mirror)
+            if (!this.mirror)
             {
                 float tmp = tMaxX;
 

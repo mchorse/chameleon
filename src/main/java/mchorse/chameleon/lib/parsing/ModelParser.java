@@ -87,8 +87,10 @@ public class ModelParser
                 parseVector(boneElement.get("rotation"), bone.initial.rotation);
 
                 bone.initial.rotation.x *= -1;
-                bone.initial.rotation.z *= -1;
+                bone.initial.rotation.y *= -1;
             }
+
+            bone.initial.translate.x *= -1;
 
             /* Setup cubes */
             if (boneElement.has("cubes"))
@@ -155,12 +157,15 @@ public class ModelParser
             cube.pivot.set(cube.origin);
         }
 
+        cube.origin.x *= -1;
+        cube.pivot.x *= -1;
+
         if (object.has("rotation"))
         {
             parseVector(object.get("rotation"), cube.rotation);
 
             cube.rotation.x *= -1;
-            cube.rotation.z *= -1;
+            cube.rotation.y *= -1;
         }
 
         if (object.has("uv"))
