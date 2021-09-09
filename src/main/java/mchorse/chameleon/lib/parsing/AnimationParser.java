@@ -65,8 +65,13 @@ public class AnimationParser
     {
         if (element.isJsonArray())
         {
-            channel.keyframes.add(parseAnimationVector(parser, element));
-            channel.sort();
+            AnimationVector vector = parseAnimationVector(parser, element);
+
+            if (vector != null)
+            {
+                channel.keyframes.add(vector);
+                channel.sort();
+            }
 
             return;
         }
@@ -99,8 +104,11 @@ public class AnimationParser
 
                 AnimationVector vector = parseAnimationVector(parser, entry.getValue());
 
-                vector.time = time;
-                channel.keyframes.add(vector);
+                if (vector != null)
+                {
+                    vector.time = time;
+                    channel.keyframes.add(vector);
+                }
             }
         }
 
