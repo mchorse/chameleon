@@ -111,27 +111,30 @@ public class ChameleonAnimator
 
     private static Vector3d interpolateList(AnimationChannel channel, float frame, MolangHelper.Component component)
     {
-        Vector3d vector = new Vector3d();
-
-        vector.x = interpolate(channel.keyframes, frame, component, EnumFacing.Axis.X);
-        vector.y = interpolate(channel.keyframes, frame, component, EnumFacing.Axis.Y);
-        vector.z = interpolate(channel.keyframes, frame, component, EnumFacing.Axis.Z);
-
-        return vector;
+        return interpolate(channel, frame, component);
     }
 
-    private static double interpolate(List<AnimationVector> keyframes, float frame, MolangHelper.Component component, EnumFacing.Axis axis)
+    private static Vector3d interpolate(AnimationChannel channel, float frame, MolangHelper.Component component)
     {
+        Vector3d output = new Vector3d();
+        List<AnimationVector> keyframes = channel.keyframes;
+
         if (keyframes.isEmpty())
         {
-            return 0;
+            output.set(0, 0, 0);
+
+            return output;
         }
 
         AnimationVector first = keyframes.get(0);
 
         if (frame < first.time * 20)
         {
-            return MolangHelper.getValue(first.getStart(axis), component, axis);
+            output.x = MolangHelper.getValue(first.getStart(EnumFacing.Axis.X), component, EnumFacing.Axis.X);
+            output.y = MolangHelper.getValue(first.getStart(EnumFacing.Axis.Y), component, EnumFacing.Axis.Y);
+            output.z = MolangHelper.getValue(first.getStart(EnumFacing.Axis.Z), component, EnumFacing.Axis.Z);
+
+            return output;
         }
 
         double duration = 0;
@@ -142,12 +145,24 @@ public class ChameleonAnimator
 
             if (frame >= duration && frame < duration + length)
             {
-                return vector.interp.interpolate(vector, component, axis, (frame - duration) / length);
+                double factor = (frame - duration) / length;
+
+                output.x = vector.interp.interpolate(vector, component, EnumFacing.Axis.X, factor);
+                output.y = vector.interp.interpolate(vector, component, EnumFacing.Axis.Y, factor);
+                output.z = vector.interp.interpolate(vector, component, EnumFacing.Axis.Z, factor);
+
+                return output;
             }
 
             duration += length;
         }
 
-        return MolangHelper.getValue(keyframes.get(keyframes.size() - 1).getEnd(axis), component, axis);
+        AnimationVector last = keyframes.get(keyframes.size() - 1);
+
+        output.x = MolangHelper.getValue(last.getStart(EnumFacing.Axis.X), component, EnumFacing.Axis.X);
+        output.y = MolangHelper.getValue(last.getStart(EnumFacing.Axis.Y), component, EnumFacing.Axis.Y);
+        output.z = MolangHelper.getValue(last.getStart(EnumFacing.Axis.Z), component, EnumFacing.Axis.Z);
+
+        return output;
     }
 }

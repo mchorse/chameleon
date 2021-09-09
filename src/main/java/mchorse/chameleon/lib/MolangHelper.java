@@ -130,11 +130,7 @@ public class MolangHelper
 
         if (component == Component.ROTATION)
         {
-            /* if (value instanceof Constant)
-            {
-                out = Math.toDegrees(out);
-            }
-            else*/ if (axis == EnumFacing.Axis.X || axis == EnumFacing.Axis.Y)
+            if (axis == EnumFacing.Axis.X || axis == EnumFacing.Axis.Y)
             {
                 out *= -1;
             }
