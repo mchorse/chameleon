@@ -34,5 +34,5 @@ chameleon.gui.config.discord=Discord
 chameleon.gui.config.wiki=Wiki
 
 # Morph stuff
-morph.section.chameleon=Chameleon (由 GeckoLib 驱动)
+morph.section.chameleon=Chameleon
 morph.category.chameleon=动画模型

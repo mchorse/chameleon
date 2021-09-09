@@ -34,5 +34,5 @@ chameleon.gui.config.discord=Діскорд
 chameleon.gui.config.wiki=Вікі
 
 # Morph stuff
-morph.section.chameleon=Хамелеон (за підтримки GeckoLib)
+morph.section.chameleon=Хамелеон
 morph.category.chameleon=Анімовані моделі

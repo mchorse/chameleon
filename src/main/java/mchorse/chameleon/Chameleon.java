@@ -10,12 +10,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-/**
- * Chameleon mod
- *
- * GeckoLib powered mod to import animated Blockbench models into
- * Metamorph as morphs
- */
 @Mod(modid = Chameleon.MOD_ID, name = Chameleon.MODNAME, version = Chameleon.VERSION, dependencies = "required-after:mclib@[%MCLIB%,);required-after:metamorph@[%METAMORPH%,)", updateJSON = "https://raw.githubusercontent.com/mchorse/chameleon/master/version.json")
 public class Chameleon
 {
