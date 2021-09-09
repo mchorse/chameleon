@@ -4,6 +4,8 @@ This is a major internal rewrite whose purpose is to make Chameleon independent 
 
 The motivation behind this update is to be able to fix bugs on my end, rather than on GeckoLib's end. 
 
+**Compatible** with McLib `2.3.5`, Metamorph `1.2.7`. It doesn't mean that future versions of McLib or Metamorph would be incompatible, but older versions are most likely incompatible.
+
 * Added support for Bedrock Smooth keyframes (`catmullrom`)
 * Added new base code (written from scratch) that replaces GeckoLib's animation and model loading code
 * Fixed the crash with missing faces in per-face UV mode
