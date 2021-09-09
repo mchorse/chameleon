@@ -121,13 +121,22 @@ public class AnimationParser
 
         if (array == null)
         {
-            if (element.getAsJsonObject().has("vector"))
+            JsonObject object = element.getAsJsonObject();
+
+            if (object.has("vector"))
             {
                 array = element.getAsJsonObject().get("vector").getAsJsonArray();
             }
-            else if (element.getAsJsonObject().has("post"))
+            else if (object.has("post"))
             {
-                array = element.getAsJsonObject().get("post").getAsJsonArray();
+                if (object.get("post").isJsonArray())
+                {
+                    array = object.get("post").getAsJsonArray();
+                }
+                else if (object.get("post").isJsonObject() && object.get("post").getAsJsonObject().has("vector"))
+                {
+                    array = object.get("post").getAsJsonObject().get("vector").getAsJsonArray();
+                }
             }
         }
 
