@@ -25,10 +25,13 @@ public class ModelCube
     public void setupBoxUV(Vector2f boxUV, boolean mirror)
     {
         /* North */
-        float tMinX = boxUV.x + this.size.z;
-        float tMinY = boxUV.y + this.size.z;
-        float tMaxX = tMinX + this.size.x;
-        float tMaxY = tMinY + this.size.y;
+        float w = (float) Math.floor(this.size.x);
+        float h = (float) Math.floor(this.size.y);
+        float d = (float) Math.floor(this.size.z);
+        float tMinX = boxUV.x + d;
+        float tMinY = boxUV.y + d;
+        float tMaxX = tMinX + w;
+        float tMaxY = tMinY + h;
 
         if (mirror)
         {
@@ -42,16 +45,16 @@ public class ModelCube
 
         /* East */
         tMinX = boxUV.x;
-        tMinY = boxUV.y + this.size.z;
-        tMaxX = tMinX + this.size.z;
-        tMaxY = tMinY + this.size.y;
+        tMinY = boxUV.y + d;
+        tMaxX = tMinX + d;
+        tMaxY = tMinY + h;
 
         if (mirror)
         {
-            tMinX = boxUV.x + this.size.z + this.size.x;
-            tMinY = boxUV.y + this.size.z;
-            tMaxX = tMinX + this.size.z;
-            tMaxY = tMinY + this.size.y;
+            tMinX = boxUV.x + d + w;
+            tMinY = boxUV.y + d;
+            tMaxX = tMinX + d;
+            tMaxY = tMinY + h;
 
             float tmp = tMinX;
 
@@ -62,10 +65,10 @@ public class ModelCube
         this.east = ModelUV.from(tMinX, tMinY, tMaxX, tMaxY);
 
         /* South */
-        tMinX = boxUV.x + this.size.z * 2 + this.size.x;
-        tMinY = boxUV.y + this.size.z;
-        tMaxX = tMinX + this.size.x;
-        tMaxY = tMinY + this.size.y;
+        tMinX = boxUV.x + d * 2 + w;
+        tMinY = boxUV.y + d;
+        tMaxX = tMinX + w;
+        tMaxY = tMinY + h;
 
         if (mirror)
         {
@@ -78,17 +81,17 @@ public class ModelCube
         this.south = ModelUV.from(tMinX, tMinY, tMaxX, tMaxY);
 
         /* West */
-        tMinX = boxUV.x + this.size.z + this.size.x;
-        tMinY = boxUV.y + this.size.z;
-        tMaxX = tMinX + this.size.z;
-        tMaxY = tMinY + this.size.y;
+        tMinX = boxUV.x + d + w;
+        tMinY = boxUV.y + d;
+        tMaxX = tMinX + d;
+        tMaxY = tMinY + h;
 
         if (mirror)
         {
             tMinX = boxUV.x;
-            tMinY = boxUV.y + this.size.z;
-            tMaxX = tMinX + this.size.z;
-            tMaxY = tMinY + this.size.y;
+            tMinY = boxUV.y + d;
+            tMaxX = tMinX + d;
+            tMaxY = tMinY + h;
 
             float tmp = tMinX;
 
@@ -99,10 +102,10 @@ public class ModelCube
         this.west = ModelUV.from(tMinX, tMinY, tMaxX, tMaxY);
 
         /* Up */
-        tMinX = boxUV.x + this.size.z;
+        tMinX = boxUV.x + d;
         tMinY = boxUV.y;
-        tMaxX = tMinX + this.size.x;
-        tMaxY = tMinY + this.size.z;
+        tMaxX = tMinX + w;
+        tMaxY = tMinY + d;
 
         if (mirror)
         {
@@ -115,9 +118,9 @@ public class ModelCube
         this.up = ModelUV.from(tMinX, tMinY, tMaxX, tMaxY);
 
         /* Down */
-        tMinX = boxUV.x + this.size.z + this.size.x;
-        tMinY = boxUV.y + this.size.z;
-        tMaxX = tMinX + this.size.x;
+        tMinX = boxUV.x + d + w;
+        tMinY = boxUV.y + d;
+        tMaxX = tMinX + w;
         tMaxY = boxUV.y;
 
         if (mirror)
