@@ -440,9 +440,13 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
                 {
                     this.checkAnimator();
- 
+
                     this.lastAnimAction = this.animator.createAction(this.animator.animation, this.actions.getConfig("animation").clone(), false);
-                    this.lastAnimAction.config.tick += this.animation.getFactor(0F) * this.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+
+                    if (this.lastAnimAction != null)
+                    {
+                        this.lastAnimAction.config.tick += this.animation.getFactor(0F) * this.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+                    }
                 }
 
                 this.isActionPlayer = animated.isActionPlayer;
