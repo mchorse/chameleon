@@ -1,6 +1,7 @@
 {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/chameleon-morph/",
     "1.12.2": {
+        "1.1.1": "This is a small patch update that fixes 1.1's bug with cube that have floating point sizes.",
         "1.1": "This is a major internal rewrite whose purpose is to make Chameleon independent from GeckoLib.",
         "1.0.3": "This is a small patch has 2 features and bug fixes.",
     	"1.0.2": "This is a small patch that is required for new versions of McLib.", 
@@ -8,7 +9,7 @@
         "1.0": "First version of Chameleon mod. This version provides essential tools to work with Chameleon animated morphs."
     },
     "promos": {
-        "1.12.2-latest": "1.1",
-        "1.12.2-recommended": "1.1"
+        "1.12.2-latest": "1.1.1",
+        "1.12.2-recommended": "1.1.1"
     }
 }
