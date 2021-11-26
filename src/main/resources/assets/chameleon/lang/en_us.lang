@@ -11,6 +11,7 @@ chameleon.gui.editor.pick_skin=Pick skin
 chameleon.gui.editor.main=Main panel
 chameleon.gui.editor.create_pose=Create pose
 chameleon.gui.editor.reset_pose=Reset pose
+chameleon.gui.editor.absolute_brightness=Absolute Brightness
 chameleon.gui.editor.glow=Limb Glow
 chameleon.gui.editor.color=Limb Color
 chameleon.gui.editor.fixed=Fixate movement

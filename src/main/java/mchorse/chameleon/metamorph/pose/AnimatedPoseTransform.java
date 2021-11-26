@@ -11,7 +11,8 @@ public class AnimatedPoseTransform extends AnimatedTransform
     public static final int ANIMATED = 1;
 
     public float fixed = ANIMATED;
-    
+
+    public boolean absoluteBrightness = false;
     public float glow = 0.0f;
     public Color color = new Color(1f, 1f, 1f, 1f);
 
@@ -41,6 +42,7 @@ public class AnimatedPoseTransform extends AnimatedTransform
         this.rotateY = transform.rotateY;
         this.rotateZ = transform.rotateZ;
         this.fixed = transform.fixed;
+        this.absoluteBrightness = transform.absoluteBrightness;
         this.glow = transform.glow;
         this.color.copy(transform.color);
     }
@@ -53,6 +55,7 @@ public class AnimatedPoseTransform extends AnimatedTransform
         if (obj instanceof AnimatedPoseTransform)
         {
             result = result && this.fixed == ((AnimatedPoseTransform) obj).fixed;
+            result = result && this.absoluteBrightness == ((AnimatedPoseTransform) obj).absoluteBrightness;
             result = result && Math.abs(this.glow - ((AnimatedPoseTransform) obj).glow) < 0.0001;
             result = result && this.color.equals(((AnimatedPoseTransform) obj).color);
         }
@@ -66,6 +69,7 @@ public class AnimatedPoseTransform extends AnimatedTransform
         super.fromNBT(tag);
 
         if (tag.hasKey("F", NBT.TAG_BYTE)) this.fixed = tag.getBoolean("F") ? ANIMATED : FIXED;
+        if (tag.hasKey("AB", NBT.TAG_BYTE)) this.absoluteBrightness = tag.getBoolean("AB");
         if (tag.hasKey("G", NBT.TAG_FLOAT)) this.glow = tag.getFloat("G");
         if (tag.hasKey("C", NBT.TAG_INT)) this.color.set(tag.getInteger("C"));
     }
@@ -76,6 +80,7 @@ public class AnimatedPoseTransform extends AnimatedTransform
         tag = super.toNBT(tag);
 
         if (this.fixed != ANIMATED) tag.setBoolean("F", false);
+        if (this.absoluteBrightness) tag.setBoolean("AB", this.absoluteBrightness);
         if (this.glow > 0.0001) tag.setFloat("G", this.glow);
         if (this.color.getRGBAColor() != 0xFFFFFFFF) tag.setInteger("C", this.color.getRGBAColor());
 
@@ -86,11 +91,11 @@ public class AnimatedPoseTransform extends AnimatedTransform
     public void interpolate(AnimatedTransform a, AnimatedTransform b, float x, Interpolation interp)
     {
         super.interpolate(a, b, x, interp);
-        
+
         float glow = 0.0f;
         float cr, cg, cb, ca;
         cr = cg = cb = ca = 1.0f;
-        
+
         if (a instanceof AnimatedPoseTransform)
         {
             AnimatedPoseTransform l = (AnimatedPoseTransform) a;
@@ -100,7 +105,7 @@ public class AnimatedPoseTransform extends AnimatedTransform
             cb = l.color.b;
             ca = l.color.a;
         }
-        
+
         if (b instanceof AnimatedPoseTransform)
         {
             AnimatedPoseTransform l = (AnimatedPoseTransform) b;
@@ -109,6 +114,8 @@ public class AnimatedPoseTransform extends AnimatedTransform
             cg = interp.interpolate(cg, l.color.g, x);
             cb = interp.interpolate(cb, l.color.b, x);
             ca = interp.interpolate(ca, l.color.a, x);
+
+            this.absoluteBrightness = l.absoluteBrightness;
         }
         else
         {
@@ -117,8 +124,10 @@ public class AnimatedPoseTransform extends AnimatedTransform
             cg = interp.interpolate(cg, 1.0f, x);
             cb = interp.interpolate(cb, 1.0f, x);
             ca = interp.interpolate(ca, 1.0f, x);
+
+            this.absoluteBrightness = false;
         }
-        
+
         this.glow = glow;
         this.color.set(cr, cg, cb, ca);
     }

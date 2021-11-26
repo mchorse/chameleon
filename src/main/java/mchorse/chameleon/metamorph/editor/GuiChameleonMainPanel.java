@@ -40,6 +40,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
 
     public GuiButtonElement createPose;
     public GuiStringListElement bones;
+    public GuiToggleElement absoluteBrightness;
     public GuiTrackpadElement glow;
     public GuiColorElement color;
     public GuiToggleElement fixed;
@@ -103,6 +104,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.createPose = new GuiButtonElement(mc, this.createLabel, this::createResetPose);
         this.bones = new GuiStringListElement(mc, this::pickBone);
         this.bones.background().context(() -> createCopyPasteMenu(this::copyCurrentPose, this::pastePose));
+        this.absoluteBrightness = new GuiToggleElement(mc, IKey.lang("chameleon.gui.editor.absolute_brightness"), this::toggleAbsoluteBrightness);
         this.glow = new GuiTrackpadElement(mc, this::setGlow).limit(0, 1).values(0.01, 0.1, 0.001);
         this.glow.tooltip(IKey.lang("chameleon.gui.editor.glow"));
         this.color = new GuiColorElement(mc, this::setColor).direction(Direction.RIGHT);
@@ -128,6 +130,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.fixed.flex().relative(this.animated).y(-1F, -5).w(1F);
         this.color.flex().relative(this.fixed).y(-1F, -10).w(1F);
         this.glow.flex().relative(this.color).y(-1F, -10).w(1F);
+        this.absoluteBrightness.flex().relative(this.glow).y(-1F, -10).w(1F);
         this.transforms.flex().relative(this).set(0, 0, 256, 70).x(0.5F, -128).y(1, -80);
         this.animation.flex().relative(this).x(1F, -130).w(130);
 
@@ -135,14 +138,17 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.player.tooltip(IKey.lang("chameleon.gui.editor.player_tooltip"));
         this.animation.addBefore(this.animation.interpolations, this.player);
 
+        GuiSimpleContextMenu abMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu glowMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu colorMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
         GuiSimpleContextMenu fixateMenu = new GuiSimpleContextMenu(Minecraft.getMinecraft());
 
+        abMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.absoluteBrightness = p.absoluteBrightness));
         glowMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.glow = p.glow));
         colorMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.color.copy(p.color)));
         fixateMenu.action(IKey.lang("chameleon.gui.editor.context.children"), this.applyToChildren((p, c) -> c.fixed = p.fixed));
 
+        this.absoluteBrightness.context(() -> abMenu);
         this.glow.context(() -> glowMenu);
         this.color.context(() -> colorMenu);
         this.fixed.context(() -> fixateMenu);
@@ -234,6 +240,11 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.glow.setValue(this.transform.glow);
         this.transforms.set(this.transform);
         this.editor.chameleonModelRenderer.boneName = bone;
+    }
+
+    private void toggleAbsoluteBrightness(GuiToggleElement toggle)
+    {
+        this.transform.absoluteBrightness = toggle.isToggled();
     }
 
     private void setGlow(Double value)
