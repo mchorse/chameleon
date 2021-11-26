@@ -11,6 +11,7 @@ chameleon.gui.editor.pick_skin=选择皮肤
 chameleon.gui.editor.main=主面板
 chameleon.gui.editor.create_pose=创建姿势
 chameleon.gui.editor.reset_pose=重置姿势
+chameleon.gui.editor.absolute_brightness=绝对亮度
 chameleon.gui.editor.glow=肢体发光
 chameleon.gui.editor.color=肢体颜色
 chameleon.gui.editor.fixed=固定动作

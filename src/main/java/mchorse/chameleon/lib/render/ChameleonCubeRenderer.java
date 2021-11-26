@@ -57,8 +57,12 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
             this.b = transform.color.b;
             this.a = transform.color.a;
 
-            lightX = (int) Interpolation.LINEAR.interpolate(OpenGlHelper.lastBrightnessX, 240, transform.glow);
-            lightY = (int) Interpolation.LINEAR.interpolate(OpenGlHelper.lastBrightnessY, 240, transform.glow);
+            if (transform.absoluteBrightness)
+            {
+                lightX = 0;
+            }
+
+            lightX = (int) Interpolation.LINEAR.interpolate(lightX, 240, transform.glow);
         }
 
         for (ModelCube cube : bone.cubes)
