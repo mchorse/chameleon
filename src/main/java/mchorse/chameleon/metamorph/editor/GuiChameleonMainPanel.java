@@ -125,7 +125,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.picker.flex().relative(this).wh(1F, 1F);
 
         this.createPose.flex().relative(this.skin).y(1F, 5).w(1F).h(20);
-        this.bones.flex().relative(this.createPose).y(1F, 5).w(1F).hTo(this.glow.flex(), -10);
+        this.bones.flex().relative(this.createPose).y(1F, 5).w(1F).hTo(this.absoluteBrightness.flex(), -10);
         this.animated.flex().relative(this).x(10).y(1F, -10).w(110).anchorY(1);
         this.fixed.flex().relative(this.animated).y(-1F, -5).w(1F);
         this.color.flex().relative(this.fixed).y(-1F, -10).w(1F);
@@ -158,7 +158,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         lowerBottom.flex().relative(this).xy(1F, 1F).w(130).anchor(1F, 1F).column(5).vertical().stretch().padding(10);
         lowerBottom.add(this.scale, this.scaleGui);
 
-        this.add(this.skin, this.createPose, this.animated, this.fixed, this.color, this.glow, this.bones, this.transforms, this.animation, lowerBottom);
+        this.add(this.skin, this.createPose, this.animated, this.fixed, this.color, this.glow, this.absoluteBrightness, this.bones, this.transforms, this.animation, lowerBottom);
     }
 
     private void copyCurrentPose()
@@ -237,6 +237,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.animated.toggled(this.morph.pose.animated == AnimatedPoseTransform.ANIMATED);
         this.fixed.toggled(this.transform.fixed == AnimatedPoseTransform.FIXED);
         this.color.picker.setColor(this.transform.color.getRGBAColor());
+        this.absoluteBrightness.toggled(this.transform.absoluteBrightness);
         this.glow.setValue(this.transform.glow);
         this.transforms.set(this.transform);
         this.editor.chameleonModelRenderer.boneName = bone;
@@ -300,6 +301,7 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
         this.createPose.setVisible(model != null && !model.getBoneNames().isEmpty());
         this.createPose.label = pose == null ? this.createLabel : this.resetLabel;
         this.bones.setVisible(model != null && pose != null);
+        this.absoluteBrightness.setVisible(model != null && pose != null);
         this.glow.setVisible(model != null && pose != null);
         this.color.setVisible(model != null && pose != null);
         this.fixed.setVisible(model != null && pose != null);
