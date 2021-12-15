@@ -120,8 +120,19 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             {
                 morph.checkAnimator();
 
-                this.lastAnimAction = morph.animator.createAction(morph.animator.animation, morph.actions.getConfig("animation").clone(), false);
-                this.lastAnimAction.config.tick += morph.animation.getFactor(0F) * morph.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+                if (morph.animator != null && morph.actions.getConfig("animation") != null)
+                {
+                    this.lastAnimAction = morph.animator.createAction(morph.animator.animation, morph.actions.getConfig("animation").clone(), false);
+                }
+                else
+                {
+                    this.lastAnimAction = null;
+                }
+
+                if (this.lastAnimAction != null)
+                {
+                    this.lastAnimAction.config.tick += morph.animation.getFactor(0F) * morph.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+                }
             }
         }
 
@@ -441,7 +452,14 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
                 {
                     this.checkAnimator();
 
-                    this.lastAnimAction = this.animator.createAction(this.animator.animation, this.actions.getConfig("animation").clone(), false);
+                    if (this.animator != null && this.actions.getConfig("animation") != null)
+                    {
+                        this.lastAnimAction = this.animator.createAction(this.animator.animation, this.actions.getConfig("animation").clone(), false);
+                    }
+                    else
+                    {
+                        this.lastAnimAction = null;
+                    }
 
                     if (this.lastAnimAction != null)
                     {
