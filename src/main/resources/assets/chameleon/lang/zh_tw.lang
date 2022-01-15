@@ -22,7 +22,7 @@ chameleon.gui.editor.scale_gui=GUI 縮放
 chameleon.gui.editor.actions.actions=動作
 chameleon.gui.editor.actions.action=動作
 
-chameleon.gui.editor.actions.clamp=回卷
+chameleon.gui.editor.actions.clamp=回捲
 chameleon.gui.editor.actions.reset=歸位
 chameleon.gui.editor.actions.speed=速度
 chameleon.gui.editor.actions.fade=緩入緩出
