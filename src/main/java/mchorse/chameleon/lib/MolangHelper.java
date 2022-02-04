@@ -74,10 +74,10 @@ public class MolangHelper
         float groundSpeed = MathHelper.sqrt((dx * dx) + (dz * dz));
         parser.setValue("query.ground_speed", groundSpeed);
 
-        parser.setValue("query.yaw_speed", target.rotationYaw - target.prevRotationYaw);
+        parser.setValue("query.yaw_speed", target.rotationYawHead - target.prevRotationYawHead);
 
         /* Chameleon specific queries */
-        float yaw = Interpolations.lerp(target.prevRotationYaw, target.rotationYaw, partialTick);
+        float yaw = Interpolations.lerp(target.prevRotationYawHead, target.rotationYawHead, partialTick);
         float bodyYaw = Interpolations.lerp(target.prevRenderYawOffset, target.renderYawOffset, partialTick);
 
         parser.setValue("query.head_yaw", yaw - bodyYaw);
