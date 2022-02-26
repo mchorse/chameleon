@@ -137,7 +137,7 @@ public class ChameleonAnimator
             return output;
         }
 
-        double duration = 0;
+        double duration = first.time * 20;
 
         for (AnimationVector vector : keyframes)
         {
