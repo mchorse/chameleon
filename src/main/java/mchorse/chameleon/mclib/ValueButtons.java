@@ -27,7 +27,7 @@ public class ValueButtons extends ValueGUI
     @SideOnly(Side.CLIENT)
     public List<GuiElement> getFields(Minecraft mc, GuiConfigPanel config)
     {
-        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.models"), (button) -> GuiUtils.openWebLink(ClientProxy.modelsFile.toURI()));
+        GuiButtonElement models = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.models"), (button) -> GuiUtils.openFolder(ClientProxy.modelsFile.getAbsolutePath()));
         GuiButtonElement tutorial = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.tutorial"), (button) -> GuiUtils.openWebLink(this.getTutorialURL()));
         GuiButtonElement discord = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.discord"), (button) -> GuiUtils.openWebLink(this.getDiscordURL()));
         GuiButtonElement wiki = new GuiButtonElement(mc, IKey.lang("chameleon.gui.config.wiki"), (button) -> GuiUtils.openWebLink(this.getWikiURL()));
