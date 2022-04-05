@@ -96,7 +96,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     {
         this.animation.pause(offset);
 
-        if (previous instanceof IMorphProvider)
+        while (previous instanceof IMorphProvider)
         {
             previous = ((IMorphProvider) previous).getMorph();
         }
@@ -484,6 +484,77 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         }
 
         return false;
+    }
+
+    @Override
+    public void afterMerge(AbstractMorph morph)
+    {
+        super.afterMerge(morph);
+
+        while (morph instanceof IMorphProvider)
+        {
+            morph = ((IMorphProvider) morph).getMorph();
+        }
+
+        if (morph instanceof IBodyPartProvider)
+        {
+            this.recursiveAfterMerge(this, (IBodyPartProvider) morph);
+        }
+
+        if (morph instanceof ChameleonMorph)
+        {
+            ChameleonMorph animated = (ChameleonMorph) morph;
+
+            if (Objects.equals(this.getKey(), animated.getKey()))
+            {
+                this.animation.last = animated.pose == null ? new AnimatedPose() : animated.pose.clone();
+
+                if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
+                {
+                    animated.checkAnimator();
+
+                    if (animated.animator != null && animated.actions.getConfig("animation") != null)
+                    {
+                        this.lastAnimAction = animated.animator.createAction(animated.animator.animation, animated.actions.getConfig("animation").clone(), false);
+                    }
+                    else
+                    {
+                        this.lastAnimAction = null;
+                    }
+
+                    if (this.lastAnimAction != null)
+                    {
+                        this.lastAnimAction.config.tick += animated.animation.getFactor(0F) * animated.animation.duration * Math.abs(this.lastAnimAction.config.speed);
+                    }
+                }
+
+                if (animated.animator != null)
+                {
+                    this.animator = animated.animator;
+                    this.animator.morph = this;
+                    this.updateAnimator = true;
+                }
+            }
+        }
+    }
+
+    private void recursiveAfterMerge(IBodyPartProvider target, IBodyPartProvider destination)
+    {
+        for (int i = 0, c = target.getBodyPart().parts.size(); i < c; i++)
+        {
+            if (i >= destination.getBodyPart().parts.size())
+            {
+                break;
+            }
+
+            AbstractMorph a = target.getBodyPart().parts.get(i).morph.get();
+            AbstractMorph b = destination.getBodyPart().parts.get(i).morph.get();
+
+            if (a != null)
+            {
+                a.afterMerge(b);
+            }
+        }
     }
 
     @Override

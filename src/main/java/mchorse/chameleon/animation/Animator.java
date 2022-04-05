@@ -68,7 +68,7 @@ public class Animator
     public boolean wasShooting = false;
     public boolean wasConsuming = false;
 
-    private ChameleonMorph morph;
+    public ChameleonMorph morph;
 
     public Animator(ChameleonMorph morph)
     {
