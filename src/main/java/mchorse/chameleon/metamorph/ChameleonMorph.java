@@ -107,7 +107,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         {
             ChameleonMorph morph = (ChameleonMorph) previous;
 
-            pose = morph.pose;
+            pose = morph.getCurrentPose(0F);
 
             if (pose != null)
             {
@@ -171,7 +171,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     {
         ChameleonMorph morph = (ChameleonMorph) this.copy();
 
-        morph.pose = this.animation.calculatePose(this.pose, this.getModel(), partialTicks);
+        morph.pose = this.getCurrentPose(partialTicks);
         morph.animation.duration = this.animation.progress;
 
         morph.parts.parts.clear();
@@ -371,6 +371,11 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         }
     }
 
+    private AnimatedPose getCurrentPose(float partialTicks)
+    {
+        return this.animation.calculatePose(this.pose, this.getModel(), partialTicks).clone();
+    }
+
     @SideOnly(Side.CLIENT)
     public ChameleonModel getModel()
     {
@@ -446,7 +451,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
                 this.lastScale = this.getScale(0);
                 this.animation.paused = false;
-                this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
+                this.animation.last = this.getCurrentPose(0F);
 
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
                 {
@@ -507,7 +512,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
             if (Objects.equals(this.getKey(), animated.getKey()))
             {
-                this.animation.last = animated.pose == null ? new AnimatedPose() : animated.pose.clone();
+                this.animation.last = animated.getCurrentPose(0F);
 
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
                 {
