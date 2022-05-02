@@ -1,3 +1,15 @@
+## Version 1.2
+
+This update was made by MiaoNLI. It adds cool features like limb glow, color animation and more.
+
+* Morph
+    * Added limb glow and color animation (suggested by MaiZhi)
+    * Added Animation action that can be controlled by animation (pauseable)
+    * Fixed some NPE bug
+    * Optimized animation
+* File Encoding
+    * UTF-8 file encoding is used by default
+
 ## Version 1.1
 
 This is a major internal rewrite whose purpose is to make Chameleon independent from GeckoLib. [GeckoLib](https://www.curseforge.com/minecraft/mc-mods/geckolib) is still an awesome library that I would recommend anyone who is doing animated entities and blocks, however, it doesn't personally satisfy me anymore.
