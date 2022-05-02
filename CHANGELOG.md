@@ -2,6 +2,8 @@
 
 This update was made by MiaoNLI. It adds cool features like limb glow, color animation and more.
 
+**Compatible** with McLib `2.4`, Metamorph `1.3`. It doesn't mean that future versions of McLib or Metamorph would be incompatible, but older versions are most likely incompatible.
+
 * Morph
     * Added limb glow and color animation (suggested by MaiZhi)
     * Added Animation action that can be controlled by animation (pauseable)
