@@ -373,7 +373,14 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
     private AnimatedPose getCurrentPose(float partialTicks)
     {
-        return this.animation.calculatePose(this.pose, this.getModel(), partialTicks).clone();
+        if (this.getModel() == null)
+        {
+            return this.pose == null ? new AnimatedPose() : this.pose.clone();
+        }
+        else
+        {
+            return this.animation.calculatePose(this.pose, this.getModel(), partialTicks).clone();
+        }
     }
 
     @SideOnly(Side.CLIENT)
