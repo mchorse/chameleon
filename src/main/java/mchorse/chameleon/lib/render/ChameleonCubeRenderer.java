@@ -33,37 +33,23 @@ public class ChameleonCubeRenderer implements IChameleonRenderProcessor
     private Vector3f normal = new Vector3f();
     private Vector4f vertex = new Vector4f();
 
-    private AnimatedPose pose;
-
-    public void setPose(AnimatedPose pose)
-    {
-        this.pose = pose;
-    }
-
     @Override
     public boolean renderBone(BufferBuilder builder, MatrixStack stack, ModelBone bone)
     {
         int lightX = (int) OpenGlHelper.lastBrightnessX;
         int lightY = (int) OpenGlHelper.lastBrightnessY;
 
-        this.r = this.g = this.b = this.a = 1.0F;
+        this.r = bone.color.r;
+        this.g = bone.color.g;
+        this.b = bone.color.b;
+        this.a = bone.color.a;
 
-        if (this.pose != null && this.pose.bones.containsKey(bone.id))
+        if (bone.absoluteBrightness)
         {
-            AnimatedPoseTransform transform = this.pose.bones.get(bone.id);
-
-            this.r = transform.color.r;
-            this.g = transform.color.g;
-            this.b = transform.color.b;
-            this.a = transform.color.a;
-
-            if (transform.absoluteBrightness)
-            {
-                lightX = 0;
-            }
-
-            lightX = (int) Interpolation.LINEAR.interpolate(lightX, 240, transform.glow);
+            lightX = 0;
         }
+
+        lightX = (int) Interpolation.LINEAR.interpolate(lightX, 240, bone.glow);
 
         for (ModelCube cube : bone.cubes)
         {

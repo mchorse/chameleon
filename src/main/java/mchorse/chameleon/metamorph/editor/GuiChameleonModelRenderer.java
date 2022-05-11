@@ -94,11 +94,15 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
 
         float scale = ((ChameleonMorph) this.morph).scale;
 
+        if (((ChameleonMorph) this.morph).skin != null)
+        {
+            Minecraft.getMinecraft().renderEngine.bindTexture(((ChameleonMorph) this.morph).skin);
+        }
+
         GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
 
         GlStateManager.enableDepth();
         GlStateManager.disableCull();
-        GlStateManager.disableTexture2D();
         GlStateManager.pushMatrix();
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.rotate(180 - (this.customEntity ? this.entityYawBody : 0), 0, 1, 0);
@@ -109,7 +113,6 @@ public class GuiChameleonModelRenderer extends GuiMorphRenderer
         ChameleonRenderer.processRenderModel(STENCIL_RENDERER, Tessellator.getInstance().getBuffer(), MATRIX_STACK, model.model);
 
         GlStateManager.popMatrix();
-        GlStateManager.enableTexture2D();
         GlStateManager.enableCull();
     }
 

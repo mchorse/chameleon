@@ -28,10 +28,8 @@ public class ChameleonRenderer
      *
      * The texture should be bind beforehand
      */
-    public static void render(Model model, AnimatedPose current)
+    public static void render(Model model)
     {
-        CUBE_RENDERER.setPose(current);
-
         GlStateManager.disableCull();
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableBlend();

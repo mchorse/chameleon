@@ -277,7 +277,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             this.getAnimator().applyActions(target, model, partialTicks);
         }
 
-        AnimatedPose current = this.applyPose(model, partialTicks);
+        this.applyPose(model, partialTicks);
 
         /* Render the model */
         if (this.skin != null)
@@ -287,7 +287,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
         boolean hurtLight = RenderLightmap.set(target, partialTicks);
 
-        ChameleonRenderer.render(model, current);
+        ChameleonRenderer.render(model);
 
         if (hurtLight)
         {
@@ -323,7 +323,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
     }
 
     @SideOnly(Side.CLIENT)
-    private AnimatedPose applyPose(Model model, float partialTicks)
+    private void applyPose(Model model, float partialTicks)
     {
         AnimatedPose pose = this.pose;
         boolean inProgress = this.animation.isInProgress();
@@ -337,8 +337,6 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         {
             this.applyPose(bone, pose);
         }
-        
-        return pose;
     }
 
     @SideOnly(Side.CLIENT)
@@ -363,6 +361,10 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
             current.scale.x = Interpolations.lerp(initial.scale.x, current.scale.x, factor) + (transform.scaleX - 1);
             current.scale.y = Interpolations.lerp(initial.scale.y, current.scale.y, factor) + (transform.scaleY - 1);
             current.scale.z = Interpolations.lerp(initial.scale.z, current.scale.z, factor) + (transform.scaleZ - 1);
+
+            bone.absoluteBrightness = transform.absoluteBrightness;
+            bone.glow = transform.glow;
+            bone.color.copy(transform.color);
         }
 
         for (ModelBone childBone : bone.children)
