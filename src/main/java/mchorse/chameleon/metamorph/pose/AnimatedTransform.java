@@ -1,13 +1,19 @@
 package mchorse.chameleon.metamorph.pose;
 
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
+import mchorse.mclib.utils.ITransformationObject;
 import mchorse.mclib.utils.Interpolation;
+import mchorse.mclib.utils.MatrixUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.Constants.NBT;
+
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector4f;
 
 /**
  * Configuration class for general transformation
  */
-public class AnimatedTransform
+public class AnimatedTransform implements ITransformationObject
 {
     public String boneName;
 
@@ -42,6 +48,21 @@ public class AnimatedTransform
         this.rotateX = interp.interpolate(a.rotateX, b.rotateX, x);
         this.rotateY = interp.interpolate(a.rotateY, b.rotateY, x);
         this.rotateZ = interp.interpolate(a.rotateZ, b.rotateZ, x);
+    }
+
+    @Override
+    public void addTranslation(double x, double y, double z, GuiTransformations.TransformOrientation transformOrientation)
+    {
+        Vector4f trans = new Vector4f((float) x,(float) y,(float) z, 1);
+
+        if (transformOrientation == GuiTransformations.TransformOrientation.LOCAL)
+        {
+            MatrixUtils.getRotationMatrix(this.rotateX, -this.rotateY, -this.rotateZ, MatrixUtils.RotationOrder.XYZ).transform(trans);
+        }
+
+        this.x += trans.x;
+        this.y += trans.y;
+        this.z += trans.z;
     }
 
     /**

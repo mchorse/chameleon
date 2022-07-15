@@ -330,6 +330,14 @@ public class GuiChameleonMainPanel extends GuiMorphPanel<ChameleonMorph, GuiCham
             super(mc);
         }
 
+        @Override
+        protected void localTranslate(double x, double y, double z)
+        {
+            this.trans.addTranslation(x, y, z, GuiStaticTransformOrientation.getOrientation());
+
+            this.fillT(this.trans.x, this.trans.y, this.trans.z);
+        }
+
         public void set(AnimatedPoseTransform trans)
         {
             this.trans = trans;
