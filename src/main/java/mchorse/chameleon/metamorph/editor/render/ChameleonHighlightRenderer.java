@@ -8,15 +8,22 @@ import mchorse.chameleon.lib.render.ChameleonPostRenderer;
 import mchorse.chameleon.lib.render.IChameleonRenderProcessor;
 import mchorse.chameleon.lib.utils.MatrixStack;
 import mchorse.mclib.client.Draw;
+import mchorse.mclib.client.gui.framework.elements.input.GuiTransformations;
+import mchorse.mclib.utils.MatrixUtils;
+import mchorse.mclib.utils.RenderingUtils;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4f;
+import java.nio.FloatBuffer;
 
 /**
  * Highlight renderer
@@ -51,6 +58,16 @@ public class ChameleonHighlightRenderer implements IChameleonRenderProcessor
 
             GlStateManager.pushMatrix();
             ChameleonPostRenderer.multiplyMatrix(stack, bone);
+
+            if (GuiTransformations.GuiStaticTransformOrientation.getOrientation() == GuiTransformations.TransformOrientation.GLOBAL)
+            {
+                Vector3d rotation = new Vector3d(bone.current.rotation);
+                rotation.x = Math.toRadians(rotation.x);
+                rotation.y = Math.toRadians(rotation.y);
+                rotation.z = Math.toRadians(rotation.z);
+
+                RenderingUtils.glRevertRotationScale(rotation, new Vector3d(bone.current.scale), MatrixUtils.RotationOrder.XYZ);
+            }
 
             Draw.axis(0.25F * 1.5F);
 
