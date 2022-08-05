@@ -23,4 +23,19 @@ public class ModelBone
     {
         this.id = id;
     }
+
+    public void reset()
+    {
+        this.current.translate.set(this.initial.translate);
+        this.current.scale.set(this.initial.scale);
+        this.current.rotation.set(this.initial.rotation);
+        this.absoluteBrightness = false;
+        this.glow = 0F;
+        this.color.set(1F, 1F, 1F, 1F);
+
+        for (ModelBone childBone : this.children)
+        {
+            childBone.reset();
+        }
+    }
 }

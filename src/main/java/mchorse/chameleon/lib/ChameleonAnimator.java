@@ -24,22 +24,7 @@ public class ChameleonAnimator
     {
         for (ModelBone bone : model.bones)
         {
-            resetBone(bone);
-        }
-    }
-
-    private static void resetBone(ModelBone bone)
-    {
-        bone.current.translate.set(bone.initial.translate);
-        bone.current.scale.set(bone.initial.scale);
-        bone.current.rotation.set(bone.initial.rotation);
-        bone.absoluteBrightness = false;
-        bone.glow = 0F;
-        bone.color.set(1F, 1F, 1F, 1F);
-
-        for (ModelBone childBone : bone.children)
-        {
-            resetBone(childBone);
+            bone.reset();
         }
     }
 
