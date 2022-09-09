@@ -107,7 +107,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
         {
             ChameleonMorph morph = (ChameleonMorph) previous;
 
-            pose = morph.getCurrentPose(0F);
+            pose = morph.pose;
 
             if (pose != null)
             {
@@ -460,7 +460,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
                 this.lastScale = this.getScale(0);
                 this.animation.paused = false;
-                this.animation.last = this.getCurrentPose(0F);
+                this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
 
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
                 {
@@ -521,7 +521,7 @@ public class ChameleonMorph extends AbstractMorph implements IBodyPartProvider, 
 
             if (Objects.equals(this.getKey(), animated.getKey()))
             {
-                this.animation.last = animated.getCurrentPose(0F);
+                this.animation.last = this.pose == null ? new AnimatedPose() : this.pose.clone();
 
                 if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT && this.isActionPlayer && animated.isActionPlayer)
                 {
