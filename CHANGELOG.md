@@ -1,3 +1,13 @@
+## Version 1.2.1
+
+This update was made by Chryfi, exceptions are mentioned at the respective items.
+
+**Compatible** with McLib `2.4.1`, Metamorph `1.3.1`. It doesn't mean that future versions of McLib or Metamorph would be incompatible, but older versions are most likely incompatible.
+
+* Added local / global translation mode
+* Fixed NPE crash in getCurrentPose due to missing model (by MiaoNLI)
+* Fixed the problem that chameleon does not support CTRL + LMB to penetrate transparent pixels (by MiaoNLI)
+
 ## Version 1.2
 
 This update was made by MiaoNLI. It adds cool features like limb glow, color animation and more.
