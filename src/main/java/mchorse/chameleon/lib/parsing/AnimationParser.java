@@ -118,6 +118,7 @@ public class AnimationParser
     private static AnimationVector parseAnimationVector(MolangParser parser, JsonElement element) throws Exception
     {
         JsonArray array = element.isJsonArray() ? element.getAsJsonArray() : null;
+        JsonArray pre = element.isJsonArray() ? element.getAsJsonArray() : null;
 
         if (array == null)
         {
@@ -137,7 +138,21 @@ public class AnimationParser
                 {
                     array = object.get("post").getAsJsonObject().get("vector").getAsJsonArray();
                 }
+
+                if (object.get("pre").isJsonArray())
+                {
+                    pre = object.get("pre").getAsJsonArray();
+                }
+                else if (object.get("pre").isJsonObject() && object.get("pre").getAsJsonObject().has("vector"))
+                {
+                    pre = object.get("pre").getAsJsonObject().get("vector").getAsJsonArray();
+                }
             }
+        }
+
+        if (pre == null)
+        {
+            pre = array;
         }
 
         AnimationVector vector = new AnimationVector();
@@ -145,6 +160,9 @@ public class AnimationParser
         vector.x = parseValue(parser, array.get(0));
         vector.y = parseValue(parser, array.get(1));
         vector.z = parseValue(parser, array.get(2));
+        vector.preX = parseValue(parser, pre.get(0));
+        vector.preY = parseValue(parser, pre.get(1));
+        vector.preZ = parseValue(parser, pre.get(2));
 
         if (element.isJsonObject())
         {
