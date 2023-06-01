@@ -139,13 +139,16 @@ public class AnimationParser
                     array = object.get("post").getAsJsonObject().get("vector").getAsJsonArray();
                 }
 
-                if (object.get("pre").isJsonArray())
+                if (object.has("pre"))
                 {
-                    pre = object.get("pre").getAsJsonArray();
-                }
-                else if (object.get("pre").isJsonObject() && object.get("pre").getAsJsonObject().has("vector"))
-                {
-                    pre = object.get("pre").getAsJsonObject().get("vector").getAsJsonArray();
+                    if (object.get("pre").isJsonArray())
+                    {
+                        pre = object.get("pre").getAsJsonArray();
+                    }
+                    else if (object.get("pre").isJsonObject() && object.get("pre").getAsJsonObject().has("vector"))
+                    {
+                        pre = object.get("pre").getAsJsonObject().get("vector").getAsJsonArray();
+                    }
                 }
             }
         }
