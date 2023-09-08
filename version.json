@@ -1,6 +1,7 @@
 {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/chameleon-morph/",
     "1.12.2": {
+		"1.2.2": "This update adds step interpolation, added by Tactsohg",
         "1.2.1": "This update was made by Chryfi and MiaoNLI and it fixes some issues.",
         "1.2": "This update was made by MiaoNLI. It adds cool features like limb glow, color animation and more.",
         "1.1.1": "This is a small patch update that fixes 1.1's bug with cube that have floating point sizes.",

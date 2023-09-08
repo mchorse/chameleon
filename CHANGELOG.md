@@ -1,3 +1,11 @@
+## Version 1.2.2
+
+This update was made by Tactsohg.
+
+**Compatible** with McLib `2.4.1`, Metamorph `1.3.1`. It doesn't mean that future versions of McLib or Metamorph would be incompatible, but older versions are most likely incompatible.
+
+* Added step interpolation support (by Tactsohg)
+
 ## Version 1.2.1
 
 This update was made by Chryfi, exceptions are mentioned at the respective items.
